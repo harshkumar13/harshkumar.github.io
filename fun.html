@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<!--
+  HARSH KUMAR — BEYOND THE OBSERVATORY
+  Personal page: fun.html
+  Same folder as index.html
+  ✏️ Find every  UPDATE  comment to personalise
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Harsh Kumar — beyond the observatory. Life outside astrophysics.">
+<title>Beyond the Observatory · Harsh Kumar</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+
+<style>
+:root{
+  --bg:   #06091d; --bg2:  #0a0d24; --bg3:  #0e1230;
+  --card: rgba(255,255,255,.032); --card2:rgba(255,255,255,.055);
+  --bdr:  rgba(255,255,255,.07);  --bdr2: rgba(255,255,255,.12);
+
+  /* Warm amber primary for this page */
+  --am:   #c8952a; --aml:  #e8b860; --amll: #f7d898;
+  /* Supporting: soft rose */
+  --ro:   #c06070; --rol:  #e89098; --roll: #f5c0c8;
+  /* Supporting: sage green */
+  --sg:   #5a9070; --sgl:  #7ab895; --sgll: #a8d4b8;
+  /* Supporting: blue */
+  --bl:   #4a8fd4; --bll:  #7ab5e8;
+
+  --tx:  #dce6f5; --tx2: #8a9bb8; --tx3: #4a5870;
+  --r:   10px; --rl: 16px;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);
+     font-family:'Inter',system-ui,sans-serif;line-height:1.7;overflow-x:hidden}
+::selection{background:rgba(200,149,42,.2)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--am);border-radius:2px}
+
+/* Progress bar */
+#pb{position:fixed;top:0;left:0;height:2px;width:0;
+    background:linear-gradient(90deg,var(--am),var(--ro),var(--sg));
+    z-index:1001;transition:width .1s}
+
+canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2.5rem;
+  background:rgba(6,9,29,.3);backdrop-filter:blur(18px);
+  border-bottom:1px solid transparent;transition:all .35s;
+}
+#nav.solid{background:rgba(6,9,29,.92);border-bottom-color:var(--bdr);padding:.78rem 2.5rem}
+.nav-brand{
+  font-family:'Cormorant Garamond',serif;font-size:1.12rem;
+  font-weight:600;color:var(--tx);white-space:nowrap;
+}
+.nav-brand em{font-style:normal;color:var(--aml)}
+.nav-links{list-style:none;display:flex;gap:0}
+.nav-links a{display:block;padding:.34rem .8rem;font-size:.83rem;font-weight:500;color:var(--tx2);border-radius:6px;transition:all .2s}
+.nav-links a:hover{color:var(--tx);background:rgba(255,255,255,.05)}
+.nav-links a.active{color:var(--aml)}
+.hburg{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hburg span{display:block;width:22px;height:2px;background:var(--tx);border-radius:1px;transition:all .3s}
+#mm{display:none;position:fixed;inset:0;z-index:99;background:rgba(6,9,29,.97);backdrop-filter:blur(18px);flex-direction:column;align-items:center;justify-content:center;gap:1.8rem}
+#mm.open{display:flex}
+#mm a{font-size:1.7rem;font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--tx2);transition:color .2s}
+#mm a:hover{color:var(--aml)}
+.mmX{position:absolute;top:1.4rem;right:2rem;background:none;border:none;color:var(--tx2);font-size:1.4rem;cursor:pointer}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1040px;margin:0 auto;padding:0 1.5rem}
+section{position:relative;z-index:1;padding:5.5rem 1.5rem}
+
+/* ── SECTION HEADER ── */
+.sh{text-align:center;margin-bottom:3.2rem}
+.sh-tag{display:inline-block;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:var(--aml);margin-bottom:.5rem}
+.sh-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,4.5vw,2.7rem);font-weight:700;letter-spacing:.5px}
+.sh-title .hl{color:var(--roll)}
+.sh-title .hl2{color:var(--sgll)}
+.sh-orn{display:flex;align-items:center;gap:.8rem;margin:.9rem auto 0;max-width:160px}
+.sh-orn::before,.sh-orn::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.sh-orn .gem{width:5px;height:5px;background:var(--am);border-radius:50%;flex-shrink:0}
+
+/* ── SCROLL REVEAL ── */
+.rv{opacity:0;transform:translateY(20px);
+    transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* ── BTN ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:.62rem 1.4rem;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:all .25s;border:none}
+.btn-am{background:var(--am);color:#fff;box-shadow:0 2px 12px rgba(200,149,42,.3)}
+.btn-am:hover{background:var(--aml);transform:translateY(-2px)}
+.btn-o{background:transparent;color:var(--tx2);border:1px solid var(--bdr2)}
+.btn-o:hover{border-color:var(--aml);color:var(--amll);transform:translateY(-2px)}
+
+/* ══════════════════════════════════
+   HERO
+══════════════════════════════════ */
+#hero{
+  min-height:85vh;display:flex;align-items:center;
+  justify-content:center;text-align:center;
+  padding:7rem 1.5rem 4rem;
+}
+.h-in{max-width:700px}
+.h-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:.28rem .9rem;border-radius:50px;
+  border:1px solid rgba(200,149,42,.28);background:rgba(200,149,42,.06);
+  font-size:.75rem;font-weight:500;color:var(--aml);
+  margin-bottom:1.4rem;animation:fadeD .8s ease both;
+}
+.h-tag .dot{width:5px;height:5px;background:var(--aml);border-radius:50%;animation:blink 2s ease-in-out infinite}
+.h-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,7vw,4.8rem);
+  font-weight:700;letter-spacing:1px;line-height:1.05;
+  margin-bottom:.75rem;animation:fadeU .8s .1s ease both;
+}
+.h-sub{font-size:clamp(1rem,2.2vw,1.15rem);color:var(--tx2);margin-bottom:1.8rem;animation:fadeU .8s .2s ease both}
+.h-emoji{font-size:2.2rem;letter-spacing:.5rem;margin-bottom:2rem;animation:fadeU .8s .3s ease both;display:block}
+.h-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;animation:fadeU .8s .4s ease both}
+
+/* Interest tags hero */
+.htags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:2rem;animation:fadeU .8s .5s ease both}
+.htag{
+  padding:.25rem .75rem;background:var(--card);border:1px solid var(--bdr);
+  border-radius:50px;font-size:.8rem;color:var(--tx2);transition:all .22s;cursor:default;
+}
+.htag:hover{border-color:rgba(200,149,42,.35);color:var(--amll)}
+
+/* ══════════════════════════════════
+   PERSONAL INTRO
+══════════════════════════════════ */
+#intro{background:linear-gradient(180deg,transparent,rgba(200,149,42,.015) 50%,transparent)}
+.intro-g{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start}
+.intro-left h3{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;margin-bottom:.9rem}
+.intro-left p{color:var(--tx2);font-size:.93rem;line-height:1.9;margin-bottom:.9rem}
+.intro-left strong{color:var(--tx)}
+
+/* Currently card */
+.curr-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden}
+.curr-top{padding:1rem 1.3rem;background:var(--card2);border-bottom:1px solid var(--bdr)}
+.curr-top h4{font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:.5rem}
+.curr-top h4 i{color:var(--aml)}
+.curr-item{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:.9rem 1.3rem;border-bottom:1px solid rgba(255,255,255,.04);
+  transition:background .2s;
+}
+.curr-item:last-child{border-bottom:none}
+.curr-item:hover{background:var(--card2)}
+.curr-ico{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;flex-shrink:0;margin-top:.15rem;
+}
+.curr-txt small{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);margin-bottom:.18rem}
+.curr-txt strong{display:block;font-size:.86rem;font-weight:500;color:var(--tx);line-height:1.35}
+.curr-txt span{font-size:.78rem;color:var(--tx2)}
+
+/* ══════════════════════════════════
+   INTERESTS GRID
+══════════════════════════════════ */
+#interests{background:linear-gradient(180deg,transparent,rgba(90,144,112,.015) 50%,transparent)}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.9rem}
+.ic{
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:1.4rem;transition:all .25s;position:relative;overflow:hidden;
+}
+.ic::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;opacity:0;transition:opacity .25s}
+.ic:hover{border-color:rgba(255,255,255,.12);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.ic:hover::before{opacity:1}
+.ic.amber::before{background:linear-gradient(180deg,var(--am),var(--roll))}
+.ic.green::before{background:linear-gradient(180deg,var(--sg),var(--sgl))}
+.ic.blue::before{background:linear-gradient(180deg,var(--bl),var(--bll))}
+.ic.rose::before{background:linear-gradient(180deg,var(--ro),var(--roll))}
+.ic-ico{font-size:1.8rem;margin-bottom:.65rem;display:block;transition:transform .25s}
+.ic:hover .ic-ico{transform:scale(1.12) rotate(-4deg)}
+.ic h3{font-size:.93rem;font-weight:600;margin-bottom:.4rem}
+.ic p{font-size:.83rem;color:var(--tx2);line-height:1.8}
+
+/* ══════════════════════════════════
+   PHOTO GALLERY
+══════════════════════════════════ */
+#gallery{background:linear-gradient(180deg,transparent,rgba(200,149,42,.012) 50%,transparent)}
+.gal-note{
+  background:rgba(200,149,42,.05);border:1px solid rgba(200,149,42,.15);
+  border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1.6rem;
+  font-size:.82rem;color:var(--amll);display:flex;align-items:flex-start;gap:.6rem;
+}
+.gal-note i{flex-shrink:0;margin-top:.15rem}
+.gal-note code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.79rem}
+.gal-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem}
+.gal-slot{
+  aspect-ratio:1;border-radius:var(--r);overflow:hidden;
+  background:var(--bg3);border:1px solid var(--bdr);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.5rem;color:var(--tx3);font-size:.78rem;
+  transition:all .25s;cursor:default;position:relative;
+}
+.gal-slot:hover{border-color:var(--bdr2);background:var(--card)}
+.gal-slot.has-img{cursor:zoom-in}
+.gal-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.gal-slot img.ok{opacity:1}
+.gal-slot .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;transition:opacity .3s}
+.gal-slot img.ok ~ .ph{opacity:0}
+.gal-slot .ph i{font-size:1.8rem;opacity:.2}
+.gal-slot .cap{
+  position:absolute;bottom:0;left:0;right:0;padding:.5rem .7rem;
+  background:linear-gradient(0deg,rgba(6,9,29,.85),transparent);
+  font-size:.73rem;color:var(--tx);opacity:0;transition:opacity .25s;
+}
+.gal-slot.has-img:hover .cap{opacity:1}
+
+/* ══════════════════════════════════
+   FAVOURITE THINGS
+══════════════════════════════════ */
+#favs{background:linear-gradient(180deg,transparent,rgba(90,144,112,.015) 50%,transparent)}
+.fav-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.1rem}
+.fav-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);
+  overflow:hidden;transition:all .25s;
+}
+.fav-card:hover{border-color:var(--bdr2);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.22)}
+.fav-top{padding:.85rem 1.1rem;display:flex;align-items:center;gap:.65rem;border-bottom:1px solid var(--bdr)}
+.fav-top i{font-size:1rem}
+.fav-top h4{font-size:.9rem;font-weight:600}
+.fav-list{list-style:none;padding:.5rem 0}
+.fav-li{
+  display:flex;align-items:center;gap:.65rem;
+  padding:.5rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.04);
+  font-size:.84rem;color:var(--tx2);transition:all .2s;
+}
+.fav-li:last-child{border-bottom:none}
+.fav-li:hover{background:var(--card2);color:var(--tx);padding-left:1.4rem}
+.fav-li .num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--tx3);width:16px;flex-shrink:0}
+
+/* ══════════════════════════════════
+   FUN FACTS / QUOTE
+══════════════════════════════════ */
+#misc{background:linear-gradient(180deg,transparent,rgba(200,149,42,.01) 50%,transparent)}
+.quote-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);
+  padding:2.5rem 2.8rem;text-align:center;position:relative;overflow:hidden;
+  max-width:680px;margin:0 auto 2.5rem;
+}
+.quote-card::before{
+  content:'❝';position:absolute;top:.5rem;left:1.3rem;
+  font-size:5rem;color:rgba(200,149,42,.07);line-height:1;
+  font-family:'Cormorant Garamond',serif;
+}
+.quote-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.1rem,2.5vw,1.3rem);font-weight:400;font-style:italic;
+  color:var(--tx);line-height:1.75;margin-bottom:1rem;position:relative;z-index:1;
+}
+.quote-by{font-size:.8rem;color:var(--aml);font-family:'JetBrains Mono',monospace}
+
+.ff-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.9rem}
+.ff-c{
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:1.2rem;text-align:center;transition:all .22s;
+}
+.ff-c:hover{border-color:rgba(200,149,42,.25);background:rgba(200,149,42,.03);transform:translateY(-3px)}
+.ff-c .ff-n{display:block;font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:500;color:var(--aml);line-height:1.2;margin-bottom:.3rem}
+.ff-c .ff-l{font-size:.75rem;color:var(--tx3)}
+
+/* ══════════════════════════════════
+   FOOTER
+══════════════════════════════════ */
+footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5rem}
+.ft{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem}
+.ft-c{font-size:.77rem;color:var(--tx3)}
+.ft-c a{color:var(--aml)}
+
+#top{position:fixed;bottom:1.8rem;right:1.8rem;z-index:50;width:36px;height:36px;background:var(--am);border:none;border-radius:8px;color:#fff;font-size:.8rem;cursor:pointer;opacity:0;transform:translateY(10px);transition:all .28s;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(200,149,42,.35)}
+#top.show{opacity:1;transform:translateY(0)}
+#top:hover{background:var(--aml);transform:translateY(-3px)}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:800px){
+  .intro-g{grid-template-columns:1fr;gap:2.2rem}
+}
+@media(max-width:640px){
+  #nav,#nav.solid{padding:.78rem 1.2rem}
+  .nav-links{display:none}
+  .hburg{display:flex}
+  section{padding:3.8rem 1rem}
+  .quote-card{padding:1.8rem 1.4rem}
+}
+</style>
+</head>
+<body>
+
+<div id="pb"></div>
+<canvas id="stars"></canvas>
+
+<!-- Mobile menu -->
+<div id="mm">
+  <button class="mmX" onclick="mClose()"><i class="fas fa-xmark"></i></button>
+  <a href="index.html" onclick="mClose()">Research</a>
+  <a href="index.html#publications" onclick="mClose()">Publications</a>
+  <a href="index.html#cv" onclick="mClose()">CV</a>
+  <a href="#interests" onclick="mClose()">Interests</a>
+  <a href="#gallery" onclick="mClose()">Gallery</a>
+  <a href="index.html#contact" onclick="mClose()">Contact</a>
+</div>
+
+<!-- Navbar -->
+<nav id="nav">
+  <a href="index.html" class="nav-brand">Harsh <em>Kumar</em></a>
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="fas fa-telescope" style="font-size:.7rem;margin-right:3px"></i> Research</a></li>
+    <li><a href="index.html#publications">Publications</a></li>
+    <li><a href="index.html#cv">CV</a></li>
+    <li><a href="#interests" class="active">Beyond ★</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <button class="hburg" onclick="mOpen()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ════════════════ HERO ════════════════ -->
+<section id="hero">
+  <div class="h-in">
+    <div class="h-tag">
+      <div class="dot"></div>
+      When the telescope is pointed at the sky — and when it isn't
+    </div>
+
+    <h1 class="h-name">Beyond the Observatory</h1>
+
+    <p class="h-sub">
+      Harsh Kumar &mdash; astrophysicist by day,
+      <!-- ✏️ UPDATE: add your own personal tagline -->
+      explorer / reader / hiker by every other moment
+    </p>
+
+    <span class="h-emoji">
+      <!-- ✏️ UPDATE: pick your emojis -->
+      📷 &nbsp; 🏸 &nbsp; 📺 &nbsp; 🎵 &nbsp; ✈️ &nbsp; 🍳
+    </span>
+
+    <div class="h-btns">
+      <a href="index.html" class="btn btn-am">
+        <i class="fas fa-telescope"></i> Back to Research
+      </a>
+      <a href="#gallery" class="btn btn-o">
+        <i class="fas fa-images"></i> Gallery
+      </a>
+    </div>
+
+    <div class="htags">
+      <!-- ✏️ UPDATE: your actual hobbies -->
+      <span class="htag">🏸 Badminton</span>
+      <span class="htag">🎵 Music</span>
+      <span class="htag">📺 Sports Watching</span>
+      <span class="htag">✈️ Travel</span>
+      <span class="htag">🍳 Cooking</span>
+      <span class="htag">📷 Astrophotography</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ PERSONAL INTRO ════════════════ -->
+<section id="intro">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="sh-tag">The Person Behind the Papers</span>
+      <h2 class="sh-title">Life <span class="hl">Outside</span> Astrophysics</h2>
+      <div class="sh-orn"><div class="gem"></div></div>
+    </div>
+
+    <div class="intro-g">
+
+      <div class="rv">
+        <h3>More Than Just Transients</h3>
+
+        <!-- ✏️ UPDATE: Write your own intro paragraph(s) -->
+        <p>
+          When I'm not staring at telescope data or chasing the latest supernova or gravitational-wave
+          alert, I spend my time exploring the world in other ways — through the strings of badminton racket,
+           the soles of hiking boots, or the episodes of a good movie or web-series.
+        </p>
+        <p>
+          Growing up in <strong>Haryana, India</strong>, I developed a love for the night sky
+          that eventually turned into a career. But the curiosity that drove me to become
+          an astrophysicist extends well beyond the cosmos — into mountains, music,
+          food, and the stories of people and places.
+        </p>
+        <p>
+          <!-- ✏️ UPDATE: Add a fun personal fact -->
+          Fun fact: I have observed the night sky from moren than 10 different telescopes.
+        </p>
+
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.5rem">
+          <a href="index.html" class="btn btn-am">
+            <i class="fas fa-meteor"></i> My Research
+          </a>
+          <a href="mailto:harsh.kumar@cfa.harvard.edu" class="btn btn-o">
+            <i class="fas fa-envelope"></i> Say Hello
+          </a>
+        </div>
+      </div>
+
+      <!-- Currently card -->
+      <div class="rv d1">
+        <div class="curr-card">
+          <div class="curr-top">
+            <h4><i class="fas fa-radio"></i> Currently</h4>
+          </div>
+
+          <div class="curr-item">
+            <div class="curr-ico" style="background:rgba(90,144,112,.1)">🎵</div>
+            <div class="curr-txt">
+              <small>Listening</small>
+              <!-- ✏️ UPDATE -->
+              <strong>Top 100 - Bollywood</strong>
+              <span>Always up to date with trends</span>
+            </div>
+          </div>
+
+          <div class="curr-item">
+            <div class="curr-ico" style="background:rgba(74,143,212,.1)">📺</div>
+            <div class="curr-txt">
+              <small>Watching</small>
+              <!-- ✏️ UPDATE -->
+              <strong>Aspirants (Prime Videos)</strong>
+              <span>Coming-of-age drama web series</span>
+            </div>
+          </div>
+
+          <div class="curr-item">
+            <div class="curr-ico" style="background:rgba(192,96,112,.1)">✈️</div>
+            <div class="curr-txt">
+              <small>Planning</small>
+              <!-- ✏️ UPDATE -->
+              <strong>Next trip: Somewhere with dark skies; Chile?</strong>
+              <span>Always optimising for Bortle class ≤ 3</span>
+            </div>
+          </div>
+
+          <div class="curr-item">
+            <div class="curr-ico" style="background:rgba(200,149,42,.1)">🔭</div>
+            <div class="curr-txt">
+              <small>Working On</small>
+              <!-- ✏️ UPDATE -->
+              <strong>A Sample study of bumpy Superluminous Supernovae paper</strong>
+              <span>Don't ask for an ETA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ INTERESTS ════════════════ -->
+<section id="interests">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="sh-tag">What I Love</span>
+      <h2 class="sh-title">Interests &amp; <span class="hl2">Hobbies</span></h2>
+      <div class="sh-orn"><div class="gem"></div></div>
+    </div>
+
+    <div class="ig">
+
+      <!-- ✏️ UPDATE each card with your own content -->
+
+      <div class="ic amber rv">
+        <span class="ic-ico">📷</span>
+        <h3>Astrophotography</h3>
+        <p>
+          Long-exposure images of the Milky Way arch, nebulae, and star trails.
+          Favourite targets: Andromeda galaxy, Orion Nebula, and — when atmospheric
+          conditions cooperate — airglow bands over mountain observatories.
+        </p>
+      </div>
+
+      <div class="ic green rv d1">
+        <span class="ic-ico">🏸</span>
+        <h3>Badminton</h3>
+        <p>
+          A sport I love for its mix of speed, precision, and strategy.
+          Whether it's a casual doubles game or a competitive match,
+          badminton is my go-to way to unwind and stay sharp —
+          on and off the court.
+        </p>
+      </div>
+
+      <div class="ic amber rv d2">
+        <span class="ic-ico">📺</span>
+        <h3>Sports Watching</h3>
+        <p>
+          From cricket and Football to Formula 1 and badminton —
+          there's something deeply compelling about watching elite
+          athletes perform under pressure. A good match is as
+          nail-biting as waiting for a follow-up observation
+          to come in.
+        </p>
+      </div>
+
+      <div class="ic rose rv">
+        <span class="ic-ico">🎵</span>
+        <h3>Music</h3>
+        <p>
+          Eclectic taste — Arijit Singh's songs at dawn, indie folk during analysis,
+          and Ludovico Einaudi music for writing nights. Occasional attempts to be up to date with trendy Phonk songs.
+        </p>
+      </div>
+
+      <div class="ic blue rv d1">
+        <span class="ic-ico">✈️</span>
+        <h3>Travel</h3>
+        <p>
+          Fortunate that astronomy conferences take me to interesting corners of the world.
+          Personal rule: always find the nearest dark-sky site within driving distance
+          of any conference venue.
+        </p>
+      </div>
+
+      <div class="ic green rv d2">
+        <span class="ic-ico">🍳</span>
+        <h3>Cooking</h3>
+        <p>
+          Amateur chef specialising in Indian home cooking — curries, dals, and biryani.
+          Ongoing experiments in recreating the exact flavours of my home comfort food from memory and intuition.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ GALLERY ════════════════ -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="sh-tag">Visual Stories</span>
+      <h2 class="sh-title">Photo <span class="hl">Gallery</span></h2>
+      <div class="sh-orn"><div class="gem"></div></div>
+    </div>
+
+    <div class="gal-note rv">
+      <i class="fas fa-info-circle"></i>
+      <div>
+        <strong>To add your photos:</strong>
+        Put image files (jpg/png) in the same folder as <code>fun.html</code>,
+        then replace the <code>src</code> values below.
+        Suggested filenames: <code>g1.jpg</code>, <code>g2.jpg</code> … <code>g9.jpg</code>.
+        Recommended size: 800×800 px or larger, square crop works best.
+      </div>
+    </div>
+
+    <div class="gal-g rv">
+
+      <!-- ✏️ UPDATE: Replace img src with your actual photo files -->
+      <!-- Each slot: if the src image exists it shows; if missing, shows placeholder icon -->
+
+      <div class="gal-slot has-img">
+        <div class="ph"><i class="fas fa-camera"></i><span>Astrophotography</span></div>
+        <img src="g1.jpg" alt="Astrophotography" onload="this.classList.add('ok')">
+        <div class="cap">Night sky over the mountains</div><!-- ✏️ UPDATE caption -->
+      </div>
+
+      <div class="gal-slot has-img">
+        <div class="ph"><i class="fas fa-mountain"></i><span>Outdoors</span></div>
+        <img src="g2.jpg" alt="Hiking" onload="this.classList.add('ok')">
+        <div class="cap">Summit views</div><!-- ✏️ UPDATE -->
+      </div>
+
+      <div class="gal-slot has-img">
+        <div class="ph"><i class="fas fa-globe"></i><span>Travel</span></div>
+        <img src="g3.jpg" alt="Travel" onload="this.classList.add('ok')">
+        <div class="cap">Somewhere with clear skies</div><!-- ✏️ UPDATE -->
+      </div>
+
+      <div class="gal-slot has-img">
+        <div class="ph"><i class="fas fa-star"></i><span>Observatory</span></div>
+        <img src="g4.jpg" alt="Observatory" onload="this.classList.add('ok')">
+        <div class="cap">At the telescope</div><!-- ✏️ UPDATE -->
+      </div>
+
+      <div class="gal-slot has-img">
+        <div class="ph"><i class="fas fa-camera"></i><span>Add photo</span></div>
+        <img src="g5.jpg" alt="Photo 5" onload="this.classList.add('ok')">
+        <div class="cap">Caption here</div><!-- ✏️ UPDATE -->
+      </div>
+
+      <div class="gal-slot has-img">
+        <div class="ph"><i class="fas fa-camera"></i><span>Add photo</span></div>
+        <img src="g6.jpg" alt="Photo 6" onload="this.classList.add('ok')">
+        <div class="cap">Caption here</div><!-- ✏️ UPDATE -->
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ FAVOURITES ════════════════ -->
+<section id="favs">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="sh-tag">Personal Picks</span>
+      <h2 class="sh-title">Some <span class="hl2">Favourites</span></h2>
+      <div class="sh-orn"><div class="gem"></div></div>
+    </div>
+
+    <div class="fav-g">
+
+      <!-- ✏️ UPDATE all lists with your own favourites -->
+
+      <div class="fav-card rv">
+        <div class="fav-top" style="background:rgba(200,149,42,.05)">
+          <i class="fas fa-book" style="color:var(--aml)"></i>
+          <h4>Sports I watch</h4>
+        </div>
+        <ul class="fav-list">
+          <li class="fav-li"><span class="num">01</span>Cricket</li>
+          <li class="fav-li"><span class="num">02</span>Football</li>
+          <li class="fav-li"><span class="num">03</span>Formula 1</li>
+          <li class="fav-li"><span class="num">04</span>Badminton</li>
+          <li class="fav-li"><span class="num">05</span>Kabaddi</li>
+          <li class="fav-li"><span class="num">06</span>Wrestling</li>
+
+        </ul>
+      </div>
+
+      <div class="fav-card rv d1">
+        <div class="fav-top" style="background:rgba(90,144,112,.05)">
+          <i class="fas fa-film" style="color:var(--sgll)"></i>
+          <h4>Films &amp; Series</h4>
+        </div>
+        <ul class="fav-list">
+          <li class="fav-li"><span class="num">01</span>Interstellar (2014)</li>
+          <li class="fav-li"><span class="num">02</span>The Boy in the Striped Pajamas</li>
+          <li class="fav-li"><span class="num">03</span>Inception</li>
+          <li class="fav-li"><span class="num">04</span>Rockstar</li>
+          <li class="fav-li"><span class="num">05</span>3 Idiots</li>
+          <li class="fav-li"><span class="num">06</span>Paan Singh Tomar</li>
+        </ul>
+      </div>
+
+      <div class="fav-card rv d2">
+        <div class="fav-top" style="background:rgba(192,96,112,.05)">
+          <i class="fas fa-location-dot" style="color:var(--roll)"></i>
+          <h4>Places I've Loved</h4>
+        </div>
+        <ul class="fav-list">
+          <!-- ✏️ UPDATE with your favourite places -->
+          <li class="fav-li"><span class="num">01</span>Hanle, Ladakh (4500m)</li>
+          <li class="fav-li"><span class="num">02</span>Kerala, India</li>
+          <li class="fav-li"><span class="num">03</span>Cambridge, Massachusetts</li>
+          <li class="fav-li"><span class="num">04</span>Vancouver, Canada</li>
+          <li class="fav-li"><span class="num">05</span>Boston, USA</li>
+          <li class="fav-li"><span class="num">06</span>Munich, Germany</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ QUOTE + FUN FACTS ════════════════ -->
+<section id="misc">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="sh-tag">A Few Things</span>
+      <h2 class="sh-title">By the <span class="hl">Numbers</span></h2>
+      <div class="sh-orn"><div class="gem"></div></div>
+    </div>
+
+    <!-- Favourite quote -->
+    <div class="quote-card rv">
+      <!-- ✏️ UPDATE with your own favourite quote -->
+      <p class="quote-text">
+        "The cosmos is within us. We are made of star-stuff. We are a way for the
+        universe to know itself."
+      </p>
+      <div class="quote-by">— Carl Sagan</div>
+    </div>
+
+    <!-- Fun facts / numbers -->
+    <div class="ff-g rv">
+      <!-- ✏️ UPDATE all numbers with real ones -->
+      <div class="ff-c">
+        <span class="ff-n" id="ff1">3+</span>
+        <span class="ff-l">Continents observed from</span>
+      </div>
+      <div class="ff-c">
+        <span class="ff-n" id="ff2">5+</span>
+        <span class="ff-l">Countries visited</span>
+      </div>
+      <div class="ff-c">
+        <span class="ff-n" id="ff3">10+</span>
+        <span class="ff-l">Badminton Gold Medals</span>
+      </div>
+      <div class="ff-c">
+        <span class="ff-n" id="ff4">4500m</span>
+        <span class="ff-l">Highest observatory visited</span>
+      </div>
+      <div class="ff-c">
+        <span class="ff-n" id="ff5">∞</span>
+        <span class="ff-l">Cups of coffee (observing nights)</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer>
+  <div class="ft">
+    <div class="ft-c">
+      © 2025 <strong>Harsh Kumar</strong> ·
+      <a href="index.html">← Back to Research</a>
+    </div>
+    <div class="ft-c">
+      <a href="mailto:harsh.kumar@cfa.harvard.edu">harsh.kumar@cfa.harvard.edu</a>
+    </div>
+  </div>
+</footer>
+
+<button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<script>
+/* ── STARS (same as main site) ── */
+(function(){
+  const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+  let stars=[],shots=[],raf,timer=0;
+  function resize(){cv.width=innerWidth;cv.height=innerHeight}
+  function mk(){stars=[];const n=Math.round(cv.width*cv.height/7800);for(let i=0;i<n;i++)stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.1+.15,a:Math.random(),da:(Math.random()*.006+.0015)*(Math.random()<.5?1:-1)})}
+  function shot(){shots.push({x:Math.random()*cv.width*.65,y:Math.random()*cv.height*.3,ang:.38+(Math.random()-.5)*.22,len:90+Math.random()*70,spd:12+Math.random()*8,pg:0})}
+  function draw(){
+    cx.clearRect(0,0,cv.width,cv.height);
+    for(const s of stars){s.a+=s.da;if(s.a>1||s.a<.03)s.da=-s.da;cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.2832);cx.fillStyle=`rgba(220,210,190,${Math.abs(s.a)*.7})`;cx.fill()}
+    timer++;
+    if(timer>250&&Math.random()<.005){shot();timer=0}
+    for(let i=shots.length-1;i>=0;i--){const s=shots[i];s.pg+=s.spd;const hx=s.x+Math.cos(s.ang)*s.pg,hy=s.y+Math.sin(s.ang)*s.pg;const tp=Math.max(0,s.pg-s.len),tx=s.x+Math.cos(s.ang)*tp,ty=s.y+Math.sin(s.ang)*tp;const op=s.pg>s.len*1.1?Math.max(0,1-(s.pg-s.len*1.1)/(s.len*.5)):1;if(op<=0||s.pg>s.len*2.4){shots.splice(i,1);continue}const g=cx.createLinearGradient(tx,ty,hx,hy);g.addColorStop(0,'rgba(255,220,180,0)');g.addColorStop(.7,`rgba(255,210,160,${op*.45})`);g.addColorStop(1,`rgba(255,240,200,${op})`);cx.strokeStyle=g;cx.lineWidth=1.5;cx.lineCap='round';cx.beginPath();cx.moveTo(tx,ty);cx.lineTo(hx,hy);cx.stroke()}
+    raf=requestAnimationFrame(draw)}
+  window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();mk();draw()});
+  resize();mk();draw();
+})();
+
+/* ── NAV ── */
+const navEl=document.getElementById('nav'),topBtn=document.getElementById('top'),pb=document.getElementById('pb');
+window.addEventListener('scroll',()=>{const y=scrollY,max=document.documentElement.scrollHeight-innerHeight;pb.style.width=(max>0?y/max*100:0)+'%';navEl.classList.toggle('solid',y>50);topBtn.classList.toggle('show',y>400)});
+function mOpen(){document.getElementById('mm').classList.add('open')}
+function mClose(){document.getElementById('mm').classList.remove('open')}
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.06});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

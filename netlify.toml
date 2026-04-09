@@ -1,0 +1,46 @@
+# netlify.toml
+# ──────────────────────────────────────────────────────
+# Netlify build + deployment configuration
+# ──────────────────────────────────────────────────────
+
+[build]
+  # Serve all files from the root folder
+  publish   = "."
+  # Serverless functions are in netlify/functions/
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# ── Security headers for every page ──
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options           = "SAMEORIGIN"
+    X-Content-Type-Options    = "nosniff"
+    Referrer-Policy           = "strict-origin-when-cross-origin"
+    Permissions-Policy        = "camera=(), microphone=(), geolocation=()"
+
+# ── Never cache HTML (always serve latest version) ──
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# ── Cache PDFs and images for 1 day ──
+[[headers]]
+  for = "/*.pdf"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# ── Redirect www → non-www (optional, uncomment if you have a custom domain) ──
+# [[redirects]]
+#   from   = "https://www.harshkumar.com/*"
+#   to     = "https://harshkumar.com/:splat"
+#   status = 301
+#   force  = true

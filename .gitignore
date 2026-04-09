@@ -1,0 +1,34 @@
+# .gitignore
+# ──────────────────────────────────────────────────────
+# Files that must NEVER go to GitHub
+# ──────────────────────────────────────────────────────
+
+# Local environment variables (for netlify dev)
+.env
+.env.local
+.env.*.local
+
+# macOS system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V8
+.Trashes
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if you ever run npm install locally)
+node_modules/
+npm-debug.log*
+
+# Netlify local dev cache
+.netlify/
