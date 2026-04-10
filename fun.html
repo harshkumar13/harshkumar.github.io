@@ -225,7 +225,7 @@ section{position:relative;z-index:1;padding:5.5rem 1.5rem}
   font-size:.73rem;color:var(--tx);opacity:0;transition:opacity .25s;
 }
 .gal-slot.has-img:hover .cap{opacity:1}
-
+.gal-slot.empty{ display:none; }
 /* ══════════════════════════════════
    FAVOURITE THINGS
 ══════════════════════════════════ */
@@ -573,49 +573,91 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
         Recommended size: 800×800 px or larger, square crop works best.
       </div>
     </div>
+<div class="gal-g rv" id="galGrid">
+  <!--
+    ✏️ To add photos:
+       1. Create a folder called  photos/  next to fun.html
+       2. Put your images inside:  photos/g1.jpg, photos/g2.jpg … photos/g9.jpg
+       3. Update the caption text in each data-cap attribute below
+       4. The section appears automatically when photos exist
+          and hides itself when the photos/ folder is empty
+  -->
 
-    <div class="gal-g rv">
+  <div class="gal-slot has-img" data-cap="Night sky over the mountains">
+    <div class="ph"><i class="fas fa-camera"></i><span>Loading…</span></div>
+    <img src="photos/g1.jpg" alt="Photo 1"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-      <!-- ✏️ UPDATE: Replace img src with your actual photo files -->
-      <!-- Each slot: if the src image exists it shows; if missing, shows placeholder icon -->
+  <div class="gal-slot has-img" data-cap="Summit views">
+    <div class="ph"><i class="fas fa-mountain"></i><span>Loading…</span></div>
+    <img src="photos/g2.jpg" alt="Photo 2"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-      <div class="gal-slot has-img">
-        <div class="ph"><i class="fas fa-camera"></i><span>Astrophotography</span></div>
-        <img src="g1.jpg" alt="Astrophotography" onload="this.classList.add('ok')">
-        <div class="cap">Night sky over the mountains</div><!-- ✏️ UPDATE caption -->
-      </div>
+  <div class="gal-slot has-img" data-cap="Somewhere with clear skies">
+    <div class="ph"><i class="fas fa-globe"></i><span>Loading…</span></div>
+    <img src="photos/g3.jpg" alt="Photo 3"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-      <div class="gal-slot has-img">
-        <div class="ph"><i class="fas fa-mountain"></i><span>Outdoors</span></div>
-        <img src="g2.jpg" alt="Hiking" onload="this.classList.add('ok')">
-        <div class="cap">Summit views</div><!-- ✏️ UPDATE -->
-      </div>
+  <div class="gal-slot has-img" data-cap="At the telescope">
+    <div class="ph"><i class="fas fa-star"></i><span>Loading…</span></div>
+    <img src="photos/g4.jpg" alt="Photo 4"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-      <div class="gal-slot has-img">
-        <div class="ph"><i class="fas fa-globe"></i><span>Travel</span></div>
-        <img src="g3.jpg" alt="Travel" onload="this.classList.add('ok')">
-        <div class="cap">Somewhere with clear skies</div><!-- ✏️ UPDATE -->
-      </div>
+  <div class="gal-slot has-img" data-cap="Caption here">
+    <div class="ph"><i class="fas fa-camera"></i><span>Loading…</span></div>
+    <img src="photos/g5.jpg" alt="Photo 5"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-      <div class="gal-slot has-img">
-        <div class="ph"><i class="fas fa-star"></i><span>Observatory</span></div>
-        <img src="g4.jpg" alt="Observatory" onload="this.classList.add('ok')">
-        <div class="cap">At the telescope</div><!-- ✏️ UPDATE -->
-      </div>
+  <div class="gal-slot has-img" data-cap="Caption here">
+    <div class="ph"><i class="fas fa-camera"></i><span>Loading…</span></div>
+    <img src="photos/g6.jpg" alt="Photo 6"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-      <div class="gal-slot has-img">
-        <div class="ph"><i class="fas fa-camera"></i><span>Add photo</span></div>
-        <img src="g5.jpg" alt="Photo 5" onload="this.classList.add('ok')">
-        <div class="cap">Caption here</div><!-- ✏️ UPDATE -->
-      </div>
+  <div class="gal-slot has-img" data-cap="Caption here">
+    <div class="ph"><i class="fas fa-camera"></i><span>Loading…</span></div>
+    <img src="photos/g7.jpg" alt="Photo 7"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-      <div class="gal-slot has-img">
-        <div class="ph"><i class="fas fa-camera"></i><span>Add photo</span></div>
-        <img src="g6.jpg" alt="Photo 6" onload="this.classList.add('ok')">
-        <div class="cap">Caption here</div><!-- ✏️ UPDATE -->
-      </div>
+  <div class="gal-slot has-img" data-cap="Caption here">
+    <div class="ph"><i class="fas fa-camera"></i><span>Loading…</span></div>
+    <img src="photos/g8.jpg" alt="Photo 8"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
 
-    </div>
+  <div class="gal-slot has-img" data-cap="Caption here">
+    <div class="ph"><i class="fas fa-camera"></i><span>Loading…</span></div>
+    <img src="photos/g9.jpg" alt="Photo 9"
+         onload="photoLoaded(this)"
+         onerror="photoFailed(this)">
+    <div class="cap"></div>
+  </div>
+
+</div>
+    
+
   </div>
 </section>
 
@@ -775,6 +817,62 @@ function mClose(){document.getElementById('mm').classList.remove('open')}
 /* ── SCROLL REVEAL ── */
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.06});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+/* ── Gallery: show section only when photos exist ──────────── */
+
+let galTotal   = 0;   // total slots attempted
+let galLoaded  = 0;   // successfully loaded
+let galFailed  = 0;   // failed to load
+
+// Count total slots on page load
+document.addEventListener('DOMContentLoaded', () => {
+  galTotal = document.querySelectorAll('#galGrid .gal-slot img').length;
+});
+
+function photoLoaded(img) {
+  // Show the image
+  img.classList.add('ok');
+
+  // Copy caption from parent slot's data-cap into the .cap div
+  const slot = img.closest('.gal-slot');
+  const cap  = slot?.querySelector('.cap');
+  if (cap) cap.textContent = slot.dataset.cap || '';
+
+  galLoaded++;
+
+  // Reveal the whole gallery section on first successful load
+  const sec = document.getElementById('gallery');
+  if (sec && galLoaded === 1) {
+    sec.classList.add('has-photos');
+    // Re-trigger scroll-reveal since section was hidden at first observe
+    sec.style.display = 'block';
+    rvObs.observe(sec.querySelector('.sh'));
+    rvObs.observe(sec.querySelector('.rv'));
+  }
+
+  checkAllDone();
+}
+
+function photoFailed(img) {
+  // Hide the empty slot completely
+  const slot = img.closest('.gal-slot');
+  if (slot) slot.classList.add('empty');
+
+  galFailed++;
+  checkAllDone();
+}
+
+function checkAllDone() {
+  if (galLoaded + galFailed < galTotal) return; // still waiting
+
+  if (galLoaded === 0) {
+    // Every image failed — hide section entirely
+    const sec = document.getElementById('gallery');
+    if (sec) sec.style.display = 'none';
+    console.info('[Gallery] No photos found in photos/ folder — section hidden.');
+  } else {
+    console.info(`[Gallery] ${galLoaded} photo(s) loaded, ${galFailed} missing.`);
+  }
+}
 </script>
 </body>
 </html>

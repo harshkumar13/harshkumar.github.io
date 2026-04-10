@@ -1,68 +1,49 @@
 <!DOCTYPE html>
 <!--
-╔══════════════════════════════════════════════════════════╗
-║  HARSH KUMAR · ACADEMIC WEBSITE v3.0                    ║
-║  ─────────────────────────────────────────────────────  ║
-║  SETUP (3 steps):                                       ║
-║  1. Paste your NASA ADS token into CFG.adsToken         ║
-║     (get free token: ui.adsabs.harvard.edu/user/        ║
-║      settings/token)                                    ║
-║  2. Place photo.jpg and cv.pdf in same folder           ║
-║  3. Deploy to GitHub Pages or Netlify                   ║
-╚══════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════╗
+║  HARSH KUMAR · ACADEMIC WEBSITE v4.0  (complete)            ║
+║  ─────────────────────────────────────────────────────────  ║
+║  REQUIRED FILES (same folder as index.html):                ║
+║    photo.jpg     → profile photo                            ║
+║    cv.pdf        → full CV (download button only)           ║
+║    cv-web.pdf    → short 2-3 page CV (webpage display)      ║
+║    netlify/functions/ads-proxy.js                           ║
+║    netlify.toml                                             ║
+║                                                             ║
+║  SECTION ORDER: About → Research → CV → Publications →      ║
+║                 Contact                                     ║
+╚══════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Harsh Kumar — Postdoctoral Fellow at CfA Harvard & Smithsonian. Research on GRBs, kilonovae, SLSNe, TDEs, and multi-messenger astronomy.">
-<title>Harsh Kumar | Astrophysicist · CfA Harvard & Smithsonian</title>
+<meta name="keywords" content="Harsh Kumar, CfA Harvard, astrophysics, gamma-ray bursts, GRB, kilonova, GROWTH-India, gravitational waves, superluminous supernovae, tidal disruption events, ORCID 0000-0003-0871-4641">
+<meta name="author" content="Harsh Kumar">
+<title>Harsh Kumar | Astrophysicist · CfA Harvard &amp; Smithsonian</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
-<!-- PDF.js loaded before body so it's ready when initCV() fires -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
-/* ═══ DESIGN TOKENS ════════════════════════════════════ */
+/* ═══ DESIGN TOKENS ═══════════════════════════════════════════ */
 :root{
-  --bg:    #06091d;
-  --bg2:   #090d28;
-  --bg3:   #0c1138;
-  --card:  rgba(255,255,255,.034);
-  --card2: rgba(255,255,255,.058);
-  --bdr:   rgba(255,255,255,.07);
-  --bdr2:  rgba(255,255,255,.13);
-
-  /* Telescope blue */
-  --bl:  #4a8fd4;
-  --bll: #7ab5e8;
-  --blll:#b8d6f5;
-
-  /* Brass / amber (telescope metal) */
-  --am:  #c8952a;
-  --aml: #e8b860;
-  --amll:#f7d898;
-
-  /* Nebula teal */
-  --tl:  #2a9d8f;
-  --tll: #52c9bb;
-
-  /* Text */
-  --tx:  #dce6f5;
-  --tx2: #8a9bb8;
-  --tx3: #4a5870;
-
-  --gr:  #3dba7f;   /* green  */
-  --rd:  #e05a5a;   /* red    */
-
-  --r:   10px;
-  --rl:  16px;
+  --bg:#06091d;--bg2:#0a0d24;--bg3:#0e1230;
+  --card:rgba(255,255,255,.034);--card2:rgba(255,255,255,.058);
+  --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.13);
+  --bl:#4a8fd4;--bll:#7ab5e8;--blll:#b8d6f5;
+  --am:#c8952a;--aml:#e8b860;--amll:#f7d898;
+  --tl:#2a9d8f;--tll:#52c9bb;
+  --tx:#dce6f5;--tx2:#8a9bb8;--tx3:#4a5870;
+  --gr:#3dba7f;--rd:#e05a5a;
+  --r:10px;--rl:16px;
 }
 
-/* ═══ RESET ════════════════════════════════════════════ */
+/* ═══ RESET ════════════════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;line-height:1.7;overflow-x:hidden}
@@ -74,17 +55,17 @@ img{display:block;max-width:100%}
 ::-webkit-scrollbar-thumb{background:var(--bl);border-radius:2px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
-/* ═══ PROGRESS BAR ══════════════════════════════════════ */
+/* ═══ PROGRESS BAR ════════════════════════════════════════════ */
 #pb{position:fixed;top:0;left:0;height:2px;width:0;
     background:linear-gradient(90deg,var(--bl),var(--tll),var(--aml));
     z-index:1001;transition:width .1s linear}
 
-/* ═══ LAYOUT ════════════════════════════════════════════ */
+/* ═══ LAYOUT ══════════════════════════════════════════════════ */
 .wrap{max-width:1060px;margin:0 auto;padding:0 1.5rem}
 section{position:relative;z-index:1;padding:5.5rem 1.5rem}
 canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* ═══ NAVBAR ════════════════════════════════════════════ */
+/* ═══ NAVBAR ══════════════════════════════════════════════════ */
 #nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
@@ -94,49 +75,28 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
   border-bottom:1px solid transparent;transition:all .35s;
 }
 #nav.solid{background:rgba(6,9,29,.9);border-bottom-color:var(--bdr);padding:.78rem 2.5rem}
-
-.nav-brand{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:1.12rem;font-weight:600;letter-spacing:.4px;color:var(--tx);white-space:nowrap;
-}
+.nav-brand{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.12rem;font-weight:600;letter-spacing:.4px;color:var(--tx);white-space:nowrap}
 .nav-brand em{font-style:normal;color:var(--aml)}
-
 .nav-links{list-style:none;display:flex;gap:0}
-.nav-links a{
-  display:block;padding:.34rem .8rem;font-size:.83rem;font-weight:500;
-  color:var(--tx2);border-radius:6px;transition:all .2s;
-}
+.nav-links a{display:block;padding:.34rem .8rem;font-size:.83rem;font-weight:500;color:var(--tx2);border-radius:6px;transition:all .2s}
 .nav-links a:hover{color:var(--tx);background:rgba(255,255,255,.05)}
 .nav-links a.active{color:var(--bll)}
-
 .hburg{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
 .hburg span{display:block;width:22px;height:2px;background:var(--tx);border-radius:1px;transition:all .3s}
-
-#mm{
-  display:none;position:fixed;inset:0;z-index:99;
-  background:rgba(6,9,29,.97);backdrop-filter:blur(18px);
-  flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;
-}
+#mm{display:none;position:fixed;inset:0;z-index:99;background:rgba(6,9,29,.97);backdrop-filter:blur(18px);flex-direction:column;align-items:center;justify-content:center;gap:1.8rem}
 #mm.open{display:flex}
 #mm a{font-size:1.7rem;font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--tx2);transition:color .2s}
 #mm a:hover{color:var(--bll)}
 .mmX{position:absolute;top:1.4rem;right:2rem;background:none;border:none;color:var(--tx2);font-size:1.4rem;cursor:pointer}
 
-/* ═══ BUTTONS ═══════════════════════════════════════════ */
-.btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:.62rem 1.45rem;border-radius:var(--r);
-  font-family:'Inter',sans-serif;font-size:.85rem;font-weight:500;
-  cursor:pointer;transition:all .25s;border:none;
-}
+/* ═══ BUTTONS ═════════════════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:.62rem 1.45rem;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:all .25s;border:none}
 .btn-p{background:var(--bl);color:#fff;box-shadow:0 2px 12px rgba(74,143,212,.3)}
 .btn-p:hover{background:#5a9fe4;transform:translateY(-2px);box-shadow:0 5px 20px rgba(74,143,212,.45)}
 .btn-o{background:transparent;color:var(--tx2);border:1px solid var(--bdr2)}
 .btn-o:hover{border-color:var(--bll);color:var(--blll);transform:translateY(-2px)}
-.btn-am{background:var(--am);color:#fff;box-shadow:0 2px 12px rgba(200,149,42,.3)}
-.btn-am:hover{background:var(--aml);transform:translateY(-2px)}
 
-/* ═══ SECTION HEADER ════════════════════════════════════ */
+/* ═══ SECTION HEADER ══════════════════════════════════════════ */
 .sh{text-align:center;margin-bottom:3.5rem}
 .sh-tag{display:inline-block;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:var(--aml);margin-bottom:.5rem}
 .sh-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:700;letter-spacing:.5px}
@@ -145,90 +105,47 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .sh-orn::before,.sh-orn::after{content:'';flex:1;height:1px;background:var(--bdr)}
 .sh-orn .gem{width:5px;height:5px;background:var(--bl);border-radius:50%;flex-shrink:0}
 
-/* ═══ SCROLL REVEAL ══════════════════════════════════════ */
-.rv{opacity:0;transform:translateY(22px);
-    transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1)}
+/* ═══ SCROLL REVEAL ════════════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1)}
 .rv.in{opacity:1;transform:translateY(0)}
 .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
-/* ═══ HERO ═══════════════════════════════════════════════ */
+/* ═══ HERO ════════════════════════════════════════════════════ */
 #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 1.5rem 5rem}
 .h-in{max-width:780px}
-
-.h-badge{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:.3rem .95rem;border-radius:50px;
-  border:1px solid rgba(74,143,212,.28);background:rgba(74,143,212,.06);
-  font-size:.75rem;font-weight:500;color:var(--bll);
-  margin-bottom:1.6rem;animation:fadeD .8s ease both;
-}
+.h-badge{display:inline-flex;align-items:center;gap:7px;padding:.3rem .95rem;border-radius:50px;border:1px solid rgba(74,143,212,.28);background:rgba(74,143,212,.06);font-size:.75rem;font-weight:500;color:var(--bll);margin-bottom:1.6rem;animation:fadeD .8s ease both}
 .h-badge .ld{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:blink 2.2s ease-in-out infinite}
-
-.h-name{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:clamp(3.4rem,9.5vw,7rem);font-weight:700;
-  line-height:.95;letter-spacing:2px;
-  margin-bottom:.9rem;animation:fadeU .8s .1s ease both;
-}
+.h-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,9.5vw,7rem);font-weight:700;line-height:.95;letter-spacing:2px;margin-bottom:.9rem;animation:fadeU .8s .1s ease both}
 .h-name .fn{color:var(--blll)}
 .h-name .ln{color:var(--amll)}
-
 .h-sub{font-size:clamp(.92rem,2vw,1.05rem);color:var(--tx2);margin-bottom:.35rem;animation:fadeU .8s .2s ease both}
-
-.typ-row{
-  display:flex;align-items:center;justify-content:center;gap:2px;
-  font-family:'JetBrains Mono',monospace;font-size:.87rem;color:var(--tll);
-  min-height:1.6em;margin-bottom:.5rem;animation:fadeU .8s .25s ease both;
-}
+.typ-row{display:flex;align-items:center;justify-content:center;gap:2px;font-family:'JetBrains Mono',monospace;font-size:.87rem;color:var(--tll);min-height:1.6em;margin-bottom:.5rem;animation:fadeU .8s .25s ease both}
 .t-cur{display:inline-block;width:2px;height:1em;background:var(--tll);animation:cur .85s step-end infinite;margin-left:1px}
-
 .h-loc{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;color:var(--aml);margin-bottom:2rem;animation:fadeU .8s .3s ease both}
 .h-desc{font-size:.97rem;color:var(--tx2);max-width:580px;margin:0 auto 2.5rem;line-height:1.9;animation:fadeU .8s .4s ease both}
 .h-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;animation:fadeU .8s .5s ease both;margin-bottom:3.5rem}
-
-/* Stat strip */
-.ss{
-  display:flex;justify-content:center;
-  border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;
-  max-width:520px;margin:0 auto;animation:fadeU .8s .65s ease both;
-}
+.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:520px;margin:0 auto;animation:fadeU .8s .65s ease both}
 .sv{flex:1;min-width:100px;text-align:center;padding:1rem .8rem;border-right:1px solid var(--bdr)}
 .sv:last-child{border-right:none}
 .sv-n{display:block;font-family:'JetBrains Mono',monospace;font-size:1.65rem;font-weight:500;color:var(--bll);line-height:1.2}
 .sv-l{font-size:.64rem;color:var(--tx3);text-transform:uppercase;letter-spacing:1.5px}
-
-/* ═══ ABOUT ══════════════════════════════════════════════ */
+@media(max-width:520px){
+  .sv{min-width:64px;padding:.8rem .4rem}
+  .sv-n{font-size:1.35rem}
+  .sv-l{font-size:.58rem}
+}
+/* ═══ ABOUT ═══════════════════════════════════════════════════ */
 #about{background:linear-gradient(180deg,transparent,rgba(74,143,212,.016) 50%,transparent)}
 .ag{display:grid;grid-template-columns:280px 1fr;gap:3.8rem;align-items:start}
-
-/* Profile card */
-.pc-card{
-  background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);
-  overflow:hidden;position:sticky;top:88px;
-}
+.pc-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;position:sticky;top:88px}
 .pc-bar{height:2px;background:linear-gradient(90deg,var(--bl),var(--tl),var(--am))}
-.pc-photo{
-  aspect-ratio:1;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,var(--bg3),rgba(74,143,212,.08));
-}
-/* ─── PHOTO: always present, fades in on load ─────────── */
-.pc-photo img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  z-index:2;opacity:0;transition:opacity .45s ease;
-}
+.pc-photo{aspect-ratio:1;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--bg3),rgba(74,143,212,.08))}
+.pc-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .45s ease}
 .pc-photo img.ok{opacity:1}
-
-/* Initials shown until / if photo loads */
-.pc-ini{
-  position:absolute;inset:0;z-index:1;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:600;
-  color:var(--bll);opacity:.55;
-}
+.pc-ini{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:600;color:var(--bll);opacity:.55}
 .ring1{position:absolute;inset:12%;border-radius:50%;border:1px solid rgba(200,149,42,.22);z-index:3;animation:rp 4s ease-in-out infinite}
 .ring2{position:absolute;inset:3%;border-radius:50%;border:1px dashed rgba(74,143,212,.12);z-index:3;animation:rp 4s ease-in-out infinite .9s}
 @keyframes rp{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.04);opacity:.9}}
-
 .pc-body{padding:1.2rem}
 .pc-body h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;margin-bottom:.18rem}
 .pc-role{font-size:.78rem;color:var(--tll);margin-bottom:1rem}
@@ -236,34 +153,18 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .pc-row i{color:var(--bll);width:13px;flex-shrink:0;margin-top:.15rem}
 .pc-row a:hover{color:var(--blll)}
 .pc-soc{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bdr)}
-.ps{
-  width:30px;height:30px;background:var(--card2);border:1px solid var(--bdr);
-  border-radius:6px;display:flex;align-items:center;justify-content:center;
-  font-size:.8rem;color:var(--tx2);transition:all .2s;
-}
+.ps{width:30px;height:30px;background:var(--card2);border:1px solid var(--bdr);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--tx2);transition:all .2s}
 .ps:hover{border-color:var(--bl);color:var(--bll);transform:translateY(-3px)}
-
-/* About text */
 .at h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:.9rem}
 .at p{color:var(--tx2);margin-bottom:.9rem;line-height:1.9;font-size:.93rem}
 .at strong{color:var(--tx)}
-
 .tags{display:flex;flex-wrap:wrap;gap:.38rem;margin:1.2rem 0}
-.tag{
-  padding:.22rem .65rem;background:var(--card);border:1px solid var(--bdr);
-  border-radius:50px;font-size:.73rem;color:var(--tx2);transition:all .2s;cursor:default;
-}
+.tag{padding:.22rem .65rem;background:var(--card);border:1px solid var(--bdr);border-radius:50px;font-size:.73rem;color:var(--tx2);transition:all .2s;cursor:default}
 .tag:hover{border-color:var(--bl);color:var(--blll);background:rgba(74,143,212,.06)}
-
-/* Timeline */
 .tl{border-left:1px solid var(--bdr);padding-left:1.4rem;margin-top:1.5rem}
 .ti{position:relative;padding:.9rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .ti:last-child{border-bottom:none}
-.ti::before{
-  content:'';position:absolute;left:-1.52rem;top:.52rem;
-  width:8px;height:8px;border-radius:50%;
-  background:var(--bg3);border:2px solid var(--bdr2);transition:all .22s;
-}
+.ti::before{content:'';position:absolute;left:-1.52rem;top:.52rem;width:8px;height:8px;border-radius:50%;background:var(--bg3);border:2px solid var(--bdr2);transition:all .22s}
 .ti:hover::before{border-color:var(--bl);background:rgba(74,143,212,.3)}
 .ti.now::before{border-color:var(--gr);background:var(--gr);box-shadow:0 0 0 3px rgba(61,186,127,.12)}
 .ti-yr{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;color:var(--aml);margin-bottom:.15rem}
@@ -273,56 +174,136 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .now-dot{display:inline-flex;align-items:center;gap:3px;font-size:.65rem;color:var(--gr);margin-left:.3rem;font-style:normal}
 .now-dot::before{content:'';width:4px;height:4px;background:var(--gr);border-radius:50%;animation:blink 1.6s ease-in-out infinite}
 
-/* ═══ RESEARCH ═══════════════════════════════════════════ */
+/* ═══ RESEARCH ════════════════════════════════════════════════ */
 #research{background:linear-gradient(180deg,transparent,rgba(42,157,143,.015) 50%,transparent)}
 .rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:.95rem}
-.rc{
-  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
-  padding:1.5rem;transition:all .28s;position:relative;overflow:hidden;cursor:default;
-}
-.rc::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
-  background:linear-gradient(180deg,var(--bl),var(--tl));
-  opacity:0;transition:opacity .28s;
-}
+.rc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.5rem;transition:all .28s;position:relative;overflow:hidden;cursor:default}
+.rc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--bl),var(--tl));opacity:0;transition:opacity .28s}
 .rc:hover{border-color:rgba(74,143,212,.22);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.28)}
 .rc:hover::before{opacity:1}
 .rc-ico{font-size:1.7rem;margin-bottom:.7rem;display:block}
 .rc h3{font-size:.93rem;font-weight:600;margin-bottom:.48rem}
 .rc p{font-size:.83rem;color:var(--tx2);line-height:1.8}
 
-/* ═══ PUBLICATIONS ═══════════════════════════════════════ */
-#publications{background:linear-gradient(180deg,transparent,rgba(74,143,212,.016) 50%,transparent)}
+/* ═══ CV ══════════════════════════════════════════════════════ */
+#cv{background:linear-gradient(180deg,transparent,rgba(42,157,143,.015) 50%,transparent)}
+.cvhc{display:flex;align-items:center;gap:1.3rem;padding:1.4rem 1.6rem;background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);margin-bottom:1.4rem;position:relative;overflow:hidden}
+.cvhc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--bl),var(--tl),var(--am))}
+.cv-av{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:var(--bg3);border:1px solid rgba(74,143,212,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--bll)}
+.cvhi{flex:1}
+.cvhi h2{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:.15rem}
+.cvhi p{font-size:.8rem;color:var(--tx2)}
+.cv-dls{display:flex;gap:.45rem;flex-wrap:wrap;flex-shrink:0}
+.cv-st{display:flex;align-items:center;gap:.5rem;font-size:.73rem;padding:.55rem .9rem;background:var(--card);border:1px solid var(--bdr);border-radius:7px;margin-bottom:1.3rem;color:var(--tx3);flex-wrap:wrap}
+.cv-st.ok{color:var(--gr);border-color:rgba(61,186,127,.18);background:rgba(61,186,127,.04)}
+.cv-st.warn{color:var(--aml);border-color:rgba(200,149,42,.2);background:rgba(200,149,42,.04)}
+.cv-st.err{color:var(--rd);border-color:rgba(224,90,90,.18);background:rgba(224,90,90,.03)}
+.cva{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);margin-bottom:.9rem;overflow:hidden;transition:border-color .22s,box-shadow .22s}
+.cva:hover{border-color:var(--bdr2)}
+.cva.open{border-color:rgba(74,143,212,.16);box-shadow:0 4px 20px rgba(0,0,0,.18)}
+.cva-hd{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.35rem;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:background .2s}
+.cva-hd:hover{background:var(--card2)}
+.cva.open .cva-hd{border-bottom-color:var(--bdr)}
+.cva-hl{display:flex;align-items:center;gap:.7rem}
+.cva-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;transition:transform .22s}
+.cva:hover .cva-ic{transform:scale(1.08)}
+.cva-ic.blue{background:rgba(74,143,212,.1);color:var(--bll)}
+.cva-ic.amber{background:rgba(200,149,42,.09);color:var(--aml)}
+.cva-ic.teal{background:rgba(42,157,143,.09);color:var(--tll)}
+.cva-ic.purple{background:rgba(167,139,250,.09);color:#c4b5fd}
+.cva-nm{font-size:.92rem;font-weight:600}
+.cva-ct{font-size:.68rem;padding:.07rem .47rem;border-radius:50px;font-family:'JetBrains Mono',monospace;font-weight:500}
+.cva-ct.blue{background:rgba(74,143,212,.09);color:var(--bll);border:1px solid rgba(74,143,212,.18)}
+.cva-ct.amber{background:rgba(200,149,42,.07);color:var(--aml);border:1px solid rgba(200,149,42,.16)}
+.cva-ct.teal{background:rgba(42,157,143,.07);color:var(--tll);border:1px solid rgba(42,157,143,.16)}
+.cva-ct.purple{background:rgba(167,139,250,.07);color:#c4b5fd;border:1px solid rgba(167,139,250,.16)}
+.cva-ch{color:var(--tx3);font-size:.77rem;transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.cva.open .cva-ch{transform:rotate(180deg)}
+.cva-bd{max-height:0;overflow:hidden;transition:max-height .55s cubic-bezier(.16,1,.3,1)}
+.cva.open .cva-bd{max-height:8000px}
+.cva-cn{padding:1.3rem 1.5rem}
+.edu-l{display:flex;flex-direction:column}
+.edu-e{display:grid;grid-template-columns:78px 1fr;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.edu-e:last-child{border-bottom:none;padding-bottom:0}
+.edu-p{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;color:var(--aml);padding-top:.28rem;line-height:1.4}
+.edu-b h4{font-size:.9rem;font-weight:600;margin-bottom:.15rem;line-height:1.4}
+.edu-d{font-size:.8rem;color:var(--tll);font-weight:500;margin-bottom:.13rem}
+.edu-loc{font-size:.76rem;color:var(--tx3);display:flex;align-items:center;gap:3px}
+.edu-n{font-size:.74rem;color:var(--tx2);font-style:italic;margin-top:.25rem;line-height:1.65}
+.edu-g{display:inline-block;font-size:.7rem;font-family:'JetBrains Mono',monospace;padding:.07rem .45rem;background:rgba(61,186,127,.07);border:1px solid rgba(61,186,127,.16);border-radius:3px;color:#6ee7b7;margin-top:.28rem;font-style:normal}
+.live-b{display:inline-flex;align-items:center;gap:3px;font-size:.65rem;color:var(--gr);margin-left:.3rem;font-style:normal;vertical-align:middle}
+.live-b::before{content:'';width:4px;height:4px;background:var(--gr);border-radius:50%;animation:blink 1.6s ease-in-out infinite}
+.aw-l{display:flex;flex-direction:column;gap:.6rem}
+.aw-e{display:flex;gap:.75rem;align-items:flex-start;padding:.75rem .9rem;background:rgba(200,149,42,.025);border:1px solid rgba(200,149,42,.07);border-radius:var(--r);transition:all .22s}
+.aw-e:hover{border-color:rgba(200,149,42,.22);transform:translateX(3px)}
+.aw-yr{min-width:52px;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:.67rem;font-weight:600;color:var(--aml);background:rgba(200,149,42,.09);border:1px solid rgba(200,149,42,.16);border-radius:4px;padding:.2rem .36rem;text-align:center;line-height:1.3}
+.aw-b h5{font-size:.82rem;font-weight:600;margin-bottom:.1rem;line-height:1.45}
+.aw-b p{font-size:.75rem;color:var(--tx3);line-height:1.5}
+.po-l{display:flex;flex-direction:column}
+.po-e{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.04);transition:padding-left .22s}
+.po-e:last-child{border-bottom:none}
+.po-e:hover{padding-left:.45rem}
+.po-dot{width:5px;height:5px;border-radius:50%;background:var(--tll);flex-shrink:0;margin-top:.62rem;opacity:.7}
+.po-tx{flex:1;font-size:.82rem;color:var(--tx);line-height:1.55}
+.po-pr{flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--tll);padding-top:.25rem;white-space:nowrap}
+.gp-e{padding:.62rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.gp-e:last-child{border-bottom:none;padding-bottom:0}
+.gp-main{font-size:.88rem;font-weight:500;color:var(--tx);margin-bottom:.2rem;line-height:1.5}
+.gp-line{font-size:.82rem;color:var(--tx2);line-height:1.7}
 
+/* ═══ PUBLICATIONS ════════════════════════════════════════════ */
+#publications{background:linear-gradient(180deg,transparent,rgba(74,143,212,.016) 50%,transparent)}
 .pub-tb{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1.3rem}
 .sw{flex:1;min-width:190px;position:relative}
 .sw i{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:.77rem;pointer-events:none}
-.pub-s{
-  width:100%;padding:.6rem .9rem .6rem 2.25rem;
-  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
-  color:var(--tx);font-family:'Inter',sans-serif;font-size:.84rem;outline:none;transition:border-color .22s;
-}
+.pub-s{width:100%;padding:.6rem .9rem .6rem 2.25rem;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);color:var(--tx);font-family:'Inter',sans-serif;font-size:.84rem;outline:none;transition:border-color .22s}
 .pub-s::placeholder{color:var(--tx3)}
 .pub-s:focus{border-color:rgba(74,143,212,.45)}
 .fr{display:flex;gap:.3rem;flex-wrap:wrap}
-.fb{
-  padding:.3rem .72rem;background:var(--card);border:1px solid var(--bdr);
-  border-radius:50px;color:var(--tx2);font-family:'Inter',sans-serif;font-size:.73rem;font-weight:500;cursor:pointer;transition:all .2s;
-}
+.fb{padding:.3rem .72rem;background:var(--card);border:1px solid var(--bdr);border-radius:50px;color:var(--tx2);font-family:'Inter',sans-serif;font-size:.73rem;font-weight:500;cursor:pointer;transition:all .2s}
 .fb:hover,.fb.on{background:rgba(74,143,212,.1);border-color:rgba(74,143,212,.4);color:var(--bll)}
 .pub-meta{font-size:.77rem;color:var(--tx3);margin-bottom:.85rem}
 #pList{display:flex;flex-direction:column;gap:.8rem}
-
-/* Pub card */
-.pub{
-  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
-  padding:1.2rem 1.45rem;transition:all .22s;position:relative;
+/* ── Scrollable publications container ── */
+#pListScroller{
+  max-height:680px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-right:.5rem;
+  /* Custom scrollbar */
+  scrollbar-width:thin;
+  scrollbar-color:var(--bl) var(--bg3);
 }
-.pub::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+#pListScroller::-webkit-scrollbar{width:5px}
+#pListScroller::-webkit-scrollbar-track{
+  background:var(--bg3);
+  border-radius:3px;
+}
+#pListScroller::-webkit-scrollbar-thumb{
   background:linear-gradient(180deg,var(--bl),var(--tl));
-  border-radius:2px 0 0 2px;opacity:0;transition:opacity .22s;
+  border-radius:3px;
 }
+#pListScroller::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,var(--bll),var(--tll));
+}
+/* Fade out hint at bottom so user knows there's more */
+.plist-wrap{
+  position:relative;
+}
+.plist-wrap::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:5px;
+  height:60px;
+  background:linear-gradient(transparent,var(--bg));
+  pointer-events:none;
+  border-radius:0 0 var(--r) var(--r);
+  transition:opacity .3s;
+}
+/* Hide fade when scrolled to bottom */
+.plist-wrap.at-bottom::after{opacity:0}
+.pub{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.2rem 1.45rem;transition:all .22s;position:relative}
+.pub::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--bl),var(--tl));border-radius:2px 0 0 2px;opacity:0;transition:opacity .22s}
 .pub:hover{border-color:rgba(74,143,212,.2);transform:translateX(4px)}
 .pub:hover::before{opacity:1}
 .pub-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-bottom:.45rem}
@@ -348,141 +329,23 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .xl.ads{color:#c084fc;border-color:rgba(192,132,252,.22)}.xl.ads:hover{background:rgba(192,132,252,.07)}
 .xl.doi{color:var(--bll);border-color:rgba(74,143,212,.22)}.xl.doi:hover{background:rgba(74,143,212,.07)}
 .xl.arx{color:var(--aml);border-color:rgba(200,149,42,.2)}.xl.arx:hover{background:rgba(200,149,42,.06)}
-
-/* Skeleton */
 .sk{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.3rem}
 .sk+.sk{margin-top:.8rem}
 .sl{height:11px;background:linear-gradient(90deg,var(--card2) 25%,rgba(255,255,255,.07) 50%,var(--card2) 75%);background-size:200% 100%;border-radius:4px;margin-bottom:.65rem;animation:shimmer 1.5s infinite}
 .sl.w80{width:80%}.sl.w60{width:60%}.sl.w40{width:40%}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* Alert */
-.alrt{
-  display:none;gap:.65rem;
-  background:rgba(200,149,42,.05);border:1px solid rgba(200,149,42,.2);
-  border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1.2rem;
-  font-size:.81rem;color:var(--amll);line-height:1.75;
-}
+.alrt{display:none;gap:.65rem;background:rgba(200,149,42,.05);border:1px solid rgba(200,149,42,.2);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1.2rem;font-size:.81rem;color:var(--amll);line-height:1.75}
 .alrt.show{display:flex;align-items:flex-start}
-.alrt code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.78rem}
+.alrt i{flex-shrink:0;margin-top:.15rem}
 .alrt a{color:inherit;text-decoration:underline}
 
-/* ═══ CV SECTION ═════════════════════════════════════════ */
-#cv{background:linear-gradient(180deg,transparent,rgba(42,157,143,.015) 50%,transparent)}
-
-.cvhc{
-  display:flex;align-items:center;gap:1.3rem;padding:1.4rem 1.6rem;
-  background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);
-  margin-bottom:1.4rem;position:relative;overflow:hidden;
-}
-.cvhc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--bl),var(--tl),var(--am))}
-.cv-av{
-  width:52px;height:52px;border-radius:50%;flex-shrink:0;
-  background:var(--bg3);border:1px solid rgba(74,143,212,.25);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--bll);
-}
-.cvhi{flex:1}
-.cvhi h2{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:.15rem}
-.cvhi p{font-size:.8rem;color:var(--tx2)}
-.cv-dls{display:flex;gap:.45rem;flex-wrap:wrap;flex-shrink:0}
-
-/* PDF status bar */
-.cv-st{
-  display:flex;align-items:center;gap:.5rem;
-  font-size:.73rem;padding:.55rem .9rem;
-  background:var(--card);border:1px solid var(--bdr);
-  border-radius:7px;margin-bottom:1.3rem;color:var(--tx3);
-}
-.cv-st.ok{color:var(--gr);border-color:rgba(61,186,127,.18);background:rgba(61,186,127,.04)}
-.cv-st.warn{color:var(--aml);border-color:rgba(200,149,42,.2);background:rgba(200,149,42,.04)}
-.cv-st.err{color:var(--rd);border-color:rgba(224,90,90,.18);background:rgba(224,90,90,.03)}
-
-/* CV Accordion */
-.cva{
-  background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);
-  margin-bottom:.9rem;overflow:hidden;transition:border-color .22s,box-shadow .22s;
-}
-.cva:hover{border-color:var(--bdr2)}
-.cva.open{border-color:rgba(74,143,212,.16);box-shadow:0 4px 20px rgba(0,0,0,.18)}
-.cva-hd{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 1.35rem;cursor:pointer;user-select:none;
-  border-bottom:1px solid transparent;transition:background .2s;
-}
-.cva-hd:hover{background:var(--card2)}
-.cva.open .cva-hd{border-bottom-color:var(--bdr)}
-.cva-hl{display:flex;align-items:center;gap:.7rem}
-.cva-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;transition:transform .22s}
-.cva:hover .cva-ic{transform:scale(1.08)}
-.cva-ic.blue{background:rgba(74,143,212,.1);color:var(--bll)}
-.cva-ic.amber{background:rgba(200,149,42,.09);color:var(--aml)}
-.cva-ic.teal{background:rgba(42,157,143,.09);color:var(--tll)}
-.cva-ic.purple{background:rgba(167,139,250,.09);color:#c4b5fd}
-.cva-nm{font-size:.92rem;font-weight:600}
-.cva-ct{font-size:.68rem;padding:.07rem .47rem;border-radius:50px;font-family:'JetBrains Mono',monospace;font-weight:500}
-.cva-ct.blue{background:rgba(74,143,212,.09);color:var(--bll);border:1px solid rgba(74,143,212,.18)}
-.cva-ct.amber{background:rgba(200,149,42,.07);color:var(--aml);border:1px solid rgba(200,149,42,.16)}
-.cva-ct.teal{background:rgba(42,157,143,.07);color:var(--tll);border:1px solid rgba(42,157,143,.16)}
-.cva-ct.purple{background:rgba(167,139,250,.07);color:#c4b5fd;border:1px solid rgba(167,139,250,.16)}
-.cva-ch{color:var(--tx3);font-size:.77rem;transition:transform .35s cubic-bezier(.16,1,.3,1)}
-.cva.open .cva-ch{transform:rotate(180deg)}
-.cva-bd{max-height:0;overflow:hidden;transition:max-height .55s cubic-bezier(.16,1,.3,1)}
-.cva.open .cva-bd{max-height:8000px}
-.cva-cn{padding:1.3rem 1.5rem}
-
-/* Education */
-.edu-l{display:flex;flex-direction:column}
-.edu-e{display:grid;grid-template-columns:78px 1fr;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.edu-e:last-child{border-bottom:none;padding-bottom:0}
-.edu-p{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;color:var(--aml);padding-top:.28rem;line-height:1.4}
-.edu-b h4{font-size:.9rem;font-weight:600;margin-bottom:.15rem;line-height:1.4}
-.edu-d{font-size:.8rem;color:var(--tll);font-weight:500;margin-bottom:.13rem}
-.edu-loc{font-size:.76rem;color:var(--tx3);display:flex;align-items:center;gap:3px}
-.edu-n{font-size:.74rem;color:var(--tx2);font-style:italic;margin-top:.25rem;line-height:1.65}
-.edu-g{display:inline-block;font-size:.7rem;font-family:'JetBrains Mono',monospace;padding:.07rem .45rem;background:rgba(61,186,127,.07);border:1px solid rgba(61,186,127,.16);border-radius:3px;color:#6ee7b7;margin-top:.28rem;font-style:normal}
-.live-b{display:inline-flex;align-items:center;gap:3px;font-size:.65rem;color:var(--gr);margin-left:.3rem;font-style:normal;vertical-align:middle}
-.live-b::before{content:'';width:4px;height:4px;background:var(--gr);border-radius:50%;animation:blink 1.6s ease-in-out infinite}
-
-/* Awards */
-.aw-l{display:flex;flex-direction:column;gap:.6rem}
-.aw-e{
-  display:flex;gap:.75rem;align-items:flex-start;
-  padding:.75rem .9rem;
-  background:rgba(200,149,42,.025);border:1px solid rgba(200,149,42,.07);
-  border-radius:var(--r);transition:all .22s;
-}
-.aw-e:hover{border-color:rgba(200,149,42,.22);transform:translateX(3px)}
-.aw-yr{min-width:52px;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:.67rem;font-weight:600;color:var(--aml);background:rgba(200,149,42,.09);border:1px solid rgba(200,149,42,.16);border-radius:4px;padding:.2rem .36rem;text-align:center;line-height:1.3}
-.aw-b h5{font-size:.82rem;font-weight:600;margin-bottom:.1rem;line-height:1.45}
-.aw-b p{font-size:.75rem;color:var(--tx3);line-height:1.5}
-
-/* Positions */
-.po-l{display:flex;flex-direction:column}
-.po-e{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.04);transition:padding-left .22s}
-.po-e:last-child{border-bottom:none}
-.po-e:hover{padding-left:.45rem}
-.po-dot{width:5px;height:5px;border-radius:50%;background:var(--tll);flex-shrink:0;margin-top:.62rem;opacity:.7}
-.po-tx{flex:1;font-size:.82rem;color:var(--tx);line-height:1.55}
-.po-pr{flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--tll);padding-top:.25rem;white-space:nowrap}
-
-/* Generic parsed section */
-.gp-e{padding:.62rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.gp-e:last-child{border-bottom:none;padding-bottom:0}
-.gp-main{font-size:.88rem;font-weight:500;color:var(--tx);margin-bottom:.2rem;line-height:1.5}
-.gp-line{font-size:.82rem;color:var(--tx2);line-height:1.7}
-
-/* ═══ CONTACT ═════════════════════════════════════════════ */
+/* ═══ CONTACT ═════════════════════════════════════════════════ */
 #contact{background:linear-gradient(180deg,transparent,rgba(74,143,212,.015) 50%,transparent)}
 .cog{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start}
 .co-h{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:.65rem}
 .co-d{color:var(--tx2);font-size:.9rem;line-height:1.9;margin-bottom:1.5rem}
 .co-ls{display:flex;flex-direction:column;gap:.6rem}
-.co-lk{
-  display:flex;align-items:center;gap:.85rem;
-  padding:.85rem 1rem;background:var(--card);border:1px solid var(--bdr);
-  border-radius:var(--r);transition:all .22s;
-}
+.co-lk{display:flex;align-items:center;gap:.85rem;padding:.85rem 1rem;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);transition:all .22s}
 .co-lk:hover{border-color:rgba(74,143,212,.28);background:rgba(74,143,212,.03);transform:translateX(4px)}
 .co-ic{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0}
 .co-tx small{display:block;font-size:.65rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:1px}
@@ -490,11 +353,7 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .co-ar{margin-left:auto;color:var(--tx3);font-size:.73rem;transition:transform .22s}
 .co-lk:hover .co-ar{transform:translateX(4px);color:var(--bll)}
 .so-g{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.5rem}
-.so-c{
-  display:flex;flex-direction:column;align-items:center;gap:.32rem;
-  padding:.8rem .35rem;background:var(--card);border:1px solid var(--bdr);
-  border-radius:var(--r);font-size:.69rem;color:var(--tx2);transition:all .22s;
-}
+.so-c{display:flex;flex-direction:column;align-items:center;gap:.32rem;padding:.8rem .35rem;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);font-size:.69rem;color:var(--tx2);transition:all .22s}
 .so-c:hover{border-color:rgba(74,143,212,.28);color:var(--bll);transform:translateY(-3px)}
 .so-c i{font-size:1.1rem}
 .po-sm{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.1rem}
@@ -503,7 +362,7 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .po-sm .row{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--tx2);margin-bottom:.25rem}
 .po-sm .row i{font-size:.75rem;color:var(--bll);width:12px}
 
-/* ═══ FOOTER ═════════════════════════════════════════════ */
+/* ═══ FOOTER ══════════════════════════════════════════════════ */
 footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5rem}
 .ft{max-width:1060px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem}
 .ft-c{font-size:.77rem;color:var(--tx3)}
@@ -511,26 +370,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
 .vis{display:inline-flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--tx3);background:var(--card);border:1px solid var(--bdr);padding:.28rem .8rem;border-radius:50px}
 .vis i{color:var(--tll);font-size:.68rem}
 .vis strong{color:var(--tll);font-family:'JetBrains Mono',monospace}
-
-#top{
-  position:fixed;bottom:1.8rem;right:1.8rem;z-index:50;
-  width:36px;height:36px;background:var(--bl);border:none;border-radius:8px;
-  color:#fff;font-size:.8rem;cursor:pointer;
-  opacity:0;transform:translateY(10px);transition:all .28s;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 10px rgba(74,143,212,.38);
-}
+#top{position:fixed;bottom:1.8rem;right:1.8rem;z-index:50;width:36px;height:36px;background:var(--bl);border:none;border-radius:8px;color:#fff;font-size:.8rem;cursor:pointer;opacity:0;transform:translateY(10px);transition:all .28s;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(74,143,212,.38)}
 #top.show{opacity:1;transform:translateY(0)}
 #top:hover{background:var(--bll);transform:translateY(-3px)}
 
-/* ═══ KEYFRAMES ═════════════════════════════════════════ */
+/* ═══ KEYFRAMES ═══════════════════════════════════════════════ */
 @keyframes fadeU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 @keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ═══ RESPONSIVE ════════════════════════════════════════ */
+/* ═══ RESPONSIVE ══════════════════════════════════════════════ */
 @media(max-width:900px){
   .ag{grid-template-columns:1fr;gap:2.5rem}
   .pc-card{max-width:310px;margin:0 auto;position:static}
@@ -558,24 +409,25 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
 <!-- Star canvas -->
 <canvas id="stars"></canvas>
 
-<!-- ─── Mobile menu ─── -->
+<!-- ── Mobile menu ─────────────────────────────────────────── -->
 <div id="mm">
   <button class="mmX" onclick="mClose()"><i class="fas fa-xmark"></i></button>
   <a href="#about"        onclick="mClose()">About</a>
   <a href="#research"     onclick="mClose()">Research</a>
-  <a href="#publications" onclick="mClose()">Publications</a>
   <a href="#cv"           onclick="mClose()">CV</a>
+  <a href="#publications" onclick="mClose()">Publications</a>
+  <a href="fun.html"      onclick="mClose()">Beyond ★</a>
   <a href="#contact"      onclick="mClose()">Contact</a>
 </div>
 
-<!-- ─── Navbar ─── -->
+<!-- ── Navbar ─────────────────────────────────────────────── -->
 <nav id="nav">
   <a href="#hero" class="nav-brand">Harsh <em>Kumar</em></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#research">Research</a></li>
-    <li><a href="#publications">Publications</a></li>
     <li><a href="#cv">CV</a></li>
+    <li><a href="#publications">Publications</a></li>
     <li><a href="fun.html">Beyond ★</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -584,48 +436,42 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   </button>
 </nav>
 
-<!-- ══════════════ HERO ══════════════ -->
+<!-- ══════════════════════ HERO ══════════════════════════════ -->
 <section id="hero">
   <div class="h-in">
     <div class="h-badge">
       <div class="ld"></div>
       Postdoctoral Fellow · Center for Astrophysics | Harvard &amp; Smithsonian
     </div>
-
     <h1 class="h-name">
       <span class="fn">Harsh</span>&nbsp;<span class="ln">Kumar</span>
     </h1>
-
     <p class="h-sub">Astrophysicist · Transient Phenomena · Multi-Messenger Astronomy</p>
-
     <div class="typ-row"><span id="typer"></span><span class="t-cur"></span></div>
-
     <div class="h-loc"><i class="fas fa-location-dot"></i> Cambridge, MA · USA</div>
-
     <p class="h-desc">
       Exploring gamma-ray bursts, kilonovae, superluminous supernovae, and tidal disruption events
       through multi-wavelength observations with the
       <strong style="color:var(--tx)">GROWTH-India Telescope</strong>
       and global observatory networks.
     </p>
-
     <div class="h-btns">
-      <a href="#publications" class="btn btn-p"><i class="fas fa-meteor"></i> View Research</a>
-      <a href="#cv" class="btn btn-o"><i class="fas fa-file-lines"></i> My CV</a>
+      <a href="#cv" class="btn btn-p"><i class="fas fa-file-lines"></i> My CV</a>
+      <a href="#publications" class="btn btn-o"><i class="fas fa-meteor"></i> Publications</a>
       <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641&sort=date+desc"
          target="_blank" class="btn btn-o"><i class="fas fa-satellite-dish"></i> NASA ADS</a>
     </div>
-
     <div class="ss">
-      <div class="sv"><span class="sv-n" id="sPap">—</span><span class="sv-l">Publications</span></div>
+      <div class="sv"><span class="sv-n" id="sPap">—</span><span class="sv-l">Papers</span></div>
       <div class="sv"><span class="sv-n" id="sCit">—</span><span class="sv-l">Citations</span></div>
       <div class="sv"><span class="sv-n" id="sH">—</span><span class="sv-l">h-index</span></div>
+      <div class="sv"><span class="sv-n" id="sI10">—</span><span class="sv-l">i10-index</span></div>
       <div class="sv"><span class="sv-n" id="sYr" style="color:var(--aml)">—</span><span class="sv-l">Yrs Active</span></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ ABOUT ══════════════ -->
+<!-- ══════════════════════ ABOUT ══════════════════════════════ -->
 <section id="about">
   <div class="wrap">
     <div class="sh rv">
@@ -633,21 +479,15 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <h2 class="sh-title">About <span class="hl">Me</span></h2>
       <div class="sh-orn"><div class="gem"></div></div>
     </div>
-
     <div class="ag">
-      <!-- Profile card -->
+
+      <!-- Profile Card -->
       <div class="pc-card rv">
         <div class="pc-bar"></div>
         <div class="pc-photo">
-          <!-- Initials shown until photo loads -->
           <div class="pc-ini">HK</div>
-          <div class="ring1"></div>
-          <div class="ring2"></div>
-          <!--
-            photo.jpg is ALWAYS present here — no need to edit HTML.
-            If photo.jpg exists in the same folder, it loads automatically.
-            If it's missing, the "HK" initials show as fallback.
-          -->
+          <div class="ring1"></div><div class="ring2"></div>
+          <!-- photo.jpg loads automatically; "HK" initials show as fallback -->
           <img src="photo.jpg" alt="Harsh Kumar"
                onload="this.classList.add('ok')"
                onerror="this.remove()">
@@ -656,7 +496,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
           <h3>Harsh Kumar</h3>
           <div class="pc-role">Postdoctoral Fellow · Astrophysics</div>
           <div class="pc-row"><i class="fas fa-university"></i><span>CfA | Harvard &amp; Smithsonian</span></div>
-          <div class="pc-row"><i class="fas fa-flask"></i><span>NSF-AI Institute (IAIFI)</span></div>
+          <div class="pc-row"><i class="fas fa-flask"></i><span>NSF-IAIFI</span></div>
           <div class="pc-row"><i class="fas fa-location-dot"></i><span>Cambridge, MA, USA</span></div>
           <div class="pc-row"><i class="fas fa-envelope"></i>
             <a href="mailto:harsh.kumar@cfa.harvard.edu">harsh.kumar@cfa.harvard.edu</a>
@@ -665,39 +505,23 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
             <a href="https://orcid.org/0000-0003-0871-4641" target="_blank">0000-0003-0871-4641</a>
           </div>
           <div class="pc-soc">
-            <a href="https://orcid.org/0000-0003-0871-4641" target="_blank" class="ps" title="ORCID"><i class="fab fa-orcid"></i></a>
+            <a href="https://orcid.org/0000-0003-0871-4641"          target="_blank" class="ps" title="ORCID"><i class="fab fa-orcid"></i></a>
             <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641" target="_blank" class="ps" title="NASA ADS"><i class="fas fa-satellite-dish"></i></a>
-            <a href="https://github.com/harshkumar13" target="_blank" class="ps" title="GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://scholar.google.com/citations?hl=en&user=fFGkrbAAAAAJ&view_op=list_works&sortby=pubdate" target="_blank" class="ps" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
-            <a href="https://www.linkedin.com/in/harsh-kumar-b90688259/" target="_blank" class="ps" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/harshkumar13"                target="_blank" class="ps" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://scholar.google.com/citations?user=fFGkrbAAAAAJ&hl=en"                                              target="_blank" class="ps" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+            <a href="www.linkedin.com/in/harsh-kumar-b90688259/"                                              target="_blank" class="ps" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://sites.google.com/view/harshkumar13/"   target="_blank" class="ps" title="Old Website"><i class="fas fa-globe"></i></a>
           </div>
         </div>
       </div>
 
-      <!-- About text -->
+      <!-- About Text -->
       <div>
         <div class="at rv">
           <h3>Decoding the Universe's Most Extreme Events</h3>
-          <p>
-            I am an astrophysicist specialising in <strong>time-domain and high-energy
-            transient phenomena</strong>, with primary focus on <strong>Gamma-Ray Bursts (GRBs)</strong>,
-            <strong>kilonovae</strong>, <strong>superluminous supernovae (SLSNe)</strong>, and
-            <strong>tidal disruption events (TDEs)</strong>.
-          </p>
-          <p>
-            My doctoral work at <strong>IIT Bombay</strong> centred on the
-            <strong>GROWTH-India Telescope</strong> — India's first robotic research telescope —
-            leading rapid follow-up campaigns for GRB afterglows and gravitational-wave
-            electromagnetic counterparts. I am currently a
-            <strong>Postdoctoral Fellow at the Center for Astrophysics | Harvard &amp; Smithsonian</strong>
-            and a Junior Investigator at the
-            <strong>NSF-AI Institute for AI and Fundamental Interactions (IAIFI)</strong>.
-          </p>
-          <p>
-            My research combines multi-wavelength observing campaigns (optical, NIR, X-ray, radio)
-            with physical modelling to decode relativistic jet physics,
-            <em>r</em>-process nucleosynthesis, and the diversity of catastrophic stellar endpoints.
-          </p>
+          <p>I am an astrophysicist specialising in <strong>time-domain and high-energy transient phenomena</strong>, with primary focus on <strong>Gamma-Ray Bursts (GRBs)</strong>, <strong>kilonovae</strong>, <strong>superluminous supernovae (SLSNe)</strong>, and <strong>tidal disruption events (TDEs)</strong>.</p>
+          <p>My doctoral work at <strong>IIT Bombay</strong> centred on the <strong>GROWTH-India Telescope</strong> — India's first robotic research telescope — leading rapid follow-up campaigns for GRB afterglows and gravitational-wave electromagnetic counterparts. I am currently a <strong>Postdoctoral Fellow at the Center for Astrophysics | Harvard &amp; Smithsonian</strong> and a Junior Investigator at the <strong>NSF-AI Institute for AI and Fundamental Interactions (IAIFI)</strong>.</p>
+          <p>My research combines multi-wavelength observing campaigns (optical, NIR, X-ray, radio) with physical modelling to decode relativistic jet physics, <em>r</em>-process nucleosynthesis, and the diversity of catastrophic stellar endpoints.</p>
         </div>
 
         <div class="rv d1">
@@ -709,7 +533,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
             <span class="tag">Tidal Disruption Events</span>
             <span class="tag">GROWTH-India Telescope</span>
             <span class="tag">Multi-Wavelength Obs.</span>
-            <span class="tag">Swift · Fermi · XMM</span>
             <span class="tag">Python · Astropy</span>
             <span class="tag">AI / ML in Astrophysics</span>
           </div>
@@ -726,7 +549,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
             <div class="ti now">
               <div class="ti-yr">2023 – Present</div>
               <div class="ti-ttl">Junior Investigator <span class="now-dot">Active</span></div>
-              <div class="ti-sub">NSF-AI Institute (IAIFI), Cambridge, USA</div>
+              <div class="ti-sub">NSF-IAIFI, Cambridge, USA</div>
             </div>
             <div class="ti">
               <div class="ti-yr">2023</div>
@@ -762,7 +585,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   </div>
 </section>
 
-<!-- ══════════════ RESEARCH ══════════════ -->
+<!-- ══════════════════════ RESEARCH ══════════════════════════ -->
 <section id="research">
   <div class="wrap">
     <div class="sh rv">
@@ -802,21 +625,79 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
         <h3>Multi-Messenger Astronomy</h3>
         <p>Coordinating global telescope networks for EM follow-up of gravitational-wave events, high-energy neutrino alerts, and gamma-ray triggers in near-real time with rapid-response observing protocols.</p>
       </div>
-      <div class="rc rv">
-        <span class="rc-ico">🛰️</span>
-        <h3>Space Mission Science</h3>
-        <p>Spectral and temporal analyses using Swift-XRT/BAT, Fermi-GBM/LAT, XMM-Newton, Chandra, and INTEGRAL data to characterise extreme high-energy transient sources.</p>
-      </div>
       <div class="rc rv d1">
         <span class="rc-ico">⚙️</span>
         <h3>AI / ML in Astrophysics</h3>
-        <p>Applying machine-learning methods to transient classification, automated survey pipelines, and neural-network approaches to gravitational-wave data analysis as a Junior Investigator at IAIFI (NSF-AI).</p>
+        <p>Applying machine-learning methods to transient classification, automated survey pipelines, and neural-network approaches to time domain astronomy as a Junior Investigator at IAIFI (NSF-AI).</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ PUBLICATIONS ══════════════ -->
+<!-- ══════════════════════ CV ════════════════════════════════ -->
+<section id="cv">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="sh-tag">Curriculum Vitae</span>
+      <h2 class="sh-title">My <span class="hl">CV</span></h2>
+      <div class="sh-orn"><div class="gem"></div></div>
+    </div>
+    <div class="rv">
+
+      <!-- CV header card -->
+      <div class="cvhc">
+        <div class="cv-av">HK</div>
+        <div class="cvhi">
+          <h2>Harsh Kumar</h2>
+          <p>Postdoctoral Fellow · Center for Astrophysics | Harvard &amp; Smithsonian</p>
+          <p style="font-size:.77rem;color:var(--tx3);margin-top:.2rem">
+            <i class="fas fa-envelope" style="margin-right:4px;color:var(--bll)"></i>harsh.kumar@cfa.harvard.edu
+            &nbsp;·&nbsp;
+            <i class="fab fa-orcid" style="margin-right:3px;color:#a6ce39"></i>0000-0003-0871-4641
+          </p>
+        </div>
+        <div class="cv-dls">
+          <!-- Downloads FULL cv.pdf — never the short cv-web.pdf -->
+          <button class="btn btn-p" onclick="dlCV()">
+            <i class="fas fa-download"></i> Download Full CV
+          </button>
+        </div>
+      </div>
+
+      <!-- Status bar — updated by JS -->
+      <div class="cv-st" id="cvSt">
+        <i class="fas fa-circle-notch fa-spin" style="margin-right:5px"></i>
+        <span>Loading CV…</span>
+      </div>
+
+      <!-- Accordion sections — filled by JS instantly from fallback, then from cv-web.pdf -->
+      <div id="cvSecs">
+        <!-- Skeleton shown for the brief instant before JS runs -->
+        <div class="cva" style="opacity:.55;pointer-events:none">
+          <div class="cva-hd"><div class="cva-hl">
+            <div class="cva-ic blue"><i class="fas fa-graduation-cap"></i></div>
+            <div style="width:110px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
+          </div></div>
+        </div>
+        <div class="cva" style="opacity:.35;pointer-events:none">
+          <div class="cva-hd"><div class="cva-hl">
+            <div class="cva-ic amber"><i class="fas fa-trophy"></i></div>
+            <div style="width:145px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
+          </div></div>
+        </div>
+        <div class="cva" style="opacity:.18;pointer-events:none">
+          <div class="cva-hd"><div class="cva-hl">
+            <div class="cva-ic teal"><i class="fas fa-users-gear"></i></div>
+            <div style="width:185px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
+          </div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ PUBLICATIONS ══════════════════════ -->
 <section id="publications">
   <div class="wrap">
     <div class="sh rv">
@@ -824,16 +705,21 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <h2 class="sh-title">Publications <span class="hl">&amp; Papers</span></h2>
       <div class="sh-orn"><div class="gem"></div></div>
     </div>
-
     <div class="rv">
-      <!-- Alert — hidden until needed -->
-      <div class="alrt" id="alrt"><span id="alrtMsg"></span></div>
 
+      <!-- Alert bar — shown only on errors -->
+      <div class="alrt" id="alrt">
+        <i class="fas fa-triangle-exclamation"></i>
+        <span id="alrtMsg"></span>
+      </div>
+
+      <!-- Search + year filters -->
       <div class="pub-tb">
         <div class="sw">
           <i class="fas fa-magnifying-glass"></i>
           <input type="text" class="pub-s" id="pubQ"
-                 placeholder="Search titles, authors, keywords…" oninput="renderPubs()">
+                 placeholder="Search titles, authors, keywords…"
+                 oninput="renderPubs()">
         </div>
         <div class="fr" id="fRow">
           <button class="fb on" data-f="all" onclick="setF('all',this)">All</button>
@@ -841,12 +727,15 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       </div>
 
       <div class="pub-meta" id="pubMeta"></div>
-
-      <!-- Skeleton while loading -->
-      <div id="pList">
-        <div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>
-        <div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>
-        <div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>
+      <!-- Scrollable paper list -->
+      <div class="plist-wrap" id="plistWrap">
+        <div id="pListScroller" onscroll="chkScroll(this)">
+          <div id="pList">
+            <div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>
+            <div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>
+            <div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>
+          </div>
+        </div>
       </div>
 
       <div style="text-align:center;margin-top:2.2rem">
@@ -859,75 +748,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   </div>
 </section>
 
-<!-- ══════════════ CV ══════════════ -->
-<section id="cv">
-  <div class="wrap">
-    <div class="sh rv">
-      <span class="sh-tag">Curriculum Vitae</span>
-      <h2 class="sh-title">My <span class="hl">CV</span></h2>
-      <div class="sh-orn"><div class="gem"></div></div>
-    </div>
-
-    <div class="rv">
-
-      <!-- CV header card -->
-      <div class="cvhc">
-        <div class="cv-av">HK</div>
-        <div class="cvhi">
-          <h2>Harsh Kumar</h2>
-          <p>Postdoctoral Fellow · Center for Astrophysics | Harvard &amp; Smithsonian</p>
-          <p style="font-size:.77rem;color:var(--tx3);margin-top:.2rem">
-            <i class="fas fa-envelope" style="margin-right:4px;color:var(--bll)"></i>harsh.kumar@cfa.harvard.edu &nbsp;·&nbsp;
-            <i class="fab fa-orcid" style="margin-right:3px;color:#a6ce39"></i>0000-0003-0871-4641
-          </p>
-        </div>
-        <div class="cv-dls">
-          <button class="btn btn-p" onclick="dlCV()">
-            <i class="fas fa-download"></i> Download CV
-          </button>
-        </div>
-      </div>
-
-      <!-- PDF source status -->
-      <div class="cv-st" id="cvSt">
-        <i class="fas fa-circle-notch fa-spin"></i>
-        <span>Reading cv.pdf…</span>
-      </div>
-
-      <!-- Sections — filled by JS -->
-      <div id="cvSecs">
-        <!-- Skeleton -->
-        <div class="cva" style="opacity:.5;pointer-events:none">
-          <div class="cva-hd">
-            <div class="cva-hl">
-              <div class="cva-ic blue"><i class="fas fa-graduation-cap"></i></div>
-              <span class="sl" style="width:120px;height:13px;display:inline-block;border-radius:4px"></span>
-            </div>
-          </div>
-        </div>
-        <div class="cva" style="opacity:.35;pointer-events:none">
-          <div class="cva-hd">
-            <div class="cva-hl">
-              <div class="cva-ic amber"><i class="fas fa-trophy"></i></div>
-              <span class="sl" style="width:145px;height:13px;display:inline-block;border-radius:4px"></span>
-            </div>
-          </div>
-        </div>
-        <div class="cva" style="opacity:.18;pointer-events:none">
-          <div class="cva-hd">
-            <div class="cva-hl">
-              <div class="cva-ic teal"><i class="fas fa-users-gear"></i></div>
-              <span class="sl" style="width:195px;height:13px;display:inline-block;border-radius:4px"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ CONTACT ══════════════ -->
+<!-- ══════════════════════ CONTACT ════════════════════════════ -->
 <section id="contact">
   <div class="wrap">
     <div class="sh rv">
@@ -935,18 +756,11 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <h2 class="sh-title">Let's <span class="hl">Connect</span></h2>
       <div class="sh-orn"><div class="gem"></div></div>
     </div>
-
     <div class="cog">
 
       <div class="rv">
         <h3 class="co-h">Open to Collaborations</h3>
-        <p class="co-d">
-          Whether it's a joint observing proposal, transient follow-up coordination,
-          a data-analysis collaboration, or a discussion about the latest GRB or
-          gravitational-wave detection — I'm always happy to connect with fellow
-          researchers and curious minds worldwide.
-        </p>
-
+        <p class="co-d">Whether it's a joint observing proposal, transient follow-up coordination, a data-analysis collaboration, or a discussion about the latest GRB or gravitational-wave detection — I'm always happy to connect with fellow researchers worldwide.</p>
         <div class="co-ls">
           <a href="mailto:harsh.kumar@cfa.harvard.edu" class="co-lk">
             <div class="co-ic" style="background:linear-gradient(135deg,#4a8fd4,#2d5a8e)"><i class="fas fa-envelope"></i></div>
@@ -979,7 +793,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <div class="rv d1">
         <h3 class="co-h">Find Me Online</h3>
         <p class="co-d">Connect with me on academic and professional platforms:</p>
-
         <div class="so-g">
           <a href="https://orcid.org/0000-0003-0871-4641" target="_blank" class="so-c">
             <i class="fab fa-orcid" style="color:#a6ce39"></i><span>ORCID</span>
@@ -990,19 +803,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
           <a href="https://github.com/harshkumar13" target="_blank" class="so-c">
             <i class="fab fa-github"></i><span>GitHub</span>
           </a>
-          <a href="https://scholar.google.com/citations?hl=en&user=fFGkrbAAAAAJ&view_op=list_works&sortby=pubdate" target="_blank" class="so-c">
+          <a href="https://scholar.google.com/citations?user=fFGkrbAAAAAJ&hl=en" target="_blank" class="so-c">
             <i class="fas fa-graduation-cap"></i><span>G. Scholar</span>
           </a>
-          <a href="https://www.linkedin.com/in/harsh-kumar-b90688259/" target="_blank" class="so-c">
+          <a href="www.linkedin.com/in/harsh-kumar-b90688259/" target="_blank" class="so-c">
             <i class="fab fa-linkedin"></i><span>LinkedIn</span>
           </a>
         </div>
-
         <div class="po-sm">
           <div class="lbl">Current Positions</div>
           <div class="ttl">Postdoctoral Fellow</div>
           <div class="row"><i class="fas fa-university"></i>Center for Astrophysics | Harvard &amp; Smithsonian</div>
-          <div class="row" style="margin-top:.35rem"><i class="fas fa-flask"></i>NSF-AI Institute (IAIFI) · Junior Investigator</div>
+          <div class="row" style="margin-top:.35rem"><i class="fas fa-flask"></i>NSF-IAIFI · Junior Investigator</div>
           <div class="row"><i class="fas fa-location-dot"></i>Cambridge, MA, USA · 2023 – present</div>
         </div>
       </div>
@@ -1011,12 +823,11 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   </div>
 </section>
 
-<!-- ══════════════ FOOTER ══════════════ -->
+<!-- ══════════════════════ FOOTER ════════════════════════════ -->
 <footer>
   <div class="ft">
     <div class="ft-c">
       © 2025 <strong>Harsh Kumar</strong> · Made with <span style="color:var(--rd)">♥</span> for Science ·
-      <a href="https://sites.google.com/view/harshkumar13/" target="_blank">Old Site ↗</a>
     </div>
     <div class="vis">
       <i class="fas fa-eye"></i>
@@ -1033,76 +844,107 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   <i class="fas fa-chevron-up"></i>
 </button>
 
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
 <script>
+
+
 const CFG = {
-  adsToken  : '',   
-  useProxy  : true,     
-  proxyUrl  : '/.netlify/functions/ads-proxy',
-
-  orcid       : '0000-0003-0871-4641',
-  authorMatch : ['kumar, h', 'kumar, harsh'],
-
-  cvPath    : './cv.pdf',
-  cvSource  : 'local',
-  cvGDriveId: '',
-
-  ctrNS     : 'hk-cfa-2025',
-  ctrKey    : 'v1',
+  useProxy   : true,                                   // ← Netlify proxy (token stays private)
+  proxyUrl   : '/.netlify/functions/ads-proxy',
+  adsToken   : '',                                     // only for local dev when useProxy=false
+  orcid      : '0000-0003-0871-4641',
+  authorMatch: ['kumar, h', 'kumar, harsh'],
+  cvPath     : './cv.pdf',                             // FULL CV → download button only
+  cvWebPath  : './cv-web.pdf',                         // SHORT CV → parsed for display
+  cvSource   : 'local',
+  ctrNS      : 'hk-cfa-2025',
+  ctrKey     : 'v1',
 };
 
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
+   📋  CV FALLBACK DATA  (shown instantly before PDF parse)
+   ══════════════════════════════════════════════════════════ */
+const CV_DATA = {
+  education:[
+    {inst:'Center for Astrophysics | Harvard and Smithsonian',
+     deg:'Post-Doctoral Fellow in Astrophysics',loc:'Cambridge, USA',period:'2023 – present',cur:true},
+    {inst:'NSF-AI Institute for Artificial Intelligence and Fundamental Interactions (IAIFI)',
+     deg:'Junior Investigator',loc:'Cambridge, USA',period:'2023 – present',cur:true},
+    {inst:'IIT Bombay',deg:'Institute Post-Doctoral Fellow',loc:'Mumbai, India',period:'2023'},
+    {inst:'IIT Bombay',deg:'Ph.D. in Astrophysics',loc:'Mumbai, India',period:'2018 – 2023',
+     grade:'CGPA: 9.3/10',
+     note:'Thesis: Studying optical counterparts of gravitational waves and gamma-ray burst afterglows with the GROWTH-India Telescope'},
+    {inst:'University of Delhi',deg:'M.Sc. — Astrophysics and Nuclear Physics',
+     loc:'Delhi, India',period:'2015 – 2017',grade:'69.6%'},
+    {inst:'University of Delhi',deg:'B.Sc. — Physics',
+     loc:'Delhi, India',period:'2012 – 2015',grade:'90.3%'},
+  ],
+  awards:[
+    {yr:'2026',   ttl:'ASI Zubin Kembhavi Award for 2025: GROWTH-India Team',       desc:'Astronomical Society of India Meeting 2026, IIT Guwahati'},
+    {yr:'2026',   ttl:'Dhananjay Joshi Fundamental Research Award 2026: GROWTH-India Team',desc:'Mumbai'},
+    {yr:'2024',   ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',       desc:'Astronomical Society of India Meeting 2024, Bangalore'},
+    {yr:'2024',   ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',       desc:'Astronomical Society of India Meeting 2024, Bangalore'},
+    {yr:'2023',   ttl:'Young Astronomer Award',                                      desc:'Honorable mention at ASI 2023, IIT Indore'},
+    {yr:'2022',   ttl:'Best Poster Award',                                           desc:'40th Annual Meeting of Astronomical Society of India'},
+    {yr:'2020',   ttl:'New Discovery Award',                                         desc:'Special Mention at 38th Annual Meeting of Astronomical Society of India'},
+    {yr:'2018–20',ttl:'Data Science Fellowship',                                     desc:'LSSTC'},
+    {yr:'2017',   ttl:'GATE Scholarship',                                            desc:'To pursue Doctorate'},
+    {yr:'2016',   ttl:'Fellowship',                                                  desc:'CSIR-NET'},
+    {yr:'2012–17',ttl:'HBCSE Scholarship',                                           desc:'Central Sector Scheme for College and University Students'},
+  ],
+  positions:[
+    {tx:'Organizer / Host of Transient Tea Meetings at Center for Astrophysics – Harvard',pr:'2024–2026'},
+    {tx:'Scientific reviewer of IOP Science Publishing House',pr:''},
+    {tx:'Served as NOIRLab Time Allocation Committee member',pr:'2 years'},
+    {tx:'Served as DOT Time Allocation Committee panel member',pr:'3 years'},
+    {tx:'Served as GMRT Time Allocation Committee panel member',pr:'1 year'},
+    {tx:'Served as panel reviewer on National Science Foundation',pr:'1 year'},
+    {tx:"Scientific Organizing Committee — Young Astronomers' Meet, ARIES Nainital",pr:'2022'},
+    {tx:'GROWTH-India Telescope Development Team Leader',pr:'2018–22'},
+    {tx:'Astro-Cosmo-Gravity Journal Club Coordinator, IIT Bombay',pr:'2018–19'},
+    {tx:'Lifetime Member — Astronomical Society of India',pr:'2022–present'},
+  ],
+};
+
+/* ══════════════════════════════════════════════════════════
    🌌  STAR FIELD + SHOOTING STARS
-   ══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════ */
 (function(){
-  const cv=document.getElementById('stars');
-  const cx=cv.getContext('2d');
+  const cv=document.getElementById('stars'),cx=cv.getContext('2d');
   let stars=[],shots=[],raf,timer=0;
-
-  function resize(){ cv.width=innerWidth; cv.height=innerHeight; }
-
+  function resize(){cv.width=innerWidth;cv.height=innerHeight}
   function mkStars(){
     stars=[];
     const n=Math.round(cv.width*cv.height/7800);
     for(let i=0;i<n;i++) stars.push({
       x:Math.random()*cv.width, y:Math.random()*cv.height,
-      r:Math.random()*1.1+.15,
-      a:Math.random(),
+      r:Math.random()*1.1+.15, a:Math.random(),
       da:(Math.random()*.006+.0015)*(Math.random()<.5?1:-1),
     });
   }
-
   function mkShot(){
     shots.push({
-      x:Math.random()*cv.width*.65,
-      y:Math.random()*cv.height*.3,
-      ang:.38+(Math.random()-.5)*.22,
-      len:90+Math.random()*70,
-      spd:12+Math.random()*8,
-      pg:0,
+      x:Math.random()*cv.width*.65, y:Math.random()*cv.height*.3,
+      ang:.38+(Math.random()-.5)*.22, len:90+Math.random()*70,
+      spd:12+Math.random()*8, pg:0,
     });
   }
-
   function draw(){
     cx.clearRect(0,0,cv.width,cv.height);
-    // Stars
     for(const s of stars){
-      s.a+=s.da;
-      if(s.a>1||s.a<.03) s.da=-s.da;
-      cx.beginPath();
-      cx.arc(s.x,s.y,s.r,0,6.2832);
-      cx.fillStyle=`rgba(200,215,255,${Math.abs(s.a)*.75})`;
-      cx.fill();
+      s.a+=s.da; if(s.a>1||s.a<.03) s.da=-s.da;
+      cx.beginPath(); cx.arc(s.x,s.y,s.r,0,6.2832);
+      cx.fillStyle=`rgba(200,215,255,${Math.abs(s.a)*.75})`; cx.fill();
     }
-    // Shooting stars
-    timer++;
-    if(timer>240&&Math.random()<.006){ mkShot(); timer=0; }
+    timer++; if(timer>240&&Math.random()<.006){mkShot();timer=0;}
     for(let i=shots.length-1;i>=0;i--){
       const s=shots[i]; s.pg+=s.spd;
       const hx=s.x+Math.cos(s.ang)*s.pg, hy=s.y+Math.sin(s.ang)*s.pg;
       const tp=Math.max(0,s.pg-s.len);
       const tx=s.x+Math.cos(s.ang)*tp, ty=s.y+Math.sin(s.ang)*tp;
-      const fs=s.len*1.1;
-      const op=s.pg>fs?Math.max(0,1-(s.pg-fs)/(s.len*.5)):1;
+      const op=s.pg>s.len*1.1?Math.max(0,1-(s.pg-s.len*1.1)/(s.len*.5)):1;
       if(op<=0||s.pg>s.len*2.4){shots.splice(i,1);continue;}
       const g=cx.createLinearGradient(tx,ty,hx,hy);
       g.addColorStop(0,'rgba(200,220,255,0)');
@@ -1115,54 +957,55 @@ const CFG = {
     }
     raf=requestAnimationFrame(draw);
   }
-
-  window.addEventListener('resize',()=>{ cancelAnimationFrame(raf); resize(); mkStars(); draw(); });
+  window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();mkStars();draw();});
   resize(); mkStars(); draw();
 })();
 
-/* ══════════════════════════════════════════════════════
-   📜  SCROLL — progress bar, navbar, back-to-top
-   ══════════════════════════════════════════════════════ */
-const navEl=document.getElementById('nav');
-const topBtn=document.getElementById('top');
-const pbEl=document.getElementById('pb');
-const secIds=['about','research','publications','cv','contact'];
-const navAs=document.querySelectorAll('.nav-links a');
+/* ══════════════════════════════════════════════════════════
+   📜  SCROLL — progress bar, navbar, back-to-top, active link
+   ══════════════════════════════════════════════════════════ */
+const navEl  = document.getElementById('nav');
+const topBtn = document.getElementById('top');
+const pbEl   = document.getElementById('pb');
+// Section order: CV comes before Publications
+const secIds = ['about','research','cv','publications','contact'];
+const navAs  = document.querySelectorAll('.nav-links a');
 
-window.addEventListener('scroll',()=>{
-  const y=scrollY;
-  const max=document.documentElement.scrollHeight-innerHeight;
-  pbEl.style.width=(max>0?y/max*100:0)+'%';
-  navEl.classList.toggle('solid',y>50);
-  topBtn.classList.toggle('show',y>400);
-  let cur='';
-  secIds.forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&y>=el.offsetTop-140) cur=id;
+window.addEventListener('scroll', () => {
+  const y   = scrollY;
+  const max = document.documentElement.scrollHeight - innerHeight;
+  pbEl.style.width = (max > 0 ? y / max * 100 : 0) + '%';
+  navEl.classList.toggle('solid', y > 50);
+  topBtn.classList.toggle('show', y > 400);
+  let cur = '';
+  secIds.forEach(id => {
+    const el = document.getElementById(id);
+    if(el && y >= el.offsetTop - 140) cur = id;
   });
-  navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${cur}`));
+  navAs.forEach(a => a.classList.toggle('active',
+    a.getAttribute('href') === `#${cur}`));
 });
 
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    📱  MOBILE MENU
-   ══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════ */
 function mOpen(){ document.getElementById('mm').classList.add('open'); }
 function mClose(){ document.getElementById('mm').classList.remove('open'); }
 
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    👁️  SCROLL REVEAL
-   ══════════════════════════════════════════════════════ */
-const rvObs=new IntersectionObserver(
-  entries=>entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),
-  {threshold:.06}
+   ══════════════════════════════════════════════════════════ */
+const rvObs = new IntersectionObserver(
+  entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }),
+  { threshold: .06 }
 );
-document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
+document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
 
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    ✍️  TYPING EFFECT
-   ══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════ */
 (function(){
-  const phrases=[
+  const phrases = [
     'γ-Ray Burst Researcher',
     'Kilonova Observer',
     'Superluminous SN Expert',
@@ -1171,171 +1014,296 @@ document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
     'Multi-Messenger Astronomer',
     'NSF-AI Junior Investigator',
   ];
-  let pi=0,ci=0,del=false;
-  const el=document.getElementById('typer');
+  let pi=0, ci=0, del=false;
+  const el = document.getElementById('typer');
   if(!el) return;
   function type(){
-    const p=phrases[pi];
-    el.textContent=del?p.substring(0,--ci):p.substring(0,++ci);
-    if(!del&&ci===p.length){ del=true; setTimeout(type,2000); return; }
-    if(del&&ci===0){ del=false; pi=(pi+1)%phrases.length; setTimeout(type,350); return; }
-    setTimeout(type,del?27:60);
+    const p = phrases[pi];
+    el.textContent = del ? p.substring(0, --ci) : p.substring(0, ++ci);
+    if(!del && ci===p.length){ del=true; setTimeout(type,2000); return; }
+    if(del && ci===0){ del=false; pi=(pi+1)%phrases.length; setTimeout(type,350); return; }
+    setTimeout(type, del?27:60);
   }
-  setTimeout(type,1100);
+  setTimeout(type, 1100);
 })();
 
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    📊  ANIMATED NUMBER COUNTER
-   ══════════════════════════════════════════════════════ */
-function animNum(id,target){
-  const el=document.getElementById(id);
-  if(!el||!target){ if(el) el.textContent='0'; return; }
-  const dur=1800,t0=performance.now();
-  const step=ts=>{
-    const p=Math.min((ts-t0)/dur,1);
-    const ep=p*p*(3-2*p);
-    el.textContent=Math.round(ep*target).toLocaleString();
+   ══════════════════════════════════════════════════════════ */
+function animNum(id, target){
+  const el = document.getElementById(id);
+  if(!el || !target){ if(el) el.textContent='0'; return; }
+  const dur=1800, t0=performance.now();
+  const step = ts => {
+    const p  = Math.min((ts-t0)/dur, 1);
+    const ep = p*p*(3-2*p);
+    el.textContent = Math.round(ep*target).toLocaleString();
     if(p<1) requestAnimationFrame(step);
-    else el.textContent=target.toLocaleString();
+    else    el.textContent = target.toLocaleString();
   };
   requestAnimationFrame(step);
 }
 
-/* ══════════════════════════════════════════════════════
-   🔭  NASA ADS — fetch publications
-   ══════════════════════════════════════════════════════ */
-let PAPERS=[];
-let curF='all';
+/* ══════════════════════════════════════════════════════════
+   🔭  PUBLICATIONS
+   Smart Cache + ORCID Primary + ADS Enrichment
+   ──────────────────────────────────────────────────────────
+   First visit  → try ADS proxy → fallback to ORCID public API
+                  → ADS enrichment runs in background
+   Return visit → render cached papers INSTANTLY (~0ms)
+                  → background checkOnly call (~200ms, tiny)
+                  → if new papers found: silent full re-fetch
+   ══════════════════════════════════════════════════════════ */
+let PAPERS = [];
+let curF   = 'all';
 
-function showAlert(html){
-  const box=document.getElementById('alrt');
-  document.getElementById('alrtMsg').innerHTML=html;
-  box.classList.add('show');
-}
-function hideAlert(){
-  document.getElementById('alrt').classList.remove('show');
-}
+// ── Paper cache ──────────────────────────────────────────────
+const PC = {
+  KEY : 'hk-papers-v4',
+  TTL : 7 * 24 * 60 * 60 * 1000,   // 7 days
+  get(){
+    try{
+      const raw = localStorage.getItem(this.KEY);
+      if(!raw) return null;
+      const o = JSON.parse(raw);
+      if(!o?.papers?.length || !o.ts) return null;
+      if(Date.now()-o.ts > this.TTL){ this.clear(); return null; }
+      return o;
+    }catch{ return null; }
+  },
+  set(papers, numFound, source){
+    try{
+      localStorage.setItem(this.KEY, JSON.stringify({
+        papers, numFound,
+        newestBibcode : papers[0]?.bibcode || '',
+        source,
+        ts   : Date.now(),
+        date : new Date().toLocaleDateString('en-US',
+                 {month:'short',day:'numeric',year:'numeric'}),
+      }));
+    }catch(e){ console.warn('[Papers] Cache write failed:',e.message); }
+  },
+  clear(){ localStorage.removeItem(this.KEY); },
+};
 
-/* ══════════════════════════════════════════════════════
-   🔭  NASA ADS — FETCH PUBLICATIONS (v3 fixed)
-   ══════════════════════════════════════════════════════ */
-async function fetchADS() {
-
-  /* ── 1. Validate token properly ── */
-  const KNOWN_BAD = [
-    '', 'your_ads_token', 'paste_token_here',
-    'your-token-here', 'token', 'xxx',
-  ];
-  const tok = (CFG.adsToken || '').trim();
-  const tokenOK = tok.length > 15 &&
-                  !KNOWN_BAD.some(b => tok.toLowerCase() === b) &&
-                  !tok.toUpperCase().startsWith('YOUR');
-
-  if (!tokenOK && !CFG.useProxy) {
-    showAlert(`
-      <strong>ADS token not set correctly.</strong>
-      In <code>index.html</code> find <code>const CFG</code> and set:<br>
-      <code style="display:block;margin:.35rem 0;padding:.4rem .7rem;
-        background:rgba(255,255,255,.07);border-radius:5px;font-size:.82rem">
-        adsToken : 'your-40-char-token-here',
-      </code>
-      Get your free token (30 seconds) →
-      <a href="https://ui.adsabs.harvard.edu/user/settings/token" target="_blank">
-        ui.adsabs.harvard.edu/user/settings/token</a>`);
-    noToken();
+// ── Entry point ──────────────────────────────────────────────
+async function fetchPapers(){
+  const cached = PC.get();
+  if(cached?.papers?.length){
+    // Render instantly from cache
+    PAPERS = cached.papers;
+    buildFilters(); renderPubs(); updateStats();
+    setPubCacheNote(cached);
+    // Silent background check for new papers
+    backgroundCheckForUpdates(cached);
     return;
   }
+  // No cache: show skeleton and full fetch
+  showPubSkeleton();
+  await fullFetchPapers(true);
+}
 
-  /* ── 2. Build URL with proper encoding ── */
-  const fl = [
-    'title','author','year','pubdate','bibcode',
-    'doi','abstract','citation_count','pub','identifier'
-  ].join(',');
+function setPubCacheNote(cached){
+  const meta = document.getElementById('pubMeta');
+  if(!meta) return;
+  const src = cached.source==='orcid' ? 'ORCID' : 'NASA ADS';
+  meta.innerHTML =
+    `${cached.papers.length} publications &nbsp;·&nbsp;` +
+    `<span style="color:var(--tx3);font-size:.72rem">` +
+    `cached ${cached.date} via ${src} · ` +
+    `<button onclick="clearPapersCache()" style="background:none;border:none;` +
+    `color:inherit;text-decoration:underline;cursor:pointer;` +
+    `font-family:inherit;font-size:inherit;padding:0">refresh</button></span>`;
+}
 
-  let url, opts = {};
+function clearPapersCache(){
+  PC.clear(); PAPERS=[];
+  document.getElementById('pList').innerHTML='';
+  fetchPapers();
+}
 
-  const qp = new URLSearchParams({
-    q    : `orcid:${CFG.orcid}`,
-    fl,
-    rows : '250',
-    sort : 'date desc',
-  });
-
-  if (CFG.useProxy) {
-    url  = `${CFG.proxyUrl}?${qp}`;
-    opts = {};
-  } else {
-    url  = `https://api.adsabs.harvard.edu/v1/search/query?${qp}`;
-    opts = { headers: { 'Authorization': `Bearer ${tok}` } };
-  }
-
-  /* ── 3. Fetch with specific error messages ── */
-  try {
-    const r = await fetch(url, opts);
-
-    const msgs = {
-      401: 'Token invalid or expired — regenerate at ui.adsabs.harvard.edu/user/settings/token',
-      403: 'Token missing search permission — try regenerating your ADS token',
-      404: 'API endpoint not found. If your token is correct, you may be running ' +
-           'from a file:// URL — deploy to GitHub Pages or run a local server',
-      429: 'Rate limit hit — wait 2 minutes and refresh the page',
-    };
-    if (msgs[r.status]) throw new Error(msgs[r.status]);
-    if (!r.ok)          throw new Error(`HTTP ${r.status}`);
-
-    const j = await r.json();
-    if (j.error)        throw new Error(`ADS: ${j.error}`);
-
-    PAPERS = j.response?.docs ?? [];
-
-    if (!PAPERS.length) {
-      showAlert(`No papers found for ORCID <code>${CFG.orcid}</code>. ` +
-                `Verify your ORCID is linked to papers in ADS.`);
-      noToken();
-      return;
+// ── Background validity check ────────────────────────────────
+async function backgroundCheckForUpdates(cached){
+  if(!CFG.useProxy) return;
+  try{
+    const params = new URLSearchParams({q:`orcid:${CFG.orcid}`,checkOnly:'true'});
+    const r = await fetch(`${CFG.proxyUrl}?${params}`);
+    if(!r.ok) return;
+    const data = await r.json();
+    const countChanged  = data.numFound      !== cached.numFound;
+    const newestChanged = data.newestBibcode !== cached.newestBibcode;
+    if(countChanged || newestChanged){
+      console.log('[Papers] New papers detected — refreshing silently…');
+      await fullFetchPapers(false);
     }
+  }catch(e){ console.warn('[Papers] Background check failed:',e.message); }
+}
 
+// ── Full fetch: ADS proxy first, ORCID fallback ──────────────
+async function fullFetchPapers(showSkel=true){
+  if(showSkel) showPubSkeleton();
+  const adsOK = await fetchFromADS();
+  if(adsOK) return;
+  await fetchFromORCID();
+}
+
+// ── ADS fetch ────────────────────────────────────────────────
+async function fetchFromADS(){
+  const tok = (CFG.adsToken||'').trim();
+  if(!CFG.useProxy && tok.length<15) return false;
+  const fl = 'title,author,year,pubdate,bibcode,doi,abstract,citation_count,pub,identifier';
+  const params = new URLSearchParams({
+    q:`orcid:${CFG.orcid}`, fl, rows:'250', sort:'date desc',
+  });
+  let url, opts={};
+  if(CFG.useProxy){
+    url = `${CFG.proxyUrl}?${params}`;
+  }else{
+    url  = `https://api.adsabs.harvard.edu/v1/search/query?${params}`;
+    opts = {headers:{Authorization:`Bearer ${tok}`}};
+  }
+  try{
+    const r = await fetch(url, opts);
+    if(!r.ok){ console.warn(`[ADS] HTTP ${r.status}`); return false; }
+    const j = await r.json();
+    if(j.error || !j.response?.docs?.length) return false;
+    PAPERS = j.response.docs;
+    PC.set(PAPERS, j.response.numFound, 'ads');
     hideAlert();
-    buildFilters();
-    renderPubs();
-    updateStats();
-
+    // Clear cached note before re-render so fresh count shows
+    const meta = document.getElementById('pubMeta');
+    if(meta) meta.innerHTML='';
+    buildFilters(); renderPubs(); updateStats();
     const cpc = document.getElementById('cvPubCt');
-    if (cpc) cpc.textContent = `${PAPERS.length} papers`;
+    if(cpc) cpc.textContent=`${PAPERS.length} papers`;
+    return true;
+  }catch(e){ console.warn('[ADS] Error:',e.message); return false; }
+}
 
-  } catch (err) {
-    console.error('ADS fetch error:', err.message);
-    showAlert(`${err.message}. &nbsp;
-      <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc"
-         target="_blank" style="color:inherit;text-decoration:underline">
-        Browse on NASA ADS ↗</a>`);
+// ── ORCID public API fallback (no token needed) ───────────────
+async function fetchFromORCID(){
+  try{
+    const r = await fetch(
+      `https://pub.orcid.org/v3.0/${CFG.orcid}/works`,
+      {headers:{Accept:'application/json'}}
+    );
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const papers = parseORCIDWorks(data);
+    if(!papers.length) throw new Error('No works returned');
+    PAPERS = papers;
+    PC.set(PAPERS, papers.length, 'orcid');
+    hideAlert(); buildFilters(); renderPubs(); updateStats();
+    // Enrich with ADS data in background
+    enrichWithADS();
+  }catch(e){
+    console.warn('[ORCID] Error:',e.message);
+    showAlert(
+      `Could not load publications automatically. &nbsp;
+       <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc"
+          target="_blank">Browse all papers on NASA ADS ↗</a>`
+    );
     noToken();
   }
 }
 
-function showAlert(html) {
-  const b = document.getElementById('alrt');
-  if (!b) return;
-  document.getElementById('alrtMsg').innerHTML = html;
-  b.classList.add('show');
-}
-function hideAlert() {
-  document.getElementById('alrt')?.classList.remove('show');
+// ── Parse ORCID works JSON ────────────────────────────────────
+function parseORCIDWorks(data){
+  return (data.group||[]).map(g=>{
+    const ws=(g['work-summary']||[]).find(s=>s.title?.title?.value)||g['work-summary']?.[0];
+    if(!ws) return null;
+    const extIds=[
+      ...(g['external-ids']?.['external-id']||[]),
+      ...(ws['external-ids']?.['external-id']||[]),
+    ];
+    let doi='', arxivId='';
+    for(const e of extIds){
+      const t=e['external-id-type'], v=e['external-id-value']||'';
+      if(t==='doi'&&!doi) doi=v;
+      if((t==='arxiv'||t==='arxiv-id')&&!arxivId) arxivId=v;
+    }
+    const year  = ws['publication-date']?.year?.value  || '—';
+    const month = ws['publication-date']?.month?.value || '01';
+    return {
+      title         :[ws.title?.title?.value||'Untitled'],
+      year, pubdate :`${year}-${month}-01`,
+      pub           :ws['journal-title']?.value||'',
+      doi           :doi     ?[doi]            :[],
+      identifier    :arxivId ?[`arXiv:${arxivId}`]:[],
+      author:[], abstract:'', citation_count:0,
+      bibcode:doi||String(ws['put-code']||''),
+      _orcid:true,
+    };
+  }).filter(Boolean).sort((a,b)=>(b.year||'0')>(a.year||'0')?1:-1);
 }
 
+// ── ADS enrichment after ORCID load ──────────────────────────
+async function enrichWithADS(){
+  if(!CFG.useProxy) return;
+  try{
+    const fl='title,author,year,bibcode,doi,abstract,citation_count,pub,identifier';
+    const params=new URLSearchParams({q:`orcid:${CFG.orcid}`,fl,rows:'250',sort:'date desc'});
+    const r=await fetch(`${CFG.proxyUrl}?${params}`);
+    if(!r.ok) return;
+    const j=await r.json();
+    const adsDocs=j.response?.docs||[];
+    if(!adsDocs.length) return;
+    const byDoi={}, byTitle={};
+    for(const p of adsDocs){
+      if(p.doi?.[0])   byDoi[p.doi[0].toLowerCase()]=p;
+      if(p.title?.[0]) byTitle[p.title[0].toLowerCase().slice(0,50)]=p;
+    }
+    let enriched=0;
+    PAPERS=PAPERS.map(p=>{
+      const dKey=p.doi?.[0]?.toLowerCase();
+      const tKey=p.title?.[0]?.toLowerCase().slice(0,50);
+      const ads=(dKey&&byDoi[dKey])||(tKey&&byTitle[tKey]);
+      if(!ads) return p;
+      enriched++;
+      return{...p,
+        author        :ads.author        ||p.author,
+        abstract      :ads.abstract      ||p.abstract,
+        citation_count:ads.citation_count??p.citation_count,
+        bibcode       :ads.bibcode        ||p.bibcode,
+        identifier    :ads.identifier     ||p.identifier,
+        _orcid        :false,
+      };
+    });
+    if(enriched>0){
+      console.log(`[Papers] Enriched ${enriched} papers from ADS`);
+      PC.set(PAPERS,adsDocs.length,'ads');
+      const meta=document.getElementById('pubMeta');
+      if(meta) meta.innerHTML='';
+      buildFilters(); renderPubs(); updateStats();
+    }
+  }catch(e){ console.warn('[Enrich] ADS enrichment failed:',e.message); }
+}
+
+// ── Skeleton & alert helpers ──────────────────────────────────
+function showPubSkeleton(){
+  document.getElementById('pList').innerHTML=
+    `<div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>`.repeat(4);
+}
+function showAlert(html){
+  const b=document.getElementById('alrt'); if(!b) return;
+  document.getElementById('alrtMsg').innerHTML=html;
+  b.classList.add('show');
+}
+function hideAlert(){ document.getElementById('alrt')?.classList.remove('show'); }
 function noToken(){
   document.getElementById('pList').innerHTML=`
     <div style="text-align:center;padding:3.5rem 1.5rem;color:var(--tx2)">
       <i class="fas fa-satellite-dish"
          style="font-size:2.5rem;display:block;margin-bottom:1rem;color:var(--bll);opacity:.4"></i>
-      <p>Publications load automatically once your ADS token is set in CFG.<br>
+      <p>Publications load automatically once your Netlify proxy is configured.<br>
       <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc"
          target="_blank" style="color:var(--bll)">Browse all papers on NASA ADS ↗</a></p>
     </div>`;
 }
 
+// ── Year filter buttons ───────────────────────────────────────
 function buildFilters(){
-  const years=[...new Set(PAPERS.map(p=>p.year))].sort((a,b)=>b-a);
+  const years=[...new Set(PAPERS.map(p=>p.year))].sort((a,b)=>b>a?1:-1);
   const MAX=5;
   document.getElementById('fRow').innerHTML=
     `<button class="fb on" data-f="all" onclick="setF('all',this)">All (${PAPERS.length})</button>`+
@@ -1353,15 +1321,16 @@ function setF(val,btn){
   renderPubs();
 }
 
+// ── Render filtered paper list ────────────────────────────────
 function renderPubs(){
   const q=(document.getElementById('pubQ')?.value||'').toLowerCase().trim();
   let list=PAPERS;
   if(curF!=='all'){
     if(curF==='older'){
-      const shown=[...new Set(PAPERS.map(p=>p.year))].sort((a,b)=>b-a).slice(0,5);
+      const shown=[...new Set(PAPERS.map(p=>p.year))].sort((a,b)=>b>a?1:-1).slice(0,5);
       const cut=Math.min(...shown.map(Number));
       list=list.filter(p=>parseInt(p.year)<cut);
-    } else {
+    }else{
       list=list.filter(p=>p.year===curF);
     }
   }
@@ -1371,14 +1340,17 @@ function renderPubs(){
     const ab=(p.abstract||'').toLowerCase();
     return t.includes(q)||a.includes(q)||ab.includes(q);
   });
-  document.getElementById('pubMeta').textContent=
-    list.length===PAPERS.length
+  const meta=document.getElementById('pubMeta');
+  if(meta&&!meta.innerHTML.includes('cached')){
+    meta.textContent=list.length===PAPERS.length
       ?`${PAPERS.length} publication${PAPERS.length!==1?'s':''}`
       :`${list.length} of ${PAPERS.length} publications`;
+  }
   if(!list.length){
     document.getElementById('pList').innerHTML=`
       <div style="text-align:center;padding:2.5rem;color:var(--tx3)">
-        <i class="fas fa-satellite-dish" style="font-size:1.8rem;margin-bottom:.7rem;display:block;opacity:.35"></i>
+        <i class="fas fa-satellite-dish"
+           style="font-size:1.8rem;margin-bottom:.7rem;display:block;opacity:.35"></i>
         No matching publications.
       </div>`;
     return;
@@ -1386,27 +1358,39 @@ function renderPubs(){
   document.getElementById('pList').innerHTML=list.map(pubCard).join('');
 }
 
+// ── Build one publication card ────────────────────────────────
 function pubCard(p,i){
-  const title=esc(p.title?.[0]??'Untitled');
-  const year=p.year??'—';
-  const jrnl=esc(p.pub??'');
-  const cites=p.citation_count??0;
-  const bib=p.bibcode??'';
-  const doi=p.doi?.[0]??'';
-  const abs=esc(p.abstract??'No abstract available.');
-  const axId=(p.identifier??[]).find(s=>/^arXiv:/i.test(s));
-  const auHtml=(p.author??[]).slice(0,8).map(a=>{
-    const low=a.toLowerCase();
-    return CFG.authorMatch.some(m=>low.includes(m))
-      ?`<span class="me">${esc(a)}</span>`:esc(a);
-  }).join(', ')+(p.author?.length>8?' <em>et al.</em>':'');
-  const isFA=CFG.authorMatch.some(m=>(p.author?.[0]??'').toLowerCase().includes(m));
-  const pd=p.pubdate?new Date(p.pubdate.replace(/-00/g,'-01')):null;
-  const isNew=pd&&(Date.now()-pd)<180*86400000;
-  const adsHref=bib?`https://ui.adsabs.harvard.edu/abs/${encodeURIComponent(bib)}/abstract`:'#';
-  const dl=Math.min(i*.04,.45).toFixed(2);
+  const title   = esc(p.title?.[0]??'Untitled');
+  const year    = p.year??'—';
+  const jrnl    = esc(p.pub??'');
+  const cites   = p.citation_count??0;
+  const bib     = p.bibcode??'';
+  const doi     = p.doi?.[0]??'';
+  const abs     = p.abstract
+    ? esc(p.abstract)
+    : (doi
+      ? `Abstract on <a href="https://doi.org/${esc(doi)}" target="_blank" style="color:var(--bll)">publisher site</a>.`
+      : 'Abstract not available.');
+  const axId    = (p.identifier??[]).find(s=>/^arXiv:/i.test(s));
+  const isORCID = p._orcid;
+  const auHtml  = p.author?.length
+    ? (p.author.slice(0,8).map(a=>{
+        const low=a.toLowerCase();
+        return CFG.authorMatch.some(m=>low.includes(m))
+          ?`<span class="me">${esc(a)}</span>`:esc(a);
+      }).join(', ')+(p.author.length>8?' <em>et al.</em>':''))
+    : `<span style="color:var(--tx3);font-style:italic">Author list via
+       <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}"
+          target="_blank" style="color:var(--bll)">NASA ADS</a></span>`;
+  const isFirst = !isORCID&&CFG.authorMatch.some(m=>(p.author?.[0]??'').toLowerCase().includes(m));
+  const pd      = p.pubdate?new Date(p.pubdate.replace(/-00/g,'-01')):null;
+  const isNew   = pd&&(Date.now()-pd)<180*86400000;
+  const adsHref = bib.length>8
+    ?`https://ui.adsabs.harvard.edu/abs/${encodeURIComponent(bib)}/abstract`
+    :(doi?`https://doi.org/${doi}`:'#');
+  const delay   = Math.min(i*.04,.45).toFixed(2);
   return `
-<div class="pub" style="animation:fadeU .5s ${dl}s ease both">
+<div class="pub" style="animation:fadeU .5s ${delay}s ease both">
   <div class="pub-top">
     <div class="pub-ttl" onclick="togAbs(this)">${title}</div>
     <span class="pub-yr">${year}</span>
@@ -1416,13 +1400,14 @@ function pubCard(p,i){
   <div class="aw"><div class="aw-in">${abs}</div></div>
   <div class="pub-ft">
     ${cites>0?`<span class="bc"><i class="fas fa-quote-left" style="font-size:.58rem"></i>${cites} cite${cites!==1?'s':''}</span>`:''}
-    ${isFA?'<span class="bf">★ First Author</span>':''}
-    ${isNew?'<span class="bn">● New</span>':''}
+    ${isFirst?'<span class="bf">★ First Author</span>':''}
+    ${isNew  ?'<span class="bn">● New</span>':''}
+    ${isORCID?'<span style="font-size:.68rem;color:var(--tx3);padding:.1rem .45rem;border:1px solid var(--bdr);border-radius:4px">via ORCID</span>':''}
     <button class="tab" onclick="togAbsBtn(this)">
       <i class="fas fa-chevron-down" style="font-size:.58rem"></i> Abstract
     </button>
     <div class="pl">
-      ${bib?`<a href="${adsHref}" target="_blank" class="xl ads">ADS</a>`:''}
+      ${adsHref!=='#'?`<a href="${adsHref}" target="_blank" class="xl ads">ADS</a>`:''}
       ${doi?`<a href="https://doi.org/${doi}" target="_blank" class="xl doi">DOI</a>`:''}
       ${axId?`<a href="https://arxiv.org/abs/${axId.replace(/^arXiv:/i,'')}" target="_blank" class="xl arx">arXiv</a>`:''}
     </div>
@@ -1430,213 +1415,249 @@ function pubCard(p,i){
 </div>`;
 }
 
-function togAbs(el){ const c=el.closest('.pub'); c.querySelector('.aw').classList.toggle('open'); const b=c.querySelector('.tab'); if(b)b.classList.toggle('open'); }
-function togAbsBtn(btn){ btn.closest('.pub').querySelector('.aw').classList.toggle('open'); btn.classList.toggle('open'); }
-
-function updateStats(){
-  animNum('sPap',PAPERS.length);
-  const tot=PAPERS.reduce((s,p)=>s+(p.citation_count??0),0);
-  animNum('sCit',tot);
-  const sorted=PAPERS.map(p=>p.citation_count??0).sort((a,b)=>b-a);
-  let h=0; sorted.forEach((c,i)=>{ if(c>=i+1) h=i+1; });
-  animNum('sH',h);
-  const yrs=PAPERS.map(p=>parseInt(p.year)).filter(y=>!isNaN(y));
-  if(yrs.length)
-    document.getElementById('sYr').textContent=(new Date().getFullYear()-Math.min(...yrs))+'+';
+function togAbs(el){
+  const c=el.closest('.pub');
+  c.querySelector('.aw').classList.toggle('open');
+  c.querySelector('.tab')?.classList.toggle('open');
+}
+function togAbsBtn(btn){
+  btn.closest('.pub').querySelector('.aw').classList.toggle('open');
+  btn.classList.toggle('open');
 }
 
 
-if(window.pdfjsLib){
-  pdfjsLib.GlobalWorkerOptions.workerSrc=
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-}
+/* ══════════════════════════════════════════════════════════
+   📊  STATS  —  ADS papers + Google Scholar metrics
+   ══════════════════════════════════════════════════════════
+   Priority order:
+   1. Paper count   → always from loaded PAPERS array
+   2. Citations     → from ADS papers first, Scholar fallback
+   3. h-index       → calculated from ADS first, Scholar fallback
+   4. i10-index     → calculated from ADS first, Scholar fallback
+   5. Yrs Active    → always from PAPERS array
+   ══════════════════════════════════════════════════════════ */
 
-/* ── Hardcoded fallback data (from CV screenshot) ── */
-const CV_DATA={
-  education:[
-    {inst:'Center for Astrophysics | Harvard and Smithsonian',deg:'Post-Doctoral Fellow in Astrophysics',loc:'Cambridge, USA',period:'2023 – present',cur:true},
-    {inst:'NSF-AI Institute for Artificial Intelligence and Fundamental Interactions (IAIFI)',deg:'Junior Investigator',loc:'Cambridge, USA',period:'2023 – present',cur:true},
-    {inst:'IIT Bombay',deg:'Institute Post-Doctoral Fellow',loc:'Mumbai, India',period:'2023'},
-    {inst:'IIT Bombay',deg:'Ph.D. in Astrophysics',loc:'Mumbai, India',period:'2018 – 2023',grade:'CGPA: 9.3/10',note:'Thesis: Studying optical counterparts of gravitational waves and gamma-ray burst afterglows with the GROWTH-India Telescope'},
-    {inst:'University of Delhi',deg:'M.Sc. — Astrophysics and Nuclear Physics',loc:'Delhi, India',period:'2015 – 2017',grade:'69.6%'},
-    {inst:'University of Delhi',deg:"B.Sc. — Physics",loc:'Delhi, India',period:'2012 – 2015',grade:'90.3%'},
-  ],
-  awards:[
-    {yr:'2026',ttl:'ASI Zubin Kembhavi Award for 2025: GROWTH-India Team',desc:'Astronomical Society of India Meeting 2026, IIT Guwahati'},
-    {yr:'2026',ttl:'Dhananjay Joshi Fundamental Research Award 2026: GROWTH-India Team',desc:'Mumbai'},
-    {yr:'2024',ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',desc:'Astronomical Society of India Meeting 2024, Bangalore'},
-    {yr:'2024',ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',desc:'Astronomical Society of India Meeting 2024, Bangalore'},
-    {yr:'2023',ttl:'Young Astronomer Award',desc:'Honorable mention at ASI 2023, IIT Indore'},
-    {yr:'2022',ttl:'Best Poster Award',desc:'40th Annual Meeting of Astronomical Society of India'},
-    {yr:'2020',ttl:'New Discovery Award',desc:'Special Mention at 38th Annual Meeting of Astronomical Society of India'},
-    {yr:'2018–20',ttl:'Data Science Fellowship',desc:'LSSTC'},
-    {yr:'2017',ttl:'GATE Scholarship',desc:'To pursue Doctorate'},
-    {yr:'2016',ttl:'Fellowship',desc:'CSIR-NET'},
-    {yr:'2012–17',ttl:'HBCSE Scholarship',desc:'Central Sector Scheme for College and University Students'},
-  ],
-  positions:[
-    {tx:'Organizer / Host of Transient Tea Meetings at Center for Astrophysics – Harvard',pr:'2024–2026'},
-    {tx:'Scientific reviewer of IOP Science Publishing House',pr:''},
-    {tx:'Served as NOIRLab Time Allocation Committee member',pr:'2 years'},
-    {tx:'Served as DOT Time Allocation Committee panel member',pr:'3 years'},
-    {tx:'Served as GMRT Time Allocation Committee panel member',pr:'1 year'},
-    {tx:'Served as panel reviewer on National Science Foundation',pr:'1 year'},
-    {tx:"Scientific Organizing Committee — Young Astronomers' Meet, ARIES Nainital",pr:'2022'},
-    {tx:'GROWTH-India Telescope Development Team Leader',pr:'2018–22'},
-    {tx:'Astro-Cosmo-Gravity Journal Club Coordinator, IIT Bombay',pr:'2018–19'},
-    {tx:'Lifetime Member — Astronomical Society of India',pr:'2022–present'},
-  ],
+// Scholar metrics cache
+const SC = {
+  KEY: 'hk-scholar-v2',
+  TTL: 6 * 60 * 60 * 1000,   // 6 hours
+  get() {
+    try {
+      const raw = localStorage.getItem(this.KEY);
+      if (!raw) return null;
+      const o = JSON.parse(raw);
+      if (!o?.hIndex || !o.ts) return null;
+      if (Date.now() - o.ts > this.TTL) { this.clear(); return null; }
+      return o;
+    } catch { return null; }
+  },
+  set(data) {
+    try {
+      localStorage.setItem(this.KEY, JSON.stringify({ ...data, ts: Date.now() }));
+    } catch (e) { console.warn('[Scholar] Cache write failed:', e.message); }
+  },
+  clear() { localStorage.removeItem(this.KEY); },
 };
 
-function setCVSt(html,cls=''){
-  const el=document.getElementById('cvSt');
-  if(!el) return;
+function updateStats() {
+  // ── Paper count: always from loaded papers ──
+  animNum('sPap', PAPERS.length);
+
+  // ── Calculate from ADS data ──
+  const citeCounts = PAPERS.map(p => p.citation_count ?? 0);
+  const totalCites = citeCounts.reduce((s, c) => s + c, 0);
+  const sorted     = [...citeCounts].sort((a, b) => b - a);
+  let   h          = 0;
+  sorted.forEach((c, i) => { if (c >= i + 1) h = i + 1; });
+  const i10        = sorted.filter(c => c >= 10).length;
+
+  // ── Yrs Active: always from papers ──
+  const yrs = PAPERS.map(p => parseInt(p.year)).filter(y => !isNaN(y));
+  if (yrs.length)
+    document.getElementById('sYr').textContent =
+      (new Date().getFullYear() - Math.min(...yrs)) + '+';
+
+  // ── If ADS gave us citation data, use it ──
+  const adsHasCitations = totalCites > 0;
+  if (adsHasCitations) {
+    animNum('sCit', totalCites);
+    animNum('sH',   h);
+    animNum('sI10', i10);
+    // Still fetch Scholar in background to keep cache warm
+    fetchScholarMetrics(false);
+    return;
+  }
+
+  // ── No ADS citation data (ORCID fallback) → use Scholar ──
+  const cached = SC.get();
+  if (cached) {
+    // Show cached Scholar stats immediately
+    animNum('sCit', cached.citations);
+    animNum('sH',   cached.hIndex);
+    animNum('sI10', cached.i10Index);
+    // Refresh in background
+    fetchScholarMetrics(false);
+  } else {
+    // Fetch Scholar now (first visit with no cache)
+    fetchScholarMetrics(true);
+  }
+}
+
+// updateStats must be called after PAPERS is populated
+// (it's already called in fetchFromADS, fetchFromORCID, enrichWithADS)
+
+async function fetchScholarMetrics(updateDisplay = true) {
+  try {
+    const r = await fetch('/.netlify/functions/scholar-proxy');
+
+    if (!r.ok) throw new Error(`Scholar proxy HTTP ${r.status}`);
+    const data = await r.json();
+    if (data.error) throw new Error(data.error);
+
+    // Cache the result
+    SC.set(data);
+
+    // Update display if requested (i.e. ADS had no citation data)
+    if (updateDisplay) {
+      animNum('sCit', data.citations);
+      animNum('sH',   data.hIndex);
+      animNum('sI10', data.i10Index);
+    }
+
+    console.log(
+      `[Scholar] citations=${data.citations} ` +
+      `h=${data.hIndex} i10=${data.i10Index}`
+    );
+
+  } catch (e) {
+    console.warn('[Scholar] Could not fetch metrics:', e.message);
+
+    // Last resort: try to show cached values even if expired
+    const stale = (() => {
+      try { return JSON.parse(localStorage.getItem(SC.KEY)); } catch { return null; }
+    })();
+
+    if (stale && updateDisplay) {
+      animNum('sCit', stale.citations ?? 0);
+      animNum('sH',   stale.hIndex   ?? 0);
+      animNum('sI10', stale.i10Index ?? 0);
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   📄  CV
+   Instant fallback → cache → background PDF parse (cv-web.pdf)
+   Download always uses full cv.pdf
+   ══════════════════════════════════════════════════════════ */
+const CV_CACHE_KEY = 'hk-cv-parsed-v4';
+const CV_CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
+
+async function initCV(){
+  // ① Render hardcoded data INSTANTLY — zero wait
+  renderFallbackCV();
+  setCVSt(
+    '<i class="fas fa-circle-check" style="margin-right:5px"></i>' +
+    'CV loaded · <span id="cvParseNote">checking for updated version…</span>',
+    'ok'
+  );
+  // ② Try localStorage cache
+  const cached = getCVCache();
+  if(cached){
+    try{
+      renderParsedCV(cached.sections);
+      updateCVNote(
+        `parsed from cv-web.pdf · cached ${cached.date} · ` +
+        `<button onclick="clearCVCache()" style="background:none;border:none;color:inherit;` +
+        `text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0">` +
+        `refresh</button>`
+      );
+      return; // Done instantly
+    }catch(e){ clearCVCache(); }
+  }
+  // ③ No cache: parse cv-web.pdf in background (non-blocking)
+  parseCVBackground();
+}
+
+async function parseCVBackground(){
+  if(!window.pdfjsLib){ updateCVNote('PDF.js unavailable — showing embedded CV data'); return; }
+  let src = CFG.cvWebPath;
+  try{
+    // Check if cv-web.pdf exists; fall back to cv.pdf if not
+    const probe = await fetch(src, {method:'HEAD'}).catch(()=>null);
+    if(!probe?.ok){ console.info('[CV] cv-web.pdf not found, using cv.pdf'); src=CFG.cvPath; }
+    updateCVNote('parsing cv-web.pdf…');
+    const sections = await extractCVSections(src);
+    if(!sections || sections.length<2) throw new Error('fewer than 2 sections detected');
+    setCVCache(sections);
+    renderParsedCV(sections);
+    const fname = src.split('/').pop();
+    updateCVNote(
+      `parsed from ${fname} · ${sections.length} sections · ` +
+      `<button onclick="clearCVCache()" style="background:none;border:none;color:inherit;` +
+      `text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0">` +
+      `refresh</button>`
+    );
+  }catch(e){
+    console.warn('[CV] Parse failed:',e.message);
+    updateCVNote(
+      `showing embedded data · ` +
+      `<a href="${CFG.cvPath}" download style="color:inherit;text-decoration:underline">download cv.pdf</a> · ` +
+      `<small style="opacity:.65">${esc(e.message)}</small>`
+    );
+  }
+}
+
+function updateCVNote(html){
+  const el=document.getElementById('cvParseNote'); if(el) el.innerHTML=html;
+}
+
+function getCVCache(){
+  try{
+    const raw=localStorage.getItem(CV_CACHE_KEY); if(!raw) return null;
+    const o=JSON.parse(raw);
+    if(!o?.sections||!o.ts) return null;
+    if(Date.now()-o.ts>CV_CACHE_TTL){ clearCVCache(); return null; }
+    return o;
+  }catch{ return null; }
+}
+function setCVCache(sections){
+  try{
+    localStorage.setItem(CV_CACHE_KEY,JSON.stringify({
+      sections, ts:Date.now(),
+      date:new Date().toLocaleDateString('en-US',
+             {month:'short',day:'numeric',year:'numeric'}),
+    }));
+  }catch(e){ console.warn('[CV] Cache write failed:',e.message); }
+}
+function clearCVCache(){ localStorage.removeItem(CV_CACHE_KEY); location.reload(); }
+
+function setCVSt(html, cls=''){
+  const el=document.getElementById('cvSt'); if(!el) return;
   el.className='cv-st'+(cls?' '+cls:'');
   el.innerHTML=html;
 }
 
+// Download button → always full cv.pdf
 function dlCV(){
   if(CFG.cvSource==='gdrive'&&CFG.cvGDriveId){
     window.open(`https://drive.google.com/uc?id=${CFG.cvGDriveId}&export=download`,'_blank');
-  } else {
+  }else{
     const a=document.createElement('a');
     a.href=CFG.cvPath; a.download='Harsh_Kumar_CV.pdf'; a.click();
   }
 }
 
-/* ══════════════════════════════════════════════════════
-   📄  CV — INSTANT LOAD + BACKGROUND PDF PARSE + CACHE
-   ══════════════════════════════════════════════════════
-   Flow:
-   1. Show hardcoded CV data INSTANTLY (zero wait)
-   2. Check localStorage for a cached parse → render if found
-   3. Parse cv.pdf in the background (non-blocking)
-   4. When done, cache it and smoothly update the page
-   ══════════════════════════════════════════════════════ */
-
-const CV_CACHE_KEY = 'hk-cv-parsed-v3';
-const CV_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
-
-async function initCV() {
-  /* Step 1: Show fallback data IMMEDIATELY — no waiting */
-  renderFallbackCV();
-  setCVSt(
-    '<i class="fas fa-circle-notch fa-spin" style="margin-right:5px"></i>' +
-    'Loading CV…'
-  );
-
-  /* Step 2: Check for valid localStorage cache */
-  const cached = getCVCache();
-  if (cached) {
-    try {
-      renderParsedCV(cached.sections);
-      setCVSt(
-        `<i class="fas fa-circle-check" style="margin-right:5px"></i>` +
-        `CV loaded · cached ${cached.date} · ` +
-        `<button onclick="clearCVCache()" style="background:none;border:none;` +
-        `color:inherit;cursor:pointer;text-decoration:underline;` +
-        `font-family:inherit;font-size:inherit;padding:0">` +
-        `Refresh from PDF</button>`,
-        'ok'
-      );
-      return; // Done instantly
-    } catch (e) {
-      clearCVCache(); // Cache corrupted, start fresh
-    }
-  }
-
-  /* Step 3: Parse PDF in background (non-blocking) */
-  setCVSt(
-    '<i class="fas fa-file-pdf" style="margin-right:5px;color:var(--rd)"></i>' +
-    'Showing embedded CV · Parsing cv.pdf in background…',
-    'warn'
-  );
-  parseCVBackground(); // Do NOT await — returns immediately
+// ── PDF.js worker ─────────────────────────────────────────────
+if(window.pdfjsLib){
+  pdfjsLib.GlobalWorkerOptions.workerSrc=
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
-
-/* Runs fully in background, updates page when done */
-async function parseCVBackground() {
-  if (!window.pdfjsLib) {
-    setCVSt(
-      '<i class="fas fa-info-circle" style="margin-right:5px"></i>' +
-      'Showing embedded CV data (PDF.js unavailable).',
-      'warn'
-    );
-    return;
-  }
-
-  const src = CFG.cvSource === 'gdrive' && CFG.cvGDriveId
-    ? `https://drive.google.com/uc?id=${CFG.cvGDriveId}&export=download`
-    : CFG.cvPath;
-
-  try {
-    const sections = await extractCVSections(src);
-
-    if (!sections || sections.length < 2) {
-      throw new Error('Less than 2 sections found in PDF');
-    }
-
-    /* Cache for next visit */
-    setCVCache(sections);
-
-    /* Update page with parsed content */
-    renderParsedCV(sections);
-    setCVSt(
-      `<i class="fas fa-circle-check" style="margin-right:5px"></i>` +
-      `Parsed from cv.pdf (${sections.length} sections found) · ` +
-      `<a href="${src}" download="Harsh_Kumar_CV.pdf" ` +
-      `style="color:inherit;text-decoration:underline">Download PDF</a>`,
-      'ok'
-    );
-
-  } catch (err) {
-    console.warn('CV PDF parse failed:', err.message);
-    setCVSt(
-      `<i class="fas fa-circle-check" style="margin-right:5px"></i>` +
-      `Showing embedded CV · ` +
-      `<a href="${CFG.cvPath}" download="Harsh_Kumar_CV.pdf" ` +
-      `style="color:inherit;text-decoration:underline">Download PDF</a> · ` +
-      `<small style="opacity:.7">PDF parse: ${esc(err.message)}</small>`,
-      'warn'
-    );
-  }
-}
-
-function getCVCache() {
-  try {
-    const raw = localStorage.getItem(CV_CACHE_KEY);
-    if (!raw) return null;
-    const obj = JSON.parse(raw);
-    if (!obj || !obj.sections || !obj.ts) return null;
-    if (Date.now() - obj.ts > CV_CACHE_TTL) { clearCVCache(); return null; }
-    return obj;
-  } catch { return null; }
-}
-
-function setCVCache(sections) {
-  try {
-    localStorage.setItem(CV_CACHE_KEY, JSON.stringify({
-      sections,
-      ts  : Date.now(),
-      date: new Date().toLocaleDateString('en-US', {
-              month:'short', day:'numeric', year:'numeric' }),
-    }));
-  } catch (e) {
-    console.warn('Could not cache CV:', e.message);
-  }
-}
-
-function clearCVCache() {
-  localStorage.removeItem(CV_CACHE_KEY);
-  location.reload();
-}
-
-/* ── PDF.js text extraction ── */
+// ── PDF text extraction ───────────────────────────────────────
 async function extractCVSections(url){
   const pdf=await pdfjsLib.getDocument({url,verbosity:0}).promise;
   const items=[];
-
   for(let pg=1;pg<=pdf.numPages;pg++){
     const page=await pdf.getPage(pg);
     const vp=page.getViewport({scale:1});
@@ -1644,87 +1665,59 @@ async function extractCVSections(url){
     for(const it of tc.items){
       if(!it.str||!it.str.trim()) continue;
       items.push({
-        t:it.str,
-        x:Math.round(it.transform[4]),
+        t:it.str, x:Math.round(it.transform[4]),
         y:Math.round(vp.height-it.transform[5]),
-        s:Math.round(Math.abs(it.transform[0]))||10,
-        pg,
+        s:Math.round(Math.abs(it.transform[0]))||10, pg,
       });
     }
   }
-
-  // Sort: page → y (top–bottom) → x (left–right)
   items.sort((a,b)=>
-    a.pg!==b.pg ? a.pg-b.pg :
-    Math.abs(a.y-b.y)>4 ? a.y-b.y : a.x-b.x
+    a.pg!==b.pg?a.pg-b.pg:Math.abs(a.y-b.y)>4?a.y-b.y:a.x-b.x
   );
-
-  // Group into lines
   const lines=[];
   let cur=null;
   for(const it of items){
     if(!cur||cur.pg!==it.pg||Math.abs(cur.y-it.y)>5){
       if(cur) lines.push(cur);
       cur={text:it.t,x:it.x,y:it.y,s:it.s,pg:it.pg};
-    } else {
-      cur.text+=' '+it.t;
-      cur.s=Math.max(cur.s,it.s);
+    }else{
+      cur.text+=' '+it.t; cur.s=Math.max(cur.s,it.s);
     }
   }
   if(cur) lines.push(cur);
-
-  // Clean
   const clean=lines
     .map(l=>({...l,text:l.text.replace(/\s+/g,' ').trim()}))
-    .filter(l=>l.text.length>1
-               &&!/^\d+$/.test(l.text)
-               &&!/^Harsh\s*Kumar\s*\d+$/i.test(l.text));
-
+    .filter(l=>l.text.length>1&&!/^\d+$/.test(l.text)&&!/^Harsh\s*Kumar\s*\d+$/i.test(l.text));
   if(!clean.length) throw new Error('no text extracted');
-
-  // Compute median font size
   const sz=clean.map(l=>l.s).filter(s=>s>0&&s<100).sort((a,b)=>a-b);
   const med=sz[Math.floor(sz.length/2)];
-  const hdrThresh=med*1.28;
-
-  // Section patterns
+  const hdrT=med*1.28;
   const SECS=[
-    {k:'education',   pat:/^education$/i,                                  ico:'fa-graduation-cap',col:'blue'},
-    {k:'awards',      pat:/^awards?\s*(and\s*fellowships?)?$/i,            ico:'fa-trophy',        col:'amber'},
-    {k:'positions',   pat:/^positions?\s*(of\s*responsibility)?\s*(and\s*memberships?)?$/i, ico:'fa-users-gear', col:'teal'},
-    {k:'publications',pat:/^publications?/i,                               ico:'fa-book-open',     col:'purple'},
-    {k:'research',    pat:/^research(\s+interests?)?$/i,                   ico:'fa-flask',         col:'blue'},
-    {k:'teaching',    pat:/^teaching/i,                                    ico:'fa-chalkboard',    col:'teal'},
-    {k:'talks',       pat:/^(invited\s*)?(talks?|presentations?|invited talks?)/i, ico:'fa-microphone', col:'purple'},
-    {k:'observing',   pat:/^observing/i,                                   ico:'fa-satellite-dish',col:'blue'},
-    {k:'grants',      pat:/^(grants?|funding)/i,                          ico:'fa-coins',         col:'amber'},
-    {k:'skills',      pat:/^(technical\s*)?(skills?|software|computing)/i,ico:'fa-code',          col:'teal'},
-    {k:'service',     pat:/^(professional\s*)?(service|outreach)/i,       ico:'fa-hands-helping', col:'teal'},
-    {k:'references',  pat:/^references?$/i,                               ico:'fa-address-book',  col:'blue'},
+    {k:'education',   pat:/^education$/i,                                                 ico:'fa-graduation-cap',col:'blue'},
+    {k:'awards',      pat:/^awards?\s*(and\s*fellowships?)?$/i,                           ico:'fa-trophy',        col:'amber'},
+    {k:'positions',   pat:/^positions?\s*(of\s*responsibility)?\s*(and\s*memberships?)?$/i,ico:'fa-users-gear',  col:'teal'},
+    {k:'publications',pat:/^publications?/i,                                              ico:'fa-book-open',     col:'purple'},
+    {k:'research',    pat:/^research(\s+interests?)?$/i,                                  ico:'fa-flask',         col:'blue'},
+    {k:'teaching',    pat:/^teaching/i,                                                   ico:'fa-chalkboard',    col:'teal'},
+    {k:'talks',       pat:/^(invited\s*)?(talks?|presentations?)/i,                       ico:'fa-microphone',    col:'purple'},
+    {k:'observing',   pat:/^observing/i,                                                  ico:'fa-satellite-dish',col:'blue'},
+    {k:'grants',      pat:/^(grants?|funding)/i,                                          ico:'fa-coins',         col:'amber'},
+    {k:'skills',      pat:/^(technical\s*)?(skills?|software|computing)/i,               ico:'fa-code',          col:'teal'},
+    {k:'service',     pat:/^(professional\s*)?(service|outreach)/i,                      ico:'fa-hands',         col:'teal'},
+    {k:'references',  pat:/^references?$/i,                                               ico:'fa-address-book',  col:'blue'},
   ];
-
   const sections=[];
   let sec=null;
-
   for(const line of clean){
-    // Skip name / email / contact header at top of page 1
-    if(line.pg===1&&line.s>=hdrThresh*1.4) continue;
+    if(line.pg===1&&line.s>=hdrT*1.4) continue;
     if(line.pg===1&&(line.text.includes('@')||line.text.includes('Homepage'))) continue;
-
     const matched=SECS.find(s=>s.pat.test(line.text.trim()));
-    const isHdr=(matched||line.s>=hdrThresh)&&line.text.length<65;
-
+    const isHdr=(matched||line.s>=hdrT)&&line.text.length<65;
     if(isHdr){
       if(sec&&sec.lines.length>0) sections.push(sec);
-      sec={
-        title:line.text.trim(),
-        key:matched?.k||'misc',
-        ico:matched?.ico||'fa-file-lines',
-        col:matched?.col||'blue',
-        lines:[],
-        med,
-      };
-    } else if(sec){
+      sec={title:line.text.trim(),key:matched?.k||'misc',
+           ico:matched?.ico||'fa-file-lines',col:matched?.col||'blue',lines:[],med};
+    }else if(sec){
       sec.lines.push(line);
     }
   }
@@ -1732,15 +1725,11 @@ async function extractCVSections(url){
   return sections;
 }
 
-/* ── Render parsed sections ── */
+// ── Render parsed sections ────────────────────────────────────
 function renderParsedCV(sections){
-  const cont=document.getElementById('cvSecs');
-  cont.innerHTML=sections.map((s,i)=>{
-    const body=renderSecBody(s);
-    return accordion(`cvP${i}`,s.title,s.ico,s.col,'',body);
-  }).join('');
-  // Cascade open all sections
-  sections.forEach((_,i)=>setTimeout(()=>openCVA(`cvP${i}`),250+i*180));
+  document.getElementById('cvSecs').innerHTML=
+    sections.map((s,i)=>accordion(`cvP${i}`,s.title,s.ico,s.col,'',renderSecBody(s))).join('');
+  sections.forEach((_,i)=>setTimeout(()=>openCVA(`cvP${i}`),200+i*160));
 }
 
 function renderSecBody(sec){
@@ -1751,39 +1740,26 @@ function renderSecBody(sec){
   return renderGen(lines,med);
 }
 
-/* ── Education ── */
 function renderEdu(lines,med){
-  const entries=[];
-  let e=null;
+  const entries=[];let e=null;
   for(const l of lines){
-    const t=l.text.trim();
-    if(!t) continue;
-    // Detect institution line: larger font or known institution keywords
-    const isInst=l.s>=med*1.05||
-      /^(iit|university|center for astrophysics|nsf|national|institute|harvard|caltech|mit)/i.test(t);
-    const hasYear=/\d{4}/.test(t);
+    const t=l.text.trim(); if(!t) continue;
+    const isInst=l.s>=med*1.05||/^(iit|university|center for astrophysics|nsf|national|institute|harvard|caltech|mit)/i.test(t);
     if(isInst&&!(/^\d/.test(t))){
       if(e) entries.push(e);
-      const pts=t.split(/\s{3,}/); // split on multi-space (right-aligned location)
+      const pts=t.split(/\s{3,}/);
       e={inst:pts[0],loc:pts[1]||'',deg:'',period:'',grade:'',note:'',cur:false};
-    } else if(e){
+    }else if(e){
       const pts=t.split(/\s{3,}/);
       const main=pts[0].trim();
-      const right=pts[pts.length-1]?.trim()||'';
       const ym=t.match(/(\d{4}\s*[-–]\s*(?:\d{4}|present))/i);
-      if((ym||/^\d{4}/.test(right))&&!e.deg){
-        e.deg=main;
-        e.period=ym?ym[1]:right;
+      if((ym||/^\d{4}/.test(pts[pts.length-1]?.trim()||''))&&!e.deg){
+        e.deg=main; e.period=ym?ym[1]:(pts[pts.length-1]||'');
         if(/present/i.test(e.period)) e.cur=true;
-      } else if(/cgpa|gpa|grade|score|\d+[%.]/i.test(t)){
-        e.grade=t;
-      } else if(/thesis|dissertation/i.test(t)){
-        e.note=t;
-      } else if(!e.deg){
-        e.deg=main;
-      } else {
-        e.note=(e.note?e.note+' ':'')+t;
-      }
+      }else if(/cgpa|gpa|grade|score|\d+[%.]/i.test(t)){e.grade=t;}
+      else if(/thesis|dissertation/i.test(t)){e.note=t;}
+      else if(!e.deg){e.deg=main;}
+      else{e.note=(e.note?e.note+' ':'')+t;}
     }
   }
   if(e) entries.push(e);
@@ -1793,25 +1769,22 @@ function renderEdu(lines,med){
   <div class="edu-p">${esc(e.period)}</div>
   <div class="edu-b">
     <h4>${esc(e.inst)}${e.cur?'<span class="live-b">Now</span>':''}</h4>
-    ${e.deg?`<div class="edu-d">${esc(e.deg)}</div>`:''}
-    ${e.loc?`<div class="edu-loc"><i class="fas fa-location-dot"></i>${esc(e.loc)}</div>`:''}
+    ${e.deg  ?`<div class="edu-d">${esc(e.deg)}</div>`:''}
+    ${e.loc  ?`<div class="edu-loc"><i class="fas fa-location-dot"></i>${esc(e.loc)}</div>`:''}
     ${e.grade?`<div class="edu-g">${esc(e.grade)}</div>`:''}
-    ${e.note?`<div class="edu-n">${esc(e.note)}</div>`:''}
+    ${e.note ?`<div class="edu-n">${esc(e.note)}</div>`:''}
   </div>
 </div>`).join('')}</div>`;
 }
 
-/* ── Awards ── */
 function renderAwd(lines){
-  const list=[];
-  let cur=null;
+  const list=[];let cur=null;
   for(const l of lines){
-    const t=l.text.trim();
-    if(!t) continue;
+    const t=l.text.trim(); if(!t) continue;
     const m=t.match(/^(\d{4}(?:[-–]\d{2,4})?)\s+(.*)/);
-    if(m){ if(cur)list.push(cur); cur={yr:m[1],ttl:m[2],desc:''}; }
-    else if(cur){ cur.desc=(cur.desc?cur.desc+' ':'')+t; }
-    else{ list.push({yr:'',ttl:t,desc:''}); }
+    if(m){if(cur)list.push(cur); cur={yr:m[1],ttl:m[2],desc:''};}
+    else if(cur){cur.desc=(cur.desc?cur.desc+' ':'')+t;}
+    else{list.push({yr:'',ttl:t,desc:''});}
   }
   if(cur) list.push(cur);
   if(!list.length) return renderGen(lines);
@@ -1822,16 +1795,14 @@ function renderAwd(lines){
 </div>`).join('')}</div>`;
 }
 
-/* ── Positions ── */
 function renderPos(lines){
   const list=[];
   for(const l of lines){
-    const t=l.text.replace(/^[-–•·]\s*/,'').trim();
-    if(!t) continue;
+    const t=l.text.replace(/^[-–•·]\s*/,'').trim(); if(!t) continue;
     const pts=t.split(/\s{3,}/);
     const per=pts.length>1?pts[pts.length-1]:'';
     const tx=per?pts.slice(0,-1).join(' ').trim():t;
-    list.push({tx,pr:per.length<12?per:''});
+    list.push({tx, pr:per.length<12?per:''});
   }
   if(!list.length) return renderGen(lines);
   return `<div class="po-l">${list.map(p=>`
@@ -1842,19 +1813,17 @@ function renderPos(lines){
 </div>`).join('')}</div>`;
 }
 
-/* ── Generic section ── */
 function renderGen(lines,med){
-  if(!lines||!lines.length) return '<p style="color:var(--tx3);font-size:.84rem">No content extracted.</p>';
-  const mxS=lines.length?Math.max(...lines.map(l=>l.s)):10;
+  if(!lines?.length) return '<p style="color:var(--tx3);font-size:.84rem">No content extracted.</p>';
+  const mxS=Math.max(...lines.map(l=>l.s));
   let html='',inE=false;
   for(const l of lines){
-    const t=l.text.trim();
-    if(!t) continue;
+    const t=l.text.trim(); if(!t) continue;
     if(l.s>=mxS*.85){
       if(inE) html+='</div>';
       html+=`<div class="gp-e"><div class="gp-main">${esc(t)}</div>`;
       inE=true;
-    } else {
+    }else{
       html+=`<div class="gp-line">${esc(t)}</div>`;
     }
   }
@@ -1862,7 +1831,7 @@ function renderGen(lines,med){
   return html||'<p style="color:var(--tx3);font-size:.84rem">Section extracted but appears empty.</p>';
 }
 
-/* ── Fallback CV (hardcoded from screenshot) ── */
+// ── Fallback CV (hardcoded from screenshot — shown instantly) ─
 function renderFallbackCV(){
   const d=CV_DATA;
   const eduHTML=`<div class="edu-l">${d.education.map(e=>`
@@ -1873,7 +1842,7 @@ function renderFallbackCV(){
     <div class="edu-d">${esc(e.deg)}</div>
     <div class="edu-loc"><i class="fas fa-location-dot"></i>${esc(e.loc)}</div>
     ${e.grade?`<div class="edu-g">${esc(e.grade)}</div>`:''}
-    ${e.note?`<div class="edu-n">${esc(e.note)}</div>`:''}
+    ${e.note ?`<div class="edu-n">${esc(e.note)}</div>`:''}
   </div>
 </div>`).join('')}</div>`;
 
@@ -1893,29 +1862,31 @@ function renderFallbackCV(){
   const pubHTML=`
 <div style="text-align:center;padding:2rem 1rem">
   <div style="font-size:2.5rem;margin-bottom:1rem">📄</div>
-  <p style="color:var(--tx2);margin-bottom:1.3rem;font-size:.88rem;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.85">
-    Live publication list is auto-fetched from NASA ADS on every page visit.
+  <p style="color:var(--tx2);margin-bottom:1.3rem;font-size:.88rem;max-width:380px;
+     margin-left:auto;margin-right:auto;line-height:1.85">
+    Live publication list is auto-fetched from NASA ADS / ORCID on every page visit.
   </p>
   <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
-    <a href="#publications" class="btn btn-p"><i class="fas fa-meteor"></i> View Publication List</a>
+    <a href="#publications" class="btn btn-p">
+      <i class="fas fa-meteor"></i> View Publication List</a>
     <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc"
-       target="_blank" class="btn btn-o"><i class="fas fa-arrow-up-right-from-square"></i> NASA ADS</a>
+       target="_blank" class="btn btn-o">
+      <i class="fas fa-arrow-up-right-from-square"></i> NASA ADS</a>
   </div>
 </div>`;
 
   const secs=[
-    {id:'cvFb0',t:'Education',i:'fa-graduation-cap',c:'blue',ct:`${d.education.length} entries`,body:eduHTML},
-    {id:'cvFb1',t:'Awards &amp; Fellowships',i:'fa-trophy',c:'amber',ct:`${d.awards.length} awards`,body:awdHTML},
-    {id:'cvFb2',t:'Positions of Responsibility &amp; Memberships',i:'fa-users-gear',c:'teal',ct:`${d.positions.length} entries`,body:posHTML},
-    {id:'cvFb3',t:'Publications',i:'fa-book-open',c:'purple',ct:'',body:pubHTML,pubCt:true},
+    {id:'cvFb0',t:'Education',                                      i:'fa-graduation-cap',c:'blue',  ct:`${d.education.length} entries`,body:eduHTML},
+    {id:'cvFb1',t:'Awards &amp; Fellowships',                      i:'fa-trophy',         c:'amber', ct:`${d.awards.length} awards`,   body:awdHTML},
+    {id:'cvFb2',t:'Positions of Responsibility &amp; Memberships', i:'fa-users-gear',     c:'teal',  ct:`${d.positions.length} entries`,body:posHTML},
+    {id:'cvFb3',t:'Publications',                                   i:'fa-book-open',      c:'purple',ct:'',                            body:pubHTML,pub:true},
   ];
-
   document.getElementById('cvSecs').innerHTML=
-    secs.map(s=>accordion(s.id,s.t,s.i,s.c,s.ct,s.body,s.pubCt)).join('');
-  secs.forEach((s,i)=>setTimeout(()=>openCVA(s.id),200+i*220));
+    secs.map(s=>accordion(s.id,s.t,s.i,s.c,s.ct,s.body,s.pub)).join('');
+  secs.forEach((s,i)=>setTimeout(()=>openCVA(s.id),180+i*200));
 }
 
-/* ── Accordion builder ── */
+// ── Accordion builder ─────────────────────────────────────────
 function accordion(id,title,ico,col,count,body,isPub=false){
   return `
 <div class="cva" id="${id}">
@@ -1923,8 +1894,8 @@ function accordion(id,title,ico,col,count,body,isPub=false){
     <div class="cva-hl">
       <div class="cva-ic ${col}"><i class="fas ${ico}"></i></div>
       <span class="cva-nm">${title}</span>
-      ${count?`<span class="cva-ct ${col}">${count}</span>`:''}
-      ${isPub?`<span class="cva-ct purple" id="cvPubCt">Live</span>`:''}
+      ${count ?`<span class="cva-ct ${col}">${count}</span>`:''}
+      ${isPub ?`<span class="cva-ct purple" id="cvPubCt">Live</span>`:''}
     </div>
     <i class="fas fa-chevron-down cva-ch"></i>
   </div>
@@ -1932,18 +1903,12 @@ function accordion(id,title,ico,col,count,body,isPub=false){
 </div>`;
 }
 
-function toggleCVA(id){
-  const el=document.getElementById(id);
-  if(el) el.classList.toggle('open');
-}
-function openCVA(id){
-  const el=document.getElementById(id);
-  if(el) el.classList.add('open');
-}
+function toggleCVA(id){ const el=document.getElementById(id); if(el) el.classList.toggle('open'); }
+function openCVA(id){   const el=document.getElementById(id); if(el) el.classList.add('open'); }
 
-/* ══════════════════════════════════════════════════════
-   👁️  VISITOR COUNTER
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   VISITOR COUNTER
+   ══════════════════════════════════════════════════════════ */
 async function hitCounter(){
   try{
     const r=await fetch(`https://api.countapi.xyz/hit/${CFG.ctrNS}/${CFG.ctrKey}`);
@@ -1953,21 +1918,23 @@ async function hitCounter(){
   }catch{}
 }
 
-/* ══════════════════════════════════════════════════════
-   🔧  HTML ESCAPE UTILITY
-   ══════════════════════════════════════════════════════ */
+
 const _ed=document.createElement('div');
 function esc(s){ _ed.textContent=String(s??''); return _ed.innerHTML; }
 
-/* ══════════════════════════════════════════════════════
-   🚀  INIT
-   ══════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded',()=>{
-  fetchADS();
-  hitCounter();
-  initCV();
-});
+/* ── Pub scroller: hide fade when user reaches bottom ── */
+function chkScroll(el){
+  const wrap = document.getElementById('plistWrap');
+  if(!wrap) return;
+  const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
+  wrap.classList.toggle('at-bottom', atBottom);
+}
 
+document.addEventListener('DOMContentLoaded',()=>{
+  fetchPapers();   // loads from cache instantly on return visits
+  hitCounter();
+  initCV();        // shows fallback instantly, parses PDF in background
+});
 </script>
 </body>
 </html>
