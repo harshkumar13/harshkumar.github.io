@@ -445,7 +445,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
          target="_blank" class="btn btn-o"><i class="fas fa-satellite-dish"></i> NASA ADS</a>
     </div>
     <div class="ss">
-      <div class="sv"><span class="sv-n" id="sPap">—</span><span class="sv-l">Papers</span></div>
+      <div class="sv"><span class="sv-n" id="sPap">—</span><span class="sv-l">Publications</span></div>
       <div class="sv"><span class="sv-n" id="sCit">—</span><span class="sv-l">Citations</span></div>
       <div class="sv"><span class="sv-n" id="sH">—</span><span class="sv-l">h-index</span></div>
       <div class="sv"><span class="sv-n" id="sI10">—</span><span class="sv-l">i10-index</span></div>
@@ -1398,17 +1398,6 @@ function togAbsBtn(btn){
   btn.classList.toggle('open');
 }
 
-
-/* ══════════════════════════════════════════════════════════
-   📊  STATS  —  ADS papers + Google Scholar metrics
-   ══════════════════════════════════════════════════════════
-   Priority order:
-   1. Paper count   → always from loaded PAPERS array
-   2. Citations     → from ADS papers first, Scholar fallback
-   3. h-index       → calculated from ADS first, Scholar fallback
-   4. i10-index     → calculated from ADS first, Scholar fallback
-   5. Yrs Active    → always from PAPERS array
-   ══════════════════════════════════════════════════════════ */
 
 // Scholar metrics cache
 const SC = {
