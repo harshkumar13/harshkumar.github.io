@@ -7,15 +7,12 @@
 <meta name="keywords" content="Harsh Kumar, CfA Harvard, astrophysics, gamma-ray bursts, GRB, kilonova, GROWTH-India, gravitational waves, superluminous supernovae, tidal disruption events, ORCID 0000-0003-0871-4641">
 <meta name="author" content="Harsh Kumar">
 <title>Harsh Kumar | Astrophysicist · CfA Harvard &amp; Smithsonian</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
 <style>
-/* ═══ DESIGN TOKENS ═══════════════════════════════════════════ */
 :root{
   --bg:#06091d;--bg2:#0a0d24;--bg3:#0e1230;
   --card:rgba(255,255,255,.034);--card2:rgba(255,255,255,.058);
@@ -27,8 +24,6 @@
   --gr:#3dba7f;--rd:#e05a5a;
   --r:10px;--rl:16px;
 }
-
-/* ═══ RESET ════════════════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;line-height:1.7;overflow-x:hidden}
@@ -40,25 +35,13 @@ img{display:block;max-width:100%}
 ::-webkit-scrollbar-thumb{background:var(--bl);border-radius:2px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
-/* ═══ PROGRESS BAR ════════════════════════════════════════════ */
-#pb{position:fixed;top:0;left:0;height:2px;width:0;
-    background:linear-gradient(90deg,var(--bl),var(--tll),var(--aml));
-    z-index:1001;transition:width .1s linear}
+#pb{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--bl),var(--tll),var(--aml));z-index:1001;transition:width .1s linear}
 
-/* ═══ LAYOUT ══════════════════════════════════════════════════ */
 .wrap{max-width:1060px;margin:0 auto;padding:0 1.5rem}
 section{position:relative;z-index:1;padding:5.5rem 1.5rem}
 canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* ═══ NAVBAR ══════════════════════════════════════════════════ */
-#nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 2.5rem;
-  background:rgba(6,9,29,.3);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid transparent;transition:all .35s;
-}
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(6,9,29,.3);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid transparent;transition:all .35s}
 #nav.solid{background:rgba(6,9,29,.9);border-bottom-color:var(--bdr);padding:.78rem 2.5rem}
 .nav-brand{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.12rem;font-weight:600;letter-spacing:.4px;color:var(--tx);white-space:nowrap}
 .nav-brand em{font-style:normal;color:var(--aml)}
@@ -74,14 +57,12 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 #mm a:hover{color:var(--bll)}
 .mmX{position:absolute;top:1.4rem;right:2rem;background:none;border:none;color:var(--tx2);font-size:1.4rem;cursor:pointer}
 
-/* ═══ BUTTONS ═════════════════════════════════════════════════ */
 .btn{display:inline-flex;align-items:center;gap:7px;padding:.62rem 1.45rem;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:all .25s;border:none}
 .btn-p{background:var(--bl);color:#fff;box-shadow:0 2px 12px rgba(74,143,212,.3)}
 .btn-p:hover{background:#5a9fe4;transform:translateY(-2px);box-shadow:0 5px 20px rgba(74,143,212,.45)}
 .btn-o{background:transparent;color:var(--tx2);border:1px solid var(--bdr2)}
 .btn-o:hover{border-color:var(--bll);color:var(--blll);transform:translateY(-2px)}
 
-/* ═══ SECTION HEADER ══════════════════════════════════════════ */
 .sh{text-align:center;margin-bottom:3.5rem}
 .sh-tag{display:inline-block;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:var(--aml);margin-bottom:.5rem}
 .sh-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:700;letter-spacing:.5px}
@@ -90,12 +71,10 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .sh-orn::before,.sh-orn::after{content:'';flex:1;height:1px;background:var(--bdr)}
 .sh-orn .gem{width:5px;height:5px;background:var(--bl);border-radius:50%;flex-shrink:0}
 
-/* ═══ SCROLL REVEAL ════════════════════════════════════════════ */
 .rv{opacity:0;transform:translateY(22px);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1)}
 .rv.in{opacity:1;transform:translateY(0)}
 .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
-/* ═══ HERO ════════════════════════════════════════════════════ */
 #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 1.5rem 5rem}
 .h-in{max-width:780px}
 .h-badge{display:inline-flex;align-items:center;gap:7px;padding:.3rem .95rem;border-radius:50px;border:1px solid rgba(74,143,212,.28);background:rgba(74,143,212,.06);font-size:.75rem;font-weight:500;color:var(--bll);margin-bottom:1.6rem;animation:fadeD .8s ease both}
@@ -109,17 +88,26 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .h-loc{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;color:var(--aml);margin-bottom:2rem;animation:fadeU .8s .3s ease both}
 .h-desc{font-size:.97rem;color:var(--tx2);max-width:580px;margin:0 auto 2.5rem;line-height:1.9;animation:fadeU .8s .4s ease both}
 .h-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;animation:fadeU .8s .5s ease both;margin-bottom:3.5rem}
-.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:520px;margin:0 auto;animation:fadeU .8s .65s ease both}
-.sv{flex:1;min-width:100px;text-align:center;padding:1rem .8rem;border-right:1px solid var(--bdr)}
+
+.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:580px;margin:0 auto;animation:fadeU .8s .65s ease both}
+.sv{flex:1;min-width:90px;text-align:center;padding:1rem .7rem;border-right:1px solid var(--bdr)}
 .sv:last-child{border-right:none}
-.sv-n{display:block;font-family:'JetBrains Mono',monospace;font-size:1.65rem;font-weight:500;color:var(--bll);line-height:1.2}
-.sv-l{font-size:.64rem;color:var(--tx3);text-transform:uppercase;letter-spacing:1.5px}
-@media(max-width:520px){
-  .sv{min-width:64px;padding:.8rem .4rem}
-  .sv-n{font-size:1.35rem}
-  .sv-l{font-size:.58rem}
-}
-/* ═══ ABOUT ═══════════════════════════════════════════════════ */
+.sv-n{display:block;font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:500;color:var(--bll);line-height:1.2;transition:color .4s}
+.sv-l{font-size:.62rem;color:var(--tx3);text-transform:uppercase;letter-spacing:1.5px}
+.sv-n.flash{animation:statFlash .55s ease}
+@keyframes statFlash{0%{filter:brightness(1)}40%{filter:brightness(1.8)}100%{filter:brightness(1)}}
+
+.stats-toggle{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:.7rem;animation:fadeU .8s .72s ease both}
+.st-pill{display:inline-flex;align-items:center;gap:.45rem;padding:.22rem .75rem;border:1px solid var(--bdr);border-radius:50px;background:var(--card);transition:border-color .4s,background .4s}
+.st-pill.refereed{border-color:rgba(42,157,143,.35);background:rgba(42,157,143,.06)}
+.st-dot{width:5px;height:5px;border-radius:50%;background:var(--bll);flex-shrink:0;transition:background .4s;animation:blink 2.2s ease-in-out infinite}
+.st-pill.refereed .st-dot{background:var(--tll)}
+.st-label{font-size:.68rem;font-weight:500;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx3);transition:opacity .25s;white-space:nowrap}
+.st-label.fade{opacity:0}
+.st-dots{display:flex;gap:.35rem;align-items:center}
+.std{width:5px;height:5px;border-radius:50%;background:var(--tx3);transition:background .35s,transform .35s}
+.std.on{background:var(--bll);transform:scale(1.35)}
+
 #about{background:linear-gradient(180deg,transparent,rgba(74,143,212,.016) 50%,transparent)}
 .ag{display:grid;grid-template-columns:280px 1fr;gap:3.8rem;align-items:start}
 .pc-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;position:sticky;top:88px}
@@ -159,7 +147,6 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .now-dot{display:inline-flex;align-items:center;gap:3px;font-size:.65rem;color:var(--gr);margin-left:.3rem;font-style:normal}
 .now-dot::before{content:'';width:4px;height:4px;background:var(--gr);border-radius:50%;animation:blink 1.6s ease-in-out infinite}
 
-/* ═══ RESEARCH ════════════════════════════════════════════════ */
 #research{background:linear-gradient(180deg,transparent,rgba(42,157,143,.015) 50%,transparent)}
 .rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:.95rem}
 .rc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.5rem;transition:all .28s;position:relative;overflow:hidden;cursor:default}
@@ -170,7 +157,6 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .rc h3{font-size:.93rem;font-weight:600;margin-bottom:.48rem}
 .rc p{font-size:.83rem;color:var(--tx2);line-height:1.8}
 
-/* ═══ CV ══════════════════════════════════════════════════════ */
 #cv{background:linear-gradient(180deg,transparent,rgba(42,157,143,.015) 50%,transparent)}
 .cvhc{display:flex;align-items:center;gap:1.3rem;padding:1.4rem 1.6rem;background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);margin-bottom:1.4rem;position:relative;overflow:hidden}
 .cvhc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--bl),var(--tl),var(--am))}
@@ -236,7 +222,6 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .gp-main{font-size:.88rem;font-weight:500;color:var(--tx);margin-bottom:.2rem;line-height:1.5}
 .gp-line{font-size:.82rem;color:var(--tx2);line-height:1.7}
 
-/* ═══ PUBLICATIONS ════════════════════════════════════════════ */
 #publications{background:linear-gradient(180deg,transparent,rgba(74,143,212,.016) 50%,transparent)}
 .pub-tb{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1.3rem}
 .sw{flex:1;min-width:190px;position:relative}
@@ -249,43 +234,13 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .fb:hover,.fb.on{background:rgba(74,143,212,.1);border-color:rgba(74,143,212,.4);color:var(--bll)}
 .pub-meta{font-size:.77rem;color:var(--tx3);margin-bottom:.85rem}
 #pList{display:flex;flex-direction:column;gap:.8rem}
-/* ── Scrollable publications container ── */
-#pListScroller{
-  max-height:680px;
-  overflow-y:auto;
-  overflow-x:hidden;
-  padding-right:.5rem;
-  /* Custom scrollbar */
-  scrollbar-width:thin;
-  scrollbar-color:var(--bl) var(--bg3);
-}
+#pListScroller{max-height:680px;overflow-y:auto;overflow-x:hidden;padding-right:.5rem;scrollbar-width:thin;scrollbar-color:var(--bl) var(--bg3)}
 #pListScroller::-webkit-scrollbar{width:5px}
-#pListScroller::-webkit-scrollbar-track{
-  background:var(--bg3);
-  border-radius:3px;
-}
-#pListScroller::-webkit-scrollbar-thumb{
-  background:linear-gradient(180deg,var(--bl),var(--tl));
-  border-radius:3px;
-}
-#pListScroller::-webkit-scrollbar-thumb:hover{
-  background:linear-gradient(180deg,var(--bll),var(--tll));
-}
-/* Fade out hint at bottom so user knows there's more */
-.plist-wrap{
-  position:relative;
-}
-.plist-wrap::after{
-  content:'';
-  position:absolute;
-  bottom:0;left:0;right:5px;
-  height:60px;
-  background:linear-gradient(transparent,var(--bg));
-  pointer-events:none;
-  border-radius:0 0 var(--r) var(--r);
-  transition:opacity .3s;
-}
-/* Hide fade when scrolled to bottom */
+#pListScroller::-webkit-scrollbar-track{background:var(--bg3);border-radius:3px}
+#pListScroller::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--bl),var(--tl));border-radius:3px}
+#pListScroller::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--bll),var(--tll))}
+.plist-wrap{position:relative}
+.plist-wrap::after{content:'';position:absolute;bottom:0;left:0;right:5px;height:60px;background:linear-gradient(transparent,var(--bg));pointer-events:none;border-radius:0 0 var(--r) var(--r);transition:opacity .3s}
 .plist-wrap.at-bottom::after{opacity:0}
 .pub{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.2rem 1.45rem;transition:all .22s;position:relative}
 .pub::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--bl),var(--tl));border-radius:2px 0 0 2px;opacity:0;transition:opacity .22s}
@@ -324,7 +279,6 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .alrt i{flex-shrink:0;margin-top:.15rem}
 .alrt a{color:inherit;text-decoration:underline}
 
-/* ═══ CONTACT ═════════════════════════════════════════════════ */
 #contact{background:linear-gradient(180deg,transparent,rgba(74,143,212,.015) 50%,transparent)}
 .cog{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start}
 .co-h{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:.65rem}
@@ -347,7 +301,6 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .po-sm .row{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--tx2);margin-bottom:.25rem}
 .po-sm .row i{font-size:.75rem;color:var(--bll);width:12px}
 
-/* ═══ FOOTER ══════════════════════════════════════════════════ */
 footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5rem}
 .ft{max-width:1060px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem}
 .ft-c{font-size:.77rem;color:var(--tx3)}
@@ -359,14 +312,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
 #top.show{opacity:1;transform:translateY(0)}
 #top:hover{background:var(--bll);transform:translateY(-3px)}
 
-/* ═══ KEYFRAMES ═══════════════════════════════════════════════ */
 @keyframes fadeU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 @keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ═══ RESPONSIVE ══════════════════════════════════════════════ */
 @media(max-width:900px){
   .ag{grid-template-columns:1fr;gap:2.5rem}
   .pc-card{max-width:310px;margin:0 auto;position:static}
@@ -377,8 +328,11 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   .nav-links{display:none}
   .hburg{display:flex}
   section{padding:3.8rem 1rem}
-  .ss{max-width:100%}
-  .sv{min-width:80px}
+  .ss{max-width:100%;border-radius:var(--r)}
+  .sv{min-width:60px;padding:.8rem .4rem}
+  .sv-n{font-size:1.25rem}
+  .sv-l{font-size:.56rem}
+  .st-label{font-size:.62rem}
   .pub-top{flex-direction:column;gap:.28rem}
   .pl{margin-left:0}
   .edu-e{grid-template-columns:65px 1fr;gap:.75rem}
@@ -389,12 +343,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
 </head>
 <body>
 
-<!-- Progress bar -->
 <div id="pb"></div>
-<!-- Star canvas -->
 <canvas id="stars"></canvas>
 
-<!-- ── Mobile menu ─────────────────────────────────────────── -->
 <div id="mm">
   <button class="mmX" onclick="mClose()"><i class="fas fa-xmark"></i></button>
   <a href="#about"        onclick="mClose()">About</a>
@@ -405,7 +356,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   <a href="#contact"      onclick="mClose()">Contact</a>
 </div>
 
-<!-- ── Navbar ─────────────────────────────────────────────── -->
 <nav id="nav">
   <a href="#hero" class="nav-brand">Harsh <em>Kumar</em></a>
   <ul class="nav-links">
@@ -421,28 +371,19 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   </button>
 </nav>
 
-<!-- ══════════════════════ HERO ══════════════════════════════ -->
+<!-- HERO -->
 <section id="hero">
   <div class="h-in">
-    <div class="h-badge">
-      <div class="ld"></div>
-      Postdoctoral Fellow · Center for Astrophysics | Harvard &amp; Smithsonian
-    </div>
-    <h1 class="h-name">
-      <span class="fn">Harsh</span>&nbsp;<span class="ln">Kumar</span>
-    </h1>
+    <div class="h-badge"><div class="ld"></div>Postdoctoral Fellow · Center for Astrophysics | Harvard &amp; Smithsonian</div>
+    <h1 class="h-name"><span class="fn">Harsh</span>&nbsp;<span class="ln">Kumar</span></h1>
     <p class="h-sub">Astrophysicist · Transient Phenomena · Multi-Messenger Astronomy</p>
     <div class="typ-row"><span id="typer"></span><span class="t-cur"></span></div>
     <div class="h-loc"><i class="fas fa-location-dot"></i> Cambridge, MA · USA</div>
-    <p class="h-desc">
-      Exploring gamma-ray bursts, kilonovae, superluminous supernovae, and tidal disruption events
-      through multi-wavelength observations.
-    </p>
+    <p class="h-desc">Exploring gamma-ray bursts, kilonovae, superluminous supernovae, and tidal disruption events through multi-wavelength observations</p>
     <div class="h-btns">
       <a href="#cv" class="btn btn-p"><i class="fas fa-file-lines"></i> My CV</a>
       <a href="#publications" class="btn btn-o"><i class="fas fa-meteor"></i> Publications</a>
-      <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641&sort=date+desc"
-         target="_blank" class="btn btn-o"><i class="fas fa-satellite-dish"></i> NASA ADS</a>
+      <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641&sort=date+desc" target="_blank" class="btn btn-o"><i class="fas fa-satellite-dish"></i> NASA ADS</a>
     </div>
     <div class="ss">
       <div class="sv"><span class="sv-n" id="sPap">—</span><span class="sv-l">Publications</span></div>
@@ -451,10 +392,20 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <div class="sv"><span class="sv-n" id="sI10">—</span><span class="sv-l">i10-index</span></div>
       <div class="sv"><span class="sv-n" id="sYr" style="color:var(--aml)">—</span><span class="sv-l">Yrs Active</span></div>
     </div>
+    <div class="stats-toggle" id="statsToggle" style="display:none">
+      <div class="st-pill" id="stPill">
+        <span class="st-dot"></span>
+        <span class="st-label" id="stLabel">All Publications</span>
+      </div>
+      <div class="st-dots">
+        <span class="std on" id="std0"></span>
+        <span class="std"    id="std1"></span>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ══════════════════════ ABOUT ══════════════════════════════ -->
+<!-- ABOUT -->
 <section id="about">
   <div class="wrap">
     <div class="sh rv">
@@ -463,17 +414,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <div class="sh-orn"><div class="gem"></div></div>
     </div>
     <div class="ag">
-
-      <!-- Profile Card -->
       <div class="pc-card rv">
         <div class="pc-bar"></div>
         <div class="pc-photo">
           <div class="pc-ini">HK</div>
           <div class="ring1"></div><div class="ring2"></div>
-          <!-- photo.jpg loads automatically; "HK" initials show as fallback -->
-          <img src="photo.jpg" alt="Harsh Kumar"
-               onload="this.classList.add('ok')"
-               onerror="this.remove()">
+          <img src="photo.jpg" alt="Harsh Kumar" onload="this.classList.add('ok')" onerror="this.remove()">
         </div>
         <div class="pc-body">
           <h3>Harsh Kumar</h3>
@@ -481,94 +427,53 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
           <div class="pc-row"><i class="fas fa-university"></i><span>CfA | Harvard &amp; Smithsonian</span></div>
           <div class="pc-row"><i class="fas fa-flask"></i><span>NSF-IAIFI</span></div>
           <div class="pc-row"><i class="fas fa-location-dot"></i><span>Cambridge, MA, USA</span></div>
-          <div class="pc-row"><i class="fas fa-envelope"></i>
-            <a href="mailto:harsh.kumar@cfa.harvard.edu">harsh.kumar@cfa.harvard.edu</a>
-          </div>
-          <div class="pc-row"><i class="fab fa-orcid" style="color:#a6ce39"></i>
-            <a href="https://orcid.org/0000-0003-0871-4641" target="_blank">0000-0003-0871-4641</a>
-          </div>
+          <div class="pc-row"><i class="fas fa-envelope"></i><a href="mailto:harsh.kumar@cfa.harvard.edu">harsh.kumar@cfa.harvard.edu</a></div>
+          <div class="pc-row"><i class="fab fa-orcid" style="color:#a6ce39"></i><a href="https://orcid.org/0000-0003-0871-4641" target="_blank">0000-0003-0871-4641</a></div>
           <div class="pc-soc">
-            <a href="https://orcid.org/0000-0003-0871-4641"          target="_blank" class="ps" title="ORCID"><i class="fab fa-orcid"></i></a>
+            <a href="https://orcid.org/0000-0003-0871-4641" target="_blank" class="ps" title="ORCID"><i class="fab fa-orcid"></i></a>
             <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641" target="_blank" class="ps" title="NASA ADS"><i class="fas fa-satellite-dish"></i></a>
-            <a href="https://github.com/harshkumar13"                target="_blank" class="ps" title="GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://scholar.google.com/citations?user=fFGkrbAAAAAJ&hl=en"                                              target="_blank" class="ps" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
-            <a href="www.linkedin.com/in/harsh-kumar-b90688259/"                                              target="_blank" class="ps" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="https://sites.google.com/view/harshkumar13/"   target="_blank" class="ps" title="Old Website"><i class="fas fa-globe"></i></a>
+            <a href="https://github.com/harshkumar13" target="_blank" class="ps" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://scholar.google.com/citations?user=fFGkrbAAAAAJ&hl=en" target="_blank" class="ps" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+            <a href="www.linkedin.com/in/harsh-kumar-b90688259/" target="_blank" class="ps" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
           </div>
         </div>
-      </div>
-
-      <!-- About Text -->
+      </div> 
       <div>
         <div class="at rv">
           <h3>Decoding the Universe's Most Extreme Events</h3>
-          <p>I am an astrophysicist specialising in <strong>time-domain and high-energy transient phenomena</strong>, with primary focus on <strong>Gamma-Ray Bursts (GRBs)</strong>, <strong>kilonovae</strong>, <strong>superluminous supernovae (SLSNe)</strong>, and <strong>tidal disruption events (TDEs)</strong>.</p>
-          <p>My doctoral work at <strong>IIT Bombay</strong> centred on the <strong>GROWTH-India Telescope</strong> — India's first robotic research telescope — leading rapid follow-up campaigns for GRB afterglows and gravitational-wave electromagnetic counterparts. I am currently a <strong>Postdoctoral Fellow at the Center for Astrophysics | Harvard &amp; Smithsonian</strong> and a Junior Investigator at the <strong>NSF-AI Institute for AI and Fundamental Interactions (IAIFI)</strong>.</p>
-          <p>My research combines multi-wavelength observing campaigns (optical, NIR, X-ray, radio) with physical modelling to decode relativistic jet physics, <em>r</em>-process nucleosynthesis, and the diversity of catastrophic stellar endpoints.</p>
+          <p>I am an astrophysicist specialising in <strong>time-domain and high-energy transient phenomena</strong>, with primary focus on <strong>superluminous supernovae (SLSNe)</strong>, <strong>tidal disruption events (TDEs)</strong>,<strong>kilonovae</strong>,<strong>Gamma-Ray Bursts (GRBs)</strong>.</p>
+          <p>My doctoral work at <strong>IIT Bombay</strong> centred on the <strong>GROWTH-India Telescope</strong> — India's first robotic research telescope — leading rapid follow-up campaigns for GRB afterglows and gravitational-wave electromagnetic counterparts. I am currently a <strong>Postdoctoral Fellow at the Center for Astrophysics | Harvard &amp; Smithsonian</strong> and a Junior Investigator at the <strong>NSF-Institute for AI and Fundamental Interactions (IAIFI)</strong>.</p>
+          <p>My research combines multi-wavelength observing campaigns (UV,optical, NIR, X-ray, radio) of SLSNe-I, <em>r</em>-process nucleosynthesis, and the diversity of catastrophic stellar endpoints.</p>
         </div>
-
         <div class="rv d1">
           <div class="tags">
-            <span class="tag">Gamma-Ray Bursts</span>
-            <span class="tag">Kilonovae</span>
-            <span class="tag">GW EM Counterparts</span>
-            <span class="tag">Superluminous Supernovae</span>
-            <span class="tag">Tidal Disruption Events</span>
-            <span class="tag">GROWTH-India Telescope</span>
-            <span class="tag">Multi-Wavelength Obs.</span>
-            <span class="tag">Python · Astropy</span>
-            <span class="tag">AI / ML in Astrophysics</span>
+            <span class="tag">GW EM Counterparts</span><span class="tag">Superluminous Supernovae</span>
+            <span class="tag">Gamma-Ray Bursts</span><span class="tag">Kilonovae</span>
+            <span class="tag">Tidal Disruption Events</span><span class="tag">GROWTH-India Telescope</span>
+            <span class="tag">Multi-Wavelength Obs.</span><span class="tag">Swift · Fermi · XMM</span>
+            <span class="tag">Python · Astropy</span><span class="tag">AI / ML in Astrophysics</span>
           </div>
         </div>
-
         <div class="rv d2">
           <div style="font-size:.67rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);margin-top:1.7rem;margin-bottom:.9rem">Career Timeline</div>
           <div class="tl">
-            <div class="ti now">
-              <div class="ti-yr">2023 – Present</div>
-              <div class="ti-ttl">Postdoctoral Fellow <span class="now-dot">Active</span></div>
-              <div class="ti-sub">Center for Astrophysics | Harvard &amp; Smithsonian, Cambridge, USA</div>
-            </div>
-            <div class="ti now">
-              <div class="ti-yr">2023 – Present</div>
-              <div class="ti-ttl">Junior Investigator <span class="now-dot">Active</span></div>
-              <div class="ti-sub">NSF-IAIFI, Cambridge, USA</div>
-            </div>
-            <div class="ti">
-              <div class="ti-yr">2023</div>
-              <div class="ti-ttl">Institute Post-Doctoral Fellow</div>
-              <div class="ti-sub">IIT Bombay, Mumbai, India</div>
-            </div>
-            <div class="ti">
-              <div class="ti-yr">2018 – 2023</div>
-              <div class="ti-ttl">Ph.D. — Astrophysics</div>
-              <div class="ti-sub">IIT Bombay, Mumbai, India · CGPA 9.3/10</div>
-              <div class="ti-note">Thesis: Studying optical counterparts of gravitational waves and gamma-ray burst afterglows with the GROWTH-India Telescope</div>
-            </div>
-            <div class="ti">
-              <div class="ti-yr">2015 – 2017</div>
-              <div class="ti-ttl">M.Sc. — Astrophysics &amp; Nuclear Physics</div>
-              <div class="ti-sub">University of Delhi, Delhi, India · 69.6%</div>
-            </div>
-            <div class="ti">
-              <div class="ti-yr">2012 – 2015</div>
-              <div class="ti-ttl">B.Sc. — Physics</div>
-              <div class="ti-sub">University of Delhi, Delhi, India · 90.3%</div>
-            </div>
+            <div class="ti now"><div class="ti-yr">2023 – Present</div><div class="ti-ttl">Postdoctoral Fellow <span class="now-dot">Active</span></div><div class="ti-sub">Center for Astrophysics | Harvard &amp; Smithsonian, Cambridge, USA</div></div>
+            <div class="ti now"><div class="ti-yr">2023 – Present</div><div class="ti-ttl">Junior Investigator <span class="now-dot">Active</span></div><div class="ti-sub">NSF-IAIFI, Cambridge, USA</div></div>
+            <div class="ti"><div class="ti-yr">2023</div><div class="ti-ttl">Institute Post-Doctoral Fellow</div><div class="ti-sub">IIT Bombay, Mumbai, India</div></div>
+            <div class="ti"><div class="ti-yr">2018 – 2023</div><div class="ti-ttl">Ph.D. — Astrophysics</div><div class="ti-sub">IIT Bombay, Mumbai, India · CGPA 9.3/10</div><div class="ti-note">Thesis: Studying optical counterparts of gravitational waves and gamma-ray burst afterglows with the GROWTH-India Telescope</div></div>
+            <div class="ti"><div class="ti-yr">2015 – 2017</div><div class="ti-ttl">M.Sc. — Astrophysics &amp; Nuclear Physics</div><div class="ti-sub">University of Delhi, Delhi, India · 69.6%</div></div>
+            <div class="ti"><div class="ti-yr">2012 – 2015</div><div class="ti-ttl">B.Sc. — Physics</div><div class="ti-sub">University of Delhi, Delhi, India · 90.3%</div></div>
           </div>
         </div>
-
         <div class="rv d3" style="margin-top:1.8rem;display:flex;gap:.65rem;flex-wrap:wrap">
           <a href="#cv" class="btn btn-p"><i class="fas fa-file-lines"></i> View Full CV</a>
-          <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641&sort=date+desc"
-             target="_blank" class="btn btn-o"><i class="fas fa-book-open"></i> Full Paper List</a>
+          <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641&sort=date+desc" target="_blank" class="btn btn-o"><i class="fas fa-book-open"></i> Full Paper List</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ RESEARCH ══════════════════════════ -->
 <section id="research">
   <div class="wrap">
     <div class="sh rv">
@@ -611,106 +516,47 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <div class="rc rv d1">
         <span class="rc-ico">⚙️</span>
         <h3>AI / ML in Astrophysics</h3>
-        <p>Applying machine-learning methods to transient classification, automated survey pipelines, and neural-network approaches to time domain astronomy as a Junior Investigator at IAIFI (NSF-AI).</p>
+        <p>Applying machine-learning methods to transient classification, automated survey pipelines, and neural-network approaches to time domain astronomy as a Junior Investigator at IAIFI (NSF).</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ CV ════════════════════════════════ -->
+<!-- CV -->
 <section id="cv">
   <div class="wrap">
-    <div class="sh rv">
-      <span class="sh-tag">Curriculum Vitae</span>
-      <h2 class="sh-title">My <span class="hl">CV</span></h2>
-      <div class="sh-orn"><div class="gem"></div></div>
-    </div>
+    <div class="sh rv"><span class="sh-tag">Curriculum Vitae</span><h2 class="sh-title">My <span class="hl">CV</span></h2><div class="sh-orn"><div class="gem"></div></div></div>
     <div class="rv">
-
-      <!-- CV header card -->
       <div class="cvhc">
         <div class="cv-av">HK</div>
         <div class="cvhi">
           <h2>Harsh Kumar</h2>
           <p>Postdoctoral Fellow · Center for Astrophysics | Harvard &amp; Smithsonian</p>
-          <p style="font-size:.77rem;color:var(--tx3);margin-top:.2rem">
-            <i class="fas fa-envelope" style="margin-right:4px;color:var(--bll)"></i>harsh.kumar@cfa.harvard.edu
-            &nbsp;·&nbsp;
-            <i class="fab fa-orcid" style="margin-right:3px;color:#a6ce39"></i>0000-0003-0871-4641
-          </p>
+          <p style="font-size:.77rem;color:var(--tx3);margin-top:.2rem"><i class="fas fa-envelope" style="margin-right:4px;color:var(--bll)"></i>harsh.kumar@cfa.harvard.edu &nbsp;·&nbsp; <i class="fab fa-orcid" style="margin-right:3px;color:#a6ce39"></i>0000-0003-0871-4641</p>
         </div>
-        <div class="cv-dls">
-          <!-- Downloads FULL cv.pdf — never the short cv-web.pdf -->
-          <button class="btn btn-p" onclick="dlCV()">
-            <i class="fas fa-download"></i> Download Full CV
-          </button>
-        </div>
+        <div class="cv-dls"><button class="btn btn-p" onclick="dlCV()"><i class="fas fa-download"></i> Download Full CV</button></div>
       </div>
-
-      <!-- Status bar — updated by JS -->
-      <div class="cv-st" id="cvSt">
-        <i class="fas fa-circle-notch fa-spin" style="margin-right:5px"></i>
-        <span>Loading CV…</span>
-      </div>
-
-      <!-- Accordion sections — filled by JS instantly from fallback, then from cv-web.pdf -->
+      <div class="cv-st" id="cvSt"><i class="fas fa-circle-notch fa-spin" style="margin-right:5px"></i><span>Loading CV…</span></div>
       <div id="cvSecs">
-        <!-- Skeleton shown for the brief instant before JS runs -->
-        <div class="cva" style="opacity:.55;pointer-events:none">
-          <div class="cva-hd"><div class="cva-hl">
-            <div class="cva-ic blue"><i class="fas fa-graduation-cap"></i></div>
-            <div style="width:110px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
-          </div></div>
-        </div>
-        <div class="cva" style="opacity:.35;pointer-events:none">
-          <div class="cva-hd"><div class="cva-hl">
-            <div class="cva-ic amber"><i class="fas fa-trophy"></i></div>
-            <div style="width:145px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
-          </div></div>
-        </div>
-        <div class="cva" style="opacity:.18;pointer-events:none">
-          <div class="cva-hd"><div class="cva-hl">
-            <div class="cva-ic teal"><i class="fas fa-users-gear"></i></div>
-            <div style="width:185px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
-          </div></div>
-        </div>
+        <div class="cva" style="opacity:.55;pointer-events:none"><div class="cva-hd"><div class="cva-hl"><div class="cva-ic blue"><i class="fas fa-graduation-cap"></i></div><div style="width:110px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div></div></div></div>
+        <div class="cva" style="opacity:.35;pointer-events:none"><div class="cva-hd"><div class="cva-hl"><div class="cva-ic amber"><i class="fas fa-trophy"></i></div><div style="width:145px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div></div></div></div>
+        <div class="cva" style="opacity:.18;pointer-events:none"><div class="cva-hd"><div class="cva-hl"><div class="cva-ic teal"><i class="fas fa-users-gear"></i></div><div style="width:185px;height:12px;border-radius:4px;background:var(--card2);animation:shimmer 1.5s infinite;background-size:200% 100%"></div></div></div></div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ PUBLICATIONS ══════════════════════ -->
+<!-- PUBLICATIONS -->
 <section id="publications">
   <div class="wrap">
-    <div class="sh rv">
-      <span class="sh-tag">My Work</span>
-      <h2 class="sh-title">Publications <span class="hl">&amp; Papers</span></h2>
-      <div class="sh-orn"><div class="gem"></div></div>
-    </div>
+    <div class="sh rv"><span class="sh-tag">My Work</span><h2 class="sh-title">Publications <span class="hl">&amp; Papers</span></h2><div class="sh-orn"><div class="gem"></div></div></div>
     <div class="rv">
-
-      <!-- Alert bar — shown only on errors -->
-      <div class="alrt" id="alrt">
-        <i class="fas fa-triangle-exclamation"></i>
-        <span id="alrtMsg"></span>
-      </div>
-
-      <!-- Search + year filters -->
+      <div class="alrt" id="alrt"><i class="fas fa-triangle-exclamation"></i><span id="alrtMsg"></span></div>
       <div class="pub-tb">
-        <div class="sw">
-          <i class="fas fa-magnifying-glass"></i>
-          <input type="text" class="pub-s" id="pubQ"
-                 placeholder="Search titles, authors, keywords…"
-                 oninput="renderPubs()">
-        </div>
-        <div class="fr" id="fRow">
-          <button class="fb on" data-f="all" onclick="setF('all',this)">All</button>
-        </div>
+        <div class="sw"><i class="fas fa-magnifying-glass"></i><input type="text" class="pub-s" id="pubQ" placeholder="Search titles, authors, keywords…" oninput="renderPubs()"></div>
+        <div class="fr" id="fRow"><button class="fb on" data-f="all" onclick="setF('all',this)">All</button></div>
       </div>
-
       <div class="pub-meta" id="pubMeta"></div>
-      <!-- Scrollable paper list -->
       <div class="plist-wrap" id="plistWrap">
         <div id="pListScroller" onscroll="chkScroll(this)">
           <div id="pList">
@@ -720,78 +566,39 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
           </div>
         </div>
       </div>
-
       <div style="text-align:center;margin-top:2.2rem">
-        <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641&sort=date+desc"
-           target="_blank" class="btn btn-o">
-          <i class="fas fa-arrow-up-right-from-square"></i> View All on NASA ADS
-        </a>
+        <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641&sort=date+desc" target="_blank" class="btn btn-o"><i class="fas fa-arrow-up-right-from-square"></i> View All on NASA ADS</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ CONTACT ════════════════════════════ -->
+<!-- CONTACT -->
 <section id="contact">
   <div class="wrap">
-    <div class="sh rv">
-      <span class="sh-tag">Get In Touch</span>
-      <h2 class="sh-title">Let's <span class="hl">Connect</span></h2>
-      <div class="sh-orn"><div class="gem"></div></div>
-    </div>
+    <div class="sh rv"><span class="sh-tag">Get In Touch</span><h2 class="sh-title">Let's <span class="hl">Connect</span></h2><div class="sh-orn"><div class="gem"></div></div></div>
     <div class="cog">
-
       <div class="rv">
         <h3 class="co-h">Open to Collaborations</h3>
         <p class="co-d">Whether it's a joint observing proposal, transient follow-up coordination, a data-analysis collaboration, or a discussion about the latest GRB or gravitational-wave detection — I'm always happy to connect with fellow researchers worldwide.</p>
         <div class="co-ls">
-          <a href="mailto:harsh.kumar@cfa.harvard.edu" class="co-lk">
-            <div class="co-ic" style="background:linear-gradient(135deg,#4a8fd4,#2d5a8e)"><i class="fas fa-envelope"></i></div>
-            <div class="co-tx"><small>Email</small><span>harsh.kumar@cfa.harvard.edu</span></div>
-            <i class="fas fa-chevron-right co-ar"></i>
-          </a>
-          <a href="https://orcid.org/0000-0003-0871-4641" target="_blank" class="co-lk">
-            <div class="co-ic" style="background:linear-gradient(135deg,#77b329,#4e7b1a)"><i class="fab fa-orcid"></i></div>
-            <div class="co-tx"><small>ORCID</small><span>0000-0003-0871-4641</span></div>
-            <i class="fas fa-chevron-right co-ar"></i>
-          </a>
-          <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641" target="_blank" class="co-lk">
-            <div class="co-ic" style="background:linear-gradient(135deg,#9b2335,#6b1520)"><i class="fas fa-satellite-dish"></i></div>
-            <div class="co-tx"><small>NASA ADS</small><span>Publication Library</span></div>
-            <i class="fas fa-chevron-right co-ar"></i>
-          </a>
-          <a href="https://github.com/harshkumar13" target="_blank" class="co-lk">
-            <div class="co-ic" style="background:linear-gradient(135deg,#2a2a2a,#111)"><i class="fab fa-github"></i></div>
-            <div class="co-tx"><small>GitHub</small><span>harshkumar13</span></div>
-            <i class="fas fa-chevron-right co-ar"></i>
-          </a>
-          <a href="https://arxiv.org/search/?searchtype=author&query=Kumar%2C+Harsh" target="_blank" class="co-lk">
-            <div class="co-ic" style="background:linear-gradient(135deg,var(--am),#7a5510)"><i class="fas fa-scroll"></i></div>
-            <div class="co-tx"><small>arXiv</small><span>Preprint Server</span></div>
-            <i class="fas fa-chevron-right co-ar"></i>
-          </a>
+          <a href="mailto:harsh.kumar@cfa.harvard.edu" class="co-lk"><div class="co-ic" style="background:linear-gradient(135deg,#4a8fd4,#2d5a8e)"><i class="fas fa-envelope"></i></div><div class="co-tx"><small>Email</small><span>harsh.kumar@cfa.harvard.edu</span></div><i class="fas fa-chevron-right co-ar"></i></a>
+          <a href="https://orcid.org/0000-0003-0871-4641" target="_blank" class="co-lk"><div class="co-ic" style="background:linear-gradient(135deg,#77b329,#4e7b1a)"><i class="fab fa-orcid"></i></div><div class="co-tx"><small>ORCID</small><span>0000-0003-0871-4641</span></div><i class="fas fa-chevron-right co-ar"></i></a>
+          <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641" target="_blank" class="co-lk"><div class="co-ic" style="background:linear-gradient(135deg,#9b2335,#6b1520)"><i class="fas fa-satellite-dish"></i></div><div class="co-tx"><small>NASA ADS</small><span>Publication Library</span></div><i class="fas fa-chevron-right co-ar"></i></a>
+          <a href="https://scholar.google.com/citations?user=fFGkrbAAAAAJ&hl=en" target="_blank" class="co-lk"><div class="co-ic" style="background:linear-gradient(135deg,#4285f4,#1a56c4)"><i class="fas fa-graduation-cap"></i></div><div class="co-tx"><small>Google Scholar</small><span>Citation Profile</span></div><i class="fas fa-chevron-right co-ar"></i></a>
+          <a href="https://github.com/harshkumar13" target="_blank" class="co-lk"><div class="co-ic" style="background:linear-gradient(135deg,#2a2a2a,#111)"><i class="fab fa-github"></i></div><div class="co-tx"><small>GitHub</small><span>harshkumar13</span></div><i class="fas fa-chevron-right co-ar"></i></a>
+          <a href="https://arxiv.org/search/?searchtype=author&query=Kumar%2C+Harsh" target="_blank" class="co-lk"><div class="co-ic" style="background:linear-gradient(135deg,var(--am),#7a5510)"><i class="fas fa-scroll"></i></div><div class="co-tx"><small>arXiv</small><span>Preprint Server</span></div><i class="fas fa-chevron-right co-ar"></i></a>
         </div>
       </div>
-
       <div class="rv d1">
         <h3 class="co-h">Find Me Online</h3>
         <p class="co-d">Connect with me on academic and professional platforms:</p>
         <div class="so-g">
-          <a href="https://orcid.org/0000-0003-0871-4641" target="_blank" class="so-c">
-            <i class="fab fa-orcid" style="color:#a6ce39"></i><span>ORCID</span>
-          </a>
-          <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641" target="_blank" class="so-c">
-            <i class="fas fa-satellite-dish"></i><span>NASA ADS</span>
-          </a>
-          <a href="https://github.com/harshkumar13" target="_blank" class="so-c">
-            <i class="fab fa-github"></i><span>GitHub</span>
-          </a>
-          <a href="https://scholar.google.com/citations?user=fFGkrbAAAAAJ&hl=en" target="_blank" class="so-c">
-            <i class="fas fa-graduation-cap"></i><span>G. Scholar</span>
-          </a>
-          <a href="www.linkedin.com/in/harsh-kumar-b90688259/" target="_blank" class="so-c">
-            <i class="fab fa-linkedin"></i><span>LinkedIn</span>
-          </a>
+          <a href="https://orcid.org/0000-0003-0871-4641" target="_blank" class="so-c"><i class="fab fa-orcid" style="color:#a6ce39"></i><span>ORCID</span></a>
+          <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641" target="_blank" class="so-c"><i class="fas fa-satellite-dish"></i><span>NASA ADS</span></a>
+          <a href="https://github.com/harshkumar13" target="_blank" class="so-c"><i class="fab fa-github"></i><span>GitHub</span></a>
+          <a href="https://scholar.google.com/citations?user=fFGkrbAAAAAJ&hl=en" target="_blank" class="so-c"><i class="fas fa-graduation-cap"></i><span>G. Scholar</span></a>
+          <a href="#" target="_blank" class="so-c"><i class="fab fa-linkedin"></i><span>LinkedIn</span></a>
         </div>
         <div class="po-sm">
           <div class="lbl">Current Positions</div>
@@ -801,81 +608,61 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
           <div class="row"><i class="fas fa-location-dot"></i>Cambridge, MA, USA · 2023 – present</div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ FOOTER ════════════════════════════ -->
+<!-- FOOTER -->
 <footer>
   <div class="ft">
-    <div class="ft-c">
-      © 2025 <strong>Harsh Kumar</strong> · Made with <span style="color:var(--rd)">♥</span> for Science ·
-    </div>
-    <div class="vis">
-      <i class="fas fa-eye"></i>
-      <strong id="vCnt">—</strong> visitors
-    </div>
-    <div class="ft-c">
-      <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641">NASA ADS</a> ·
-      <a href="https://orcid.org/0000-0003-0871-4641">ORCID</a>
-    </div>
+    <div class="ft-c">© 2025 <strong>Harsh Kumar</strong> · Made with <span style="color:var(--rd)">♥</span> for Science </div>
+    <div class="vis"><i class="fas fa-eye"></i><strong id="vCnt">—</strong> visitors</div>
+    <div class="ft-c"><a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641">NASA ADS</a> · <a href="https://orcid.org/0000-0003-0871-4641">ORCID</a></div>
   </div>
 </footer>
+<button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"><i class="fas fa-chevron-up"></i></button>
 
-<button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
-  <i class="fas fa-chevron-up"></i>
-</button>
-
-<!-- ══════════════════════════════════════════════════════════
-     JAVASCRIPT
-═══════════════════════════════════════════════════════════ -->
 <script>
-
-
-const CFG = {
-  useProxy   : true,                                   // ← Netlify proxy (token stays private)
-  proxyUrl   : '/.netlify/functions/ads-proxy',
-  adsToken   : '',                                     // only for local dev when useProxy=false
-  orcid      : '0000-0003-0871-4641',
-  authorMatch: ['kumar, h', 'kumar, harsh'],
-  cvPath     : './cv.pdf',                             // FULL CV → download button only
-  cvWebPath  : './cv-web.pdf',                         // SHORT CV → parsed for display
-  cvSource   : 'local',
-  ctrNS      : 'hk-cfa-2025',
-  ctrKey     : 'v1',
+/* ══════════════════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════════════════ */
+const CFG={
+  useProxy   :true,
+  proxyUrl   :'/.netlify/functions/ads-proxy',
+  adsToken   :'',
+  orcid      :'0000-0003-0871-4641',
+  authorMatch:['kumar, h','kumar, harsh'],
+  cvPath     :'./cv.pdf',
+  cvWebPath  :'./cv-web.pdf',
+  cvSource   :'local',
+  ctrNS      :'hk-cfa-2025',
+  ctrKey     :'v1',
 };
 
 /* ══════════════════════════════════════════════════════════
-   📋  CV FALLBACK DATA  (shown instantly before PDF parse)
-   ══════════════════════════════════════════════════════════ */
-const CV_DATA = {
+   CV FALLBACK DATA
+══════════════════════════════════════════════════════════ */
+const CV_DATA={
   education:[
-    {inst:'Center for Astrophysics | Harvard and Smithsonian',
-     deg:'Post-Doctoral Fellow in Astrophysics',loc:'Cambridge, USA',period:'2023 – present',cur:true},
-    {inst:'NSF-AI Institute for Artificial Intelligence and Fundamental Interactions (IAIFI)',
-     deg:'Junior Investigator',loc:'Cambridge, USA',period:'2023 – present',cur:true},
+    {inst:'Center for Astrophysics | Harvard and Smithsonian',deg:'Post-Doctoral Fellow in Astrophysics',loc:'Cambridge, USA',period:'2023 – present',cur:true},
+    {inst:'NSF-Institute for Artificial Intelligence and Fundamental Interactions (IAIFI)',deg:'Junior Investigator',loc:'Cambridge, USA',period:'2023 – present',cur:true},
     {inst:'IIT Bombay',deg:'Institute Post-Doctoral Fellow',loc:'Mumbai, India',period:'2023'},
-    {inst:'IIT Bombay',deg:'Ph.D. in Astrophysics',loc:'Mumbai, India',period:'2018 – 2023',
-     grade:'CGPA: 9.3/10',
-     note:'Thesis: Studying optical counterparts of gravitational waves and gamma-ray burst afterglows with the GROWTH-India Telescope'},
-    {inst:'University of Delhi',deg:'M.Sc. — Astrophysics and Nuclear Physics',
-     loc:'Delhi, India',period:'2015 – 2017',grade:'69.6%'},
-    {inst:'University of Delhi',deg:'B.Sc. — Physics',
-     loc:'Delhi, India',period:'2012 – 2015',grade:'90.3%'},
+    {inst:'IIT Bombay',deg:'Ph.D. in Astrophysics',loc:'Mumbai, India',period:'2018 – 2023',grade:'CGPA: 9.3/10',note:'Thesis: Studying optical counterparts of gravitational waves and gamma-ray burst afterglows with the GROWTH-India Telescope'},
+    {inst:'University of Delhi',deg:'M.Sc. — Astrophysics and Nuclear Physics',loc:'Delhi, India',period:'2015 – 2017',grade:'69.6%'},
+    {inst:'University of Delhi',deg:'B.Sc. — Physics',loc:'Delhi, India',period:'2012 – 2015',grade:'90.3%'},
   ],
   awards:[
-    {yr:'2026',   ttl:'ASI Zubin Kembhavi Award for 2025: GROWTH-India Team',       desc:'Astronomical Society of India Meeting 2026, IIT Guwahati'},
+    {yr:'2026',   ttl:'ASI Zubin Kembhavi Award for 2025: GROWTH-India Team',             desc:'Astronomical Society of India Meeting 2026, IIT Guwahati'},
     {yr:'2026',   ttl:'Dhananjay Joshi Fundamental Research Award 2026: GROWTH-India Team',desc:'Mumbai'},
-    {yr:'2024',   ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',       desc:'Astronomical Society of India Meeting 2024, Bangalore'},
-    {yr:'2024',   ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',       desc:'Astronomical Society of India Meeting 2024, Bangalore'},
-    {yr:'2023',   ttl:'Young Astronomer Award',                                      desc:'Honorable mention at ASI 2023, IIT Indore'},
-    {yr:'2022',   ttl:'Best Poster Award',                                           desc:'40th Annual Meeting of Astronomical Society of India'},
-    {yr:'2020',   ttl:'New Discovery Award',                                         desc:'Special Mention at 38th Annual Meeting of Astronomical Society of India'},
-    {yr:'2018–20',ttl:'Data Science Fellowship',                                     desc:'LSSTC'},
-    {yr:'2017',   ttl:'GATE Scholarship',                                            desc:'To pursue Doctorate'},
-    {yr:'2016',   ttl:'Fellowship',                                                  desc:'CSIR-NET'},
-    {yr:'2012–17',ttl:'HBCSE Scholarship',                                           desc:'Central Sector Scheme for College and University Students'},
+    {yr:'2024',   ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',             desc:'Astronomical Society of India Meeting 2024, Bangalore'},
+    {yr:'2024',   ttl:'Justice Oak Award for Outstanding Thesis in Astronomy',             desc:'Astronomical Society of India Meeting 2024, Bangalore'},
+    {yr:'2023',   ttl:'Young Astronomer Award',                                            desc:'Honorable mention at ASI 2023, IIT Indore'},
+    {yr:'2022',   ttl:'Best Poster Award',                                                 desc:'40th Annual Meeting of Astronomical Society of India'},
+    {yr:'2020',   ttl:'New Discovery Award',                                               desc:'Special Mention at 38th Annual Meeting of Astronomical Society of India'},
+    {yr:'2018–20',ttl:'Data Science Fellowship',                                           desc:'LSSTC'},
+    {yr:'2017',   ttl:'GATE Scholarship',                                                  desc:'To pursue Doctorate'},
+    {yr:'2016',   ttl:'Fellowship',                                                        desc:'CSIR-NET'},
+    {yr:'2012–17',ttl:'HBCSE Scholarship',                                                desc:'Central Sector Scheme for College and University Students'},
   ],
   positions:[
     {tx:'Organizer / Host of Transient Tea Meetings at Center for Astrophysics – Harvard',pr:'2024–2026'},
@@ -892,8 +679,8 @@ const CV_DATA = {
 };
 
 /* ══════════════════════════════════════════════════════════
-   🌌  STAR FIELD + SHOOTING STARS
-   ══════════════════════════════════════════════════════════ */
+   STAR FIELD + SHOOTING STARS
+══════════════════════════════════════════════════════════ */
 (function(){
   const cv=document.getElementById('stars'),cx=cv.getContext('2d');
   let stars=[],shots=[],raf,timer=0;
@@ -901,327 +688,255 @@ const CV_DATA = {
   function mkStars(){
     stars=[];
     const n=Math.round(cv.width*cv.height/7800);
-    for(let i=0;i<n;i++) stars.push({
-      x:Math.random()*cv.width, y:Math.random()*cv.height,
-      r:Math.random()*1.1+.15, a:Math.random(),
-      da:(Math.random()*.006+.0015)*(Math.random()<.5?1:-1),
-    });
+    for(let i=0;i<n;i++) stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.1+.15,a:Math.random(),da:(Math.random()*.006+.0015)*(Math.random()<.5?1:-1)});
   }
-  function mkShot(){
-    shots.push({
-      x:Math.random()*cv.width*.65, y:Math.random()*cv.height*.3,
-      ang:.38+(Math.random()-.5)*.22, len:90+Math.random()*70,
-      spd:12+Math.random()*8, pg:0,
-    });
-  }
+  function mkShot(){shots.push({x:Math.random()*cv.width*.65,y:Math.random()*cv.height*.3,ang:.38+(Math.random()-.5)*.22,len:90+Math.random()*70,spd:12+Math.random()*8,pg:0});}
   function draw(){
     cx.clearRect(0,0,cv.width,cv.height);
-    for(const s of stars){
-      s.a+=s.da; if(s.a>1||s.a<.03) s.da=-s.da;
-      cx.beginPath(); cx.arc(s.x,s.y,s.r,0,6.2832);
-      cx.fillStyle=`rgba(200,215,255,${Math.abs(s.a)*.75})`; cx.fill();
-    }
-    timer++; if(timer>240&&Math.random()<.006){mkShot();timer=0;}
+    for(const s of stars){s.a+=s.da;if(s.a>1||s.a<.03)s.da=-s.da;cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.2832);cx.fillStyle=`rgba(200,215,255,${Math.abs(s.a)*.75})`;cx.fill();}
+    timer++;if(timer>240&&Math.random()<.006){mkShot();timer=0;}
     for(let i=shots.length-1;i>=0;i--){
-      const s=shots[i]; s.pg+=s.spd;
-      const hx=s.x+Math.cos(s.ang)*s.pg, hy=s.y+Math.sin(s.ang)*s.pg;
-      const tp=Math.max(0,s.pg-s.len);
-      const tx=s.x+Math.cos(s.ang)*tp, ty=s.y+Math.sin(s.ang)*tp;
+      const s=shots[i];s.pg+=s.spd;
+      const hx=s.x+Math.cos(s.ang)*s.pg,hy=s.y+Math.sin(s.ang)*s.pg;
+      const tp=Math.max(0,s.pg-s.len),tx=s.x+Math.cos(s.ang)*tp,ty=s.y+Math.sin(s.ang)*tp;
       const op=s.pg>s.len*1.1?Math.max(0,1-(s.pg-s.len*1.1)/(s.len*.5)):1;
       if(op<=0||s.pg>s.len*2.4){shots.splice(i,1);continue;}
       const g=cx.createLinearGradient(tx,ty,hx,hy);
-      g.addColorStop(0,'rgba(200,220,255,0)');
-      g.addColorStop(.7,`rgba(180,210,255,${op*.5})`);
-      g.addColorStop(1,`rgba(225,235,255,${op})`);
-      cx.strokeStyle=g; cx.lineWidth=1.6; cx.lineCap='round';
-      cx.beginPath(); cx.moveTo(tx,ty); cx.lineTo(hx,hy); cx.stroke();
-      cx.beginPath(); cx.arc(hx,hy,1.4,0,6.2832);
-      cx.fillStyle=`rgba(235,245,255,${op})`; cx.fill();
+      g.addColorStop(0,'rgba(200,220,255,0)');g.addColorStop(.7,`rgba(180,210,255,${op*.5})`);g.addColorStop(1,`rgba(225,235,255,${op})`);
+      cx.strokeStyle=g;cx.lineWidth=1.6;cx.lineCap='round';cx.beginPath();cx.moveTo(tx,ty);cx.lineTo(hx,hy);cx.stroke();
+      cx.beginPath();cx.arc(hx,hy,1.4,0,6.2832);cx.fillStyle=`rgba(235,245,255,${op})`;cx.fill();
     }
     raf=requestAnimationFrame(draw);
   }
   window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();mkStars();draw();});
-  resize(); mkStars(); draw();
+  resize();mkStars();draw();
 })();
 
 /* ══════════════════════════════════════════════════════════
-   📜  SCROLL — progress bar, navbar, back-to-top, active link
-   ══════════════════════════════════════════════════════════ */
-const navEl  = document.getElementById('nav');
-const topBtn = document.getElementById('top');
-const pbEl   = document.getElementById('pb');
-// Section order: CV comes before Publications
-const secIds = ['about','research','cv','publications','contact'];
-const navAs  = document.querySelectorAll('.nav-links a');
+   SCROLL — progress bar, navbar, active link
+══════════════════════════════════════════════════════════ */
+const navEl=document.getElementById('nav');
+const topBtn=document.getElementById('top');
+const pbEl=document.getElementById('pb');
+const secIds=['about','research','cv','publications','contact'];
+const navAs=document.querySelectorAll('.nav-links a');
 
-window.addEventListener('scroll', () => {
-  const y   = scrollY;
-  const max = document.documentElement.scrollHeight - innerHeight;
-  pbEl.style.width = (max > 0 ? y / max * 100 : 0) + '%';
-  navEl.classList.toggle('solid', y > 50);
-  topBtn.classList.toggle('show', y > 400);
-  let cur = '';
-  secIds.forEach(id => {
-    const el = document.getElementById(id);
-    if(el && y >= el.offsetTop - 140) cur = id;
-  });
-  navAs.forEach(a => a.classList.toggle('active',
-    a.getAttribute('href') === `#${cur}`));
+window.addEventListener('scroll',()=>{
+  const y=scrollY,max=document.documentElement.scrollHeight-innerHeight;
+  pbEl.style.width=(max>0?y/max*100:0)+'%';
+  navEl.classList.toggle('solid',y>50);
+  topBtn.classList.toggle('show',y>400);
+  let cur='';
+  secIds.forEach(id=>{const el=document.getElementById(id);if(el&&y>=el.offsetTop-140)cur=id;});
+  navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${cur}`));
 });
 
 /* ══════════════════════════════════════════════════════════
-   📱  MOBILE MENU
-   ══════════════════════════════════════════════════════════ */
-function mOpen(){ document.getElementById('mm').classList.add('open'); }
-function mClose(){ document.getElementById('mm').classList.remove('open'); }
+   MOBILE MENU
+══════════════════════════════════════════════════════════ */
+function mOpen(){document.getElementById('mm').classList.add('open');}
+function mClose(){document.getElementById('mm').classList.remove('open');}
 
 /* ══════════════════════════════════════════════════════════
-   👁️  SCROLL REVEAL
-   ══════════════════════════════════════════════════════════ */
-const rvObs = new IntersectionObserver(
-  entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }),
-  { threshold: .06 }
+   SCROLL REVEAL
+══════════════════════════════════════════════════════════ */
+const rvObs=new IntersectionObserver(
+  entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),
+  {threshold:.06}
 );
-document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
+document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
 
 /* ══════════════════════════════════════════════════════════
-   ✍️  TYPING EFFECT
-   ══════════════════════════════════════════════════════════ */
+   TYPING EFFECT
+══════════════════════════════════════════════════════════ */
 (function(){
-  const phrases = [
-    'Superluminous SN Expert',
-    'Tidal Disruption Event Watcher',
-    'Kilonova Observer',
-    'Formar GIT Student Team Lead',
-    'γ-Ray Burst Researcher',
-    'Multi-Messenger Astronomer',
-  ];
-  let pi=0, ci=0, del=false;
-  const el = document.getElementById('typer');
+  const phrases=['Superluminous SN Expert','Kilonova Observer','Tidal Disruption Event Watcher','Former GROWTH-India Team Student Lead','γ-Ray Burst Researcher','Multi-Messenger Astronomer','NSF-IAIFI Junior Investigator'];
+  let pi=0,ci=0,del=false;
+  const el=document.getElementById('typer');
   if(!el) return;
   function type(){
-    const p = phrases[pi];
-    el.textContent = del ? p.substring(0, --ci) : p.substring(0, ++ci);
-    if(!del && ci===p.length){ del=true; setTimeout(type,2000); return; }
-    if(del && ci===0){ del=false; pi=(pi+1)%phrases.length; setTimeout(type,350); return; }
-    setTimeout(type, del?27:60);
+    const p=phrases[pi];
+    el.textContent=del?p.substring(0,--ci):p.substring(0,++ci);
+    if(!del&&ci===p.length){del=true;setTimeout(type,2000);return;}
+    if(del&&ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(type,350);return;}
+    setTimeout(type,del?27:60);
   }
-  setTimeout(type, 1100);
+  setTimeout(type,1100);
 })();
 
 /* ══════════════════════════════════════════════════════════
-   📊  ANIMATED NUMBER COUNTER
-   ══════════════════════════════════════════════════════════ */
-function animNum(id, target){
-  const el = document.getElementById(id);
-  if(!el || !target){ if(el) el.textContent='0'; return; }
-  const dur=1800, t0=performance.now();
-  const step = ts => {
-    const p  = Math.min((ts-t0)/dur, 1);
-    const ep = p*p*(3-2*p);
-    el.textContent = Math.round(ep*target).toLocaleString();
+   ANIMATED NUMBER COUNTER
+══════════════════════════════════════════════════════════ */
+function animNum(id,target,flash=false){
+  const el=document.getElementById(id);
+  if(!el) return;
+  if(target===undefined||target===null){el.textContent='—';return;}
+  const cur=parseInt((el.textContent||'0').replace(/[^0-9]/g,''))||0;
+  if(cur===target) return;
+  const dur=cur===0?1800:850;
+  const t0=performance.now();
+  if(flash&&el.classList){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}
+  const step=ts=>{
+    const p=Math.min((ts-t0)/dur,1);
+    const ep=p*p*(3-2*p);
+    el.textContent=Math.round(cur+ep*(target-cur)).toLocaleString();
     if(p<1) requestAnimationFrame(step);
-    else    el.textContent = target.toLocaleString();
+    else    el.textContent=target.toLocaleString();
   };
   requestAnimationFrame(step);
 }
 
+/* ══════════════════════════════════════════════════════════
+   PUBLICATIONS — Smart Cache + ORCID + ADS Enrichment
+══════════════════════════════════════════════════════════ */
+let PAPERS=[];
+let curF='all';
 
-let PAPERS = [];
-let curF   = 'all';
-
-// ── Paper cache ──────────────────────────────────────────────
-const PC = {
-  KEY : 'hk-papers-v4',
-  TTL : 7 * 24 * 60 * 60 * 1000,   // 7 days
+const PC={
+  KEY:'hk-papers-v4',TTL:7*24*60*60*1000,
   get(){
     try{
-      const raw = localStorage.getItem(this.KEY);
-      if(!raw) return null;
-      const o = JSON.parse(raw);
-      if(!o?.papers?.length || !o.ts) return null;
-      if(Date.now()-o.ts > this.TTL){ this.clear(); return null; }
+      const raw=localStorage.getItem(this.KEY);if(!raw)return null;
+      const o=JSON.parse(raw);
+      if(!o?.papers?.length||!o.ts)return null;
+      if(Date.now()-o.ts>this.TTL){this.clear();return null;}
       return o;
-    }catch{ return null; }
+    }catch{return null;}
   },
-  set(papers, numFound, source){
+  set(papers,numFound,source){
     try{
-      localStorage.setItem(this.KEY, JSON.stringify({
-        papers, numFound,
-        newestBibcode : papers[0]?.bibcode || '',
-        source,
-        ts   : Date.now(),
-        date : new Date().toLocaleDateString('en-US',
-                 {month:'short',day:'numeric',year:'numeric'}),
+      localStorage.setItem(this.KEY,JSON.stringify({
+        papers,numFound,newestBibcode:papers[0]?.bibcode||'',source,
+        ts:Date.now(),date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
       }));
-    }catch(e){ console.warn('[Papers] Cache write failed:',e.message); }
+    }catch(e){console.warn('[Papers] Cache write failed:',e.message);}
   },
-  clear(){ localStorage.removeItem(this.KEY); },
+  clear(){localStorage.removeItem(this.KEY);},
 };
 
-// ── Entry point ──────────────────────────────────────────────
 async function fetchPapers(){
-  const cached = PC.get();
+  const cached=PC.get();
   if(cached?.papers?.length){
-    // Render instantly from cache
-    PAPERS = cached.papers;
-    buildFilters(); renderPubs(); updateStats();
+    PAPERS=cached.papers;
+    buildFilters();renderPubs();updateStats();
     setPubCacheNote(cached);
-    // Silent background check for new papers
     backgroundCheckForUpdates(cached);
     return;
   }
-  // No cache: show skeleton and full fetch
   showPubSkeleton();
   await fullFetchPapers(true);
 }
 
 function setPubCacheNote(cached){
-  const meta = document.getElementById('pubMeta');
+  const meta=document.getElementById('pubMeta');
   if(!meta) return;
-  const src = cached.source==='orcid' ? 'ORCID' : 'NASA ADS';
-  meta.innerHTML =
-    `${cached.papers.length} publications &nbsp;·&nbsp;` +
-    `<span style="color:var(--tx3);font-size:.72rem">` +
-    `cached ${cached.date} via ${src} · ` +
-    `<button onclick="clearPapersCache()" style="background:none;border:none;` +
-    `color:inherit;text-decoration:underline;cursor:pointer;` +
-    `font-family:inherit;font-size:inherit;padding:0">refresh</button></span>`;
+  const src=cached.source==='orcid'?'ORCID':'NASA ADS';
+  meta.innerHTML=`${cached.papers.length} publications &nbsp;·&nbsp;<span style="color:var(--tx3);font-size:.72rem">cached ${cached.date} via ${src} · <button onclick="clearPapersCache()" style="background:none;border:none;color:inherit;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0">refresh</button></span>`;
 }
 
-function clearPapersCache(){
-  PC.clear(); PAPERS=[];
-  document.getElementById('pList').innerHTML='';
-  fetchPapers();
-}
+function clearPapersCache(){PC.clear();PAPERS=[];document.getElementById('pList').innerHTML='';fetchPapers();}
 
-// ── Background validity check ────────────────────────────────
 async function backgroundCheckForUpdates(cached){
   if(!CFG.useProxy) return;
   try{
-    const params = new URLSearchParams({q:`orcid:${CFG.orcid}`,checkOnly:'true'});
-    const r = await fetch(`${CFG.proxyUrl}?${params}`);
+    const params=new URLSearchParams({q:`orcid:${CFG.orcid}`,checkOnly:'true'});
+    const r=await fetch(`${CFG.proxyUrl}?${params}`);
     if(!r.ok) return;
-    const data = await r.json();
-    const countChanged  = data.numFound      !== cached.numFound;
-    const newestChanged = data.newestBibcode !== cached.newestBibcode;
-    if(countChanged || newestChanged){
+    const data=await r.json();
+    if(data.numFound!==cached.numFound||data.newestBibcode!==cached.newestBibcode){
       console.log('[Papers] New papers detected — refreshing silently…');
       await fullFetchPapers(false);
     }
-  }catch(e){ console.warn('[Papers] Background check failed:',e.message); }
+  }catch(e){console.warn('[Papers] Background check failed:',e.message);}
 }
 
-// ── Full fetch: ADS proxy first, ORCID fallback ──────────────
 async function fullFetchPapers(showSkel=true){
   if(showSkel) showPubSkeleton();
-  const adsOK = await fetchFromADS();
+  const adsOK=await fetchFromADS();
   if(adsOK) return;
   await fetchFromORCID();
 }
 
-// ── ADS fetch ────────────────────────────────────────────────
 async function fetchFromADS(){
-  const tok = (CFG.adsToken||'').trim();
-  if(!CFG.useProxy && tok.length<15) return false;
-  const fl = 'title,author,year,pubdate,bibcode,doi,abstract,citation_count,pub,identifier';
-  const params = new URLSearchParams({
-    q:`orcid:${CFG.orcid}`, fl, rows:'250', sort:'date desc',
-  });
-  let url, opts={};
-  if(CFG.useProxy){
-    url = `${CFG.proxyUrl}?${params}`;
-  }else{
-    url  = `https://api.adsabs.harvard.edu/v1/search/query?${params}`;
-    opts = {headers:{Authorization:`Bearer ${tok}`}};
-  }
+  const tok=(CFG.adsToken||'').trim();
+  if(!CFG.useProxy&&tok.length<15) return false;
+  const fl='title,author,year,pubdate,bibcode,doi,abstract,citation_count,pub,identifier,property';
+  const params=new URLSearchParams({q:`orcid:${CFG.orcid}`,fl,rows:'250',sort:'date desc'});
+  let url,opts={};
+  if(CFG.useProxy){url=`${CFG.proxyUrl}?${params}`;}
+  else{url=`https://api.adsabs.harvard.edu/v1/search/query?${params}`;opts={headers:{Authorization:`Bearer ${tok}`}};}
   try{
-    const r = await fetch(url, opts);
-    if(!r.ok){ console.warn(`[ADS] HTTP ${r.status}`); return false; }
-    const j = await r.json();
-    if(j.error || !j.response?.docs?.length) return false;
-    PAPERS = j.response.docs;
-    PC.set(PAPERS, j.response.numFound, 'ads');
+    const r=await fetch(url,opts);
+    if(!r.ok){console.warn(`[ADS] HTTP ${r.status}`);return false;}
+    const j=await r.json();
+    if(j.error||!j.response?.docs?.length) return false;
+    PAPERS=j.response.docs;
+    PC.set(PAPERS,j.response.numFound,'ads');
     hideAlert();
-    // Clear cached note before re-render so fresh count shows
-    const meta = document.getElementById('pubMeta');
+    const meta=document.getElementById('pubMeta');
     if(meta) meta.innerHTML='';
-    buildFilters(); renderPubs(); updateStats();
-    const cpc = document.getElementById('cvPubCt');
+    buildFilters();renderPubs();updateStats();
+    const cpc=document.getElementById('cvPubCt');
     if(cpc) cpc.textContent=`${PAPERS.length} papers`;
     return true;
-  }catch(e){ console.warn('[ADS] Error:',e.message); return false; }
+  }catch(e){console.warn('[ADS] Error:',e.message);return false;}
 }
 
-// ── ORCID public API fallback (no token needed) ───────────────
 async function fetchFromORCID(){
   try{
-    const r = await fetch(
-      `https://pub.orcid.org/v3.0/${CFG.orcid}/works`,
-      {headers:{Accept:'application/json'}}
-    );
+    const r=await fetch(`https://pub.orcid.org/v3.0/${CFG.orcid}/works`,{headers:{Accept:'application/json'}});
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    const papers = parseORCIDWorks(data);
+    const data=await r.json();
+    const papers=parseORCIDWorks(data);
     if(!papers.length) throw new Error('No works returned');
-    PAPERS = papers;
-    PC.set(PAPERS, papers.length, 'orcid');
-    hideAlert(); buildFilters(); renderPubs(); updateStats();
-    // Enrich with ADS data in background
+    PAPERS=papers;
+    PC.set(PAPERS,papers.length,'orcid');
+    hideAlert();buildFilters();renderPubs();updateStats();
     enrichWithADS();
   }catch(e){
     console.warn('[ORCID] Error:',e.message);
-    showAlert(
-      `Could not load publications automatically. &nbsp;
-       <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc"
-          target="_blank">Browse all papers on NASA ADS ↗</a>`
-    );
+    showAlert(`Could not load publications automatically. &nbsp;<a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc" target="_blank">Browse all papers on NASA ADS ↗</a>`);
     noToken();
   }
 }
 
-// ── Parse ORCID works JSON ────────────────────────────────────
 function parseORCIDWorks(data){
   return (data.group||[]).map(g=>{
     const ws=(g['work-summary']||[]).find(s=>s.title?.title?.value)||g['work-summary']?.[0];
     if(!ws) return null;
-    const extIds=[
-      ...(g['external-ids']?.['external-id']||[]),
-      ...(ws['external-ids']?.['external-id']||[]),
-    ];
-    let doi='', arxivId='';
+    const extIds=[...(g['external-ids']?.['external-id']||[]),...(ws['external-ids']?.['external-id']||[])];
+    let doi='',arxivId='';
     for(const e of extIds){
-      const t=e['external-id-type'], v=e['external-id-value']||'';
+      const t=e['external-id-type'],v=e['external-id-value']||'';
       if(t==='doi'&&!doi) doi=v;
       if((t==='arxiv'||t==='arxiv-id')&&!arxivId) arxivId=v;
     }
-    const year  = ws['publication-date']?.year?.value  || '—';
-    const month = ws['publication-date']?.month?.value || '01';
-    return {
-      title         :[ws.title?.title?.value||'Untitled'],
-      year, pubdate :`${year}-${month}-01`,
-      pub           :ws['journal-title']?.value||'',
-      doi           :doi     ?[doi]            :[],
-      identifier    :arxivId ?[`arXiv:${arxivId}`]:[],
-      author:[], abstract:'', citation_count:0,
+    const year=ws['publication-date']?.year?.value||'—';
+    const month=ws['publication-date']?.month?.value||'01';
+    return{
+      title:[ws.title?.title?.value||'Untitled'],
+      year,pubdate:`${year}-${month}-01`,
+      pub:ws['journal-title']?.value||'',
+      doi:doi?[doi]:[],
+      identifier:arxivId?[`arXiv:${arxivId}`]:[],
+      author:[],abstract:'',citation_count:0,
       bibcode:doi||String(ws['put-code']||''),
-      _orcid:true,
+      property:[],_orcid:true,
     };
   }).filter(Boolean).sort((a,b)=>(b.year||'0')>(a.year||'0')?1:-1);
 }
 
-// ── ADS enrichment after ORCID load ──────────────────────────
 async function enrichWithADS(){
   if(!CFG.useProxy) return;
   try{
-    const fl='title,author,year,bibcode,doi,abstract,citation_count,pub,identifier';
+    const fl='title,author,year,bibcode,doi,abstract,citation_count,pub,identifier,property';
     const params=new URLSearchParams({q:`orcid:${CFG.orcid}`,fl,rows:'250',sort:'date desc'});
     const r=await fetch(`${CFG.proxyUrl}?${params}`);
     if(!r.ok) return;
     const j=await r.json();
     const adsDocs=j.response?.docs||[];
     if(!adsDocs.length) return;
-    const byDoi={}, byTitle={};
+    const byDoi={},byTitle={};
     for(const p of adsDocs){
       if(p.doi?.[0])   byDoi[p.doi[0].toLowerCase()]=p;
       if(p.title?.[0]) byTitle[p.title[0].toLowerCase().slice(0,50)]=p;
@@ -1233,57 +948,33 @@ async function enrichWithADS(){
       const ads=(dKey&&byDoi[dKey])||(tKey&&byTitle[tKey]);
       if(!ads) return p;
       enriched++;
-      return{...p,
-        author        :ads.author        ||p.author,
-        abstract      :ads.abstract      ||p.abstract,
-        citation_count:ads.citation_count??p.citation_count,
-        bibcode       :ads.bibcode        ||p.bibcode,
-        identifier    :ads.identifier     ||p.identifier,
-        _orcid        :false,
-      };
+      return{...p,author:ads.author||p.author,abstract:ads.abstract||p.abstract,citation_count:ads.citation_count??p.citation_count,bibcode:ads.bibcode||p.bibcode,identifier:ads.identifier||p.identifier,property:ads.property||p.property,_orcid:false};
     });
     if(enriched>0){
       console.log(`[Papers] Enriched ${enriched} papers from ADS`);
       PC.set(PAPERS,adsDocs.length,'ads');
       const meta=document.getElementById('pubMeta');
       if(meta) meta.innerHTML='';
-      buildFilters(); renderPubs(); updateStats();
+      buildFilters();renderPubs();updateStats();
     }
-  }catch(e){ console.warn('[Enrich] ADS enrichment failed:',e.message); }
+  }catch(e){console.warn('[Enrich] ADS enrichment failed:',e.message);}
 }
 
-// ── Skeleton & alert helpers ──────────────────────────────────
 function showPubSkeleton(){
-  document.getElementById('pList').innerHTML=
-    `<div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>`.repeat(4);
+  document.getElementById('pList').innerHTML=`<div class="sk"><div class="sl w80"></div><div class="sl w60"></div><div class="sl w40"></div></div>`.repeat(4);
 }
-function showAlert(html){
-  const b=document.getElementById('alrt'); if(!b) return;
-  document.getElementById('alrtMsg').innerHTML=html;
-  b.classList.add('show');
-}
-function hideAlert(){ document.getElementById('alrt')?.classList.remove('show'); }
+function showAlert(html){const b=document.getElementById('alrt');if(!b)return;document.getElementById('alrtMsg').innerHTML=html;b.classList.add('show');}
+function hideAlert(){document.getElementById('alrt')?.classList.remove('show');}
 function noToken(){
-  document.getElementById('pList').innerHTML=`
-    <div style="text-align:center;padding:3.5rem 1.5rem;color:var(--tx2)">
-      <i class="fas fa-satellite-dish"
-         style="font-size:2.5rem;display:block;margin-bottom:1rem;color:var(--bll);opacity:.4"></i>
-      <p>Publications load automatically once your Netlify proxy is configured.<br>
-      <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc"
-         target="_blank" style="color:var(--bll)">Browse all papers on NASA ADS ↗</a></p>
-    </div>`;
+  document.getElementById('pList').innerHTML=`<div style="text-align:center;padding:3.5rem 1.5rem;color:var(--tx2)"><i class="fas fa-satellite-dish" style="font-size:2.5rem;display:block;margin-bottom:1rem;color:var(--bll);opacity:.4"></i><p>Publications load automatically once your Netlify proxy is configured.<br><a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc" target="_blank" style="color:var(--bll)">Browse all papers on NASA ADS ↗</a></p></div>`;
 }
 
-// ── Year filter buttons ───────────────────────────────────────
 function buildFilters(){
   const years=[...new Set(PAPERS.map(p=>p.year))].sort((a,b)=>b>a?1:-1);
   const MAX=5;
   document.getElementById('fRow').innerHTML=
     `<button class="fb on" data-f="all" onclick="setF('all',this)">All (${PAPERS.length})</button>`+
-    years.slice(0,MAX).map(y=>{
-      const n=PAPERS.filter(p=>p.year===y).length;
-      return `<button class="fb" data-f="${y}" onclick="setF('${y}',this)">${y} (${n})</button>`;
-    }).join('')+
+    years.slice(0,MAX).map(y=>{const n=PAPERS.filter(p=>p.year===y).length;return `<button class="fb" data-f="${y}" onclick="setF('${y}',this)">${y} (${n})</button>`;}).join('')+
     (years.length>MAX?`<button class="fb" data-f="older" onclick="setF('older',this)">Earlier</button>`:'');
 }
 
@@ -1294,7 +985,6 @@ function setF(val,btn){
   renderPubs();
 }
 
-// ── Render filtered paper list ────────────────────────────────
 function renderPubs(){
   const q=(document.getElementById('pubQ')?.value||'').toLowerCase().trim();
   let list=PAPERS;
@@ -1315,53 +1005,33 @@ function renderPubs(){
   });
   const meta=document.getElementById('pubMeta');
   if(meta&&!meta.innerHTML.includes('cached')){
-    meta.textContent=list.length===PAPERS.length
-      ?`${PAPERS.length} publication${PAPERS.length!==1?'s':''}`
-      :`${list.length} of ${PAPERS.length} publications`;
+    meta.textContent=list.length===PAPERS.length?`${PAPERS.length} publication${PAPERS.length!==1?'s':''}`:`${list.length} of ${PAPERS.length} publications`;
   }
   if(!list.length){
-    document.getElementById('pList').innerHTML=`
-      <div style="text-align:center;padding:2.5rem;color:var(--tx3)">
-        <i class="fas fa-satellite-dish"
-           style="font-size:1.8rem;margin-bottom:.7rem;display:block;opacity:.35"></i>
-        No matching publications.
-      </div>`;
+    document.getElementById('pList').innerHTML=`<div style="text-align:center;padding:2.5rem;color:var(--tx3)"><i class="fas fa-satellite-dish" style="font-size:1.8rem;margin-bottom:.7rem;display:block;opacity:.35"></i>No matching publications.</div>`;
     return;
   }
   document.getElementById('pList').innerHTML=list.map(pubCard).join('');
 }
 
-// ── Build one publication card ────────────────────────────────
 function pubCard(p,i){
-  const title   = esc(p.title?.[0]??'Untitled');
-  const year    = p.year??'—';
-  const jrnl    = esc(p.pub??'');
-  const cites   = p.citation_count??0;
-  const bib     = p.bibcode??'';
-  const doi     = p.doi?.[0]??'';
-  const abs     = p.abstract
-    ? esc(p.abstract)
-    : (doi
-      ? `Abstract on <a href="https://doi.org/${esc(doi)}" target="_blank" style="color:var(--bll)">publisher site</a>.`
-      : 'Abstract not available.');
-  const axId    = (p.identifier??[]).find(s=>/^arXiv:/i.test(s));
-  const isORCID = p._orcid;
-  const auHtml  = p.author?.length
-    ? (p.author.slice(0,8).map(a=>{
-        const low=a.toLowerCase();
-        return CFG.authorMatch.some(m=>low.includes(m))
-          ?`<span class="me">${esc(a)}</span>`:esc(a);
-      }).join(', ')+(p.author.length>8?' <em>et al.</em>':''))
-    : `<span style="color:var(--tx3);font-style:italic">Author list via
-       <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}"
-          target="_blank" style="color:var(--bll)">NASA ADS</a></span>`;
-  const isFirst = !isORCID&&CFG.authorMatch.some(m=>(p.author?.[0]??'').toLowerCase().includes(m));
-  const pd      = p.pubdate?new Date(p.pubdate.replace(/-00/g,'-01')):null;
-  const isNew   = pd&&(Date.now()-pd)<180*86400000;
-  const adsHref = bib.length>8
-    ?`https://ui.adsabs.harvard.edu/abs/${encodeURIComponent(bib)}/abstract`
-    :(doi?`https://doi.org/${doi}`:'#');
-  const delay   = Math.min(i*.04,.45).toFixed(2);
+  const title=esc(p.title?.[0]??'Untitled');
+  const year=p.year??'—';
+  const jrnl=esc(p.pub??'');
+  const cites=p.citation_count??0;
+  const bib=p.bibcode??'';
+  const doi=p.doi?.[0]??'';
+  const abs=p.abstract?esc(p.abstract):(doi?`Abstract on <a href="https://doi.org/${esc(doi)}" target="_blank" style="color:var(--bll)">publisher site</a>.`:'Abstract not available.');
+  const axId=(p.identifier??[]).find(s=>/^arXiv:/i.test(s));
+  const isORCID=p._orcid;
+  const auHtml=p.author?.length
+    ?(p.author.slice(0,8).map(a=>{const low=a.toLowerCase();return CFG.authorMatch.some(m=>low.includes(m))?`<span class="me">${esc(a)}</span>`:esc(a);}).join(', ')+(p.author.length>8?' <em>et al.</em>':''))
+    :`<span style="color:var(--tx3);font-style:italic">Author list via <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}" target="_blank" style="color:var(--bll)">NASA ADS</a></span>`;
+  const isFirst=!isORCID&&CFG.authorMatch.some(m=>(p.author?.[0]??'').toLowerCase().includes(m));
+  const pd=p.pubdate?new Date(p.pubdate.replace(/-00/g,'-01')):null;
+  const isNew=pd&&(Date.now()-pd)<180*86400000;
+  const adsHref=bib.length>8?`https://ui.adsabs.harvard.edu/abs/${encodeURIComponent(bib)}/abstract`:(doi?`https://doi.org/${doi}`:'#');
+  const delay=Math.min(i*.04,.45).toFixed(2);
   return `
 <div class="pub" style="animation:fadeU .5s ${delay}s ease both">
   <div class="pub-top">
@@ -1374,11 +1044,9 @@ function pubCard(p,i){
   <div class="pub-ft">
     ${cites>0?`<span class="bc"><i class="fas fa-quote-left" style="font-size:.58rem"></i>${cites} cite${cites!==1?'s':''}</span>`:''}
     ${isFirst?'<span class="bf">★ First Author</span>':''}
-    ${isNew  ?'<span class="bn">● New</span>':''}
+    ${isNew?'<span class="bn">● New</span>':''}
     ${isORCID?'<span style="font-size:.68rem;color:var(--tx3);padding:.1rem .45rem;border:1px solid var(--bdr);border-radius:4px">via ORCID</span>':''}
-    <button class="tab" onclick="togAbsBtn(this)">
-      <i class="fas fa-chevron-down" style="font-size:.58rem"></i> Abstract
-    </button>
+    <button class="tab" onclick="togAbsBtn(this)"><i class="fas fa-chevron-down" style="font-size:.58rem"></i> Abstract</button>
     <div class="pl">
       ${adsHref!=='#'?`<a href="${adsHref}" target="_blank" class="xl ads">ADS</a>`:''}
       ${doi?`<a href="https://doi.org/${doi}" target="_blank" class="xl doi">DOI</a>`:''}
@@ -1388,235 +1056,217 @@ function pubCard(p,i){
 </div>`;
 }
 
-function togAbs(el){
-  const c=el.closest('.pub');
-  c.querySelector('.aw').classList.toggle('open');
-  c.querySelector('.tab')?.classList.toggle('open');
-}
-function togAbsBtn(btn){
-  btn.closest('.pub').querySelector('.aw').classList.toggle('open');
-  btn.classList.toggle('open');
+function togAbs(el){const c=el.closest('.pub');c.querySelector('.aw').classList.toggle('open');c.querySelector('.tab')?.classList.toggle('open');}
+function togAbsBtn(btn){btn.closest('.pub').querySelector('.aw').classList.toggle('open');btn.classList.toggle('open');}
+
+function chkScroll(el){
+  const wrap=document.getElementById('plistWrap');
+  if(!wrap) return;
+  wrap.classList.toggle('at-bottom',el.scrollTop+el.clientHeight>=el.scrollHeight-10);
 }
 
-
-// Scholar metrics cache
-const SC = {
-  KEY: 'hk-scholar-v2',
-  TTL: 6 * 60 * 60 * 1000,   // 6 hours
-  get() {
-    try {
-      const raw = localStorage.getItem(this.KEY);
-      if (!raw) return null;
-      const o = JSON.parse(raw);
-      if (!o?.hIndex || !o.ts) return null;
-      if (Date.now() - o.ts > this.TTL) { this.clear(); return null; }
+/* ══════════════════════════════════════════════════════════
+   STATS — All vs Refereed toggle with Scholar fallback
+══════════════════════════════════════════════════════════ */
+const SC={
+  KEY:'hk-scholar-v2',TTL:6*60*60*1000,
+  get(){
+    try{
+      const raw=localStorage.getItem(this.KEY);if(!raw)return null;
+      const o=JSON.parse(raw);
+      if(!o?.hIndex||!o.ts)return null;
+      if(Date.now()-o.ts>this.TTL){this.clear();return null;}
       return o;
-    } catch { return null; }
+    }catch{return null;}
   },
-  set(data) {
-    try {
-      localStorage.setItem(this.KEY, JSON.stringify({ ...data, ts: Date.now() }));
-    } catch (e) { console.warn('[Scholar] Cache write failed:', e.message); }
+  set(d){
+    try{localStorage.setItem(this.KEY,JSON.stringify({...d,ts:Date.now()}));}
+    catch(e){console.warn('[Scholar] Cache write failed:',e.message);}
   },
-  clear() { localStorage.removeItem(this.KEY); },
+  clear(){localStorage.removeItem(this.KEY);},
 };
 
-function updateStats() {
-  // ── Paper count: always from loaded papers ──
-  animNum('sPap', PAPERS.length);
+let statsTimer=null;
+let statsMode=0;
+let allStats={papers:0,cites:0,h:0,i10:0};
+let refStats={papers:0,cites:0,h:0,i10:0};
 
-  // ── Calculate from ADS data ──
-  const citeCounts = PAPERS.map(p => p.citation_count ?? 0);
-  const totalCites = citeCounts.reduce((s, c) => s + c, 0);
-  const sorted     = [...citeCounts].sort((a, b) => b - a);
-  let   h          = 0;
-  sorted.forEach((c, i) => { if (c >= i + 1) h = i + 1; });
-  const i10        = sorted.filter(c => c >= 10).length;
+function isRefereed(p){
+  if(Array.isArray(p.property)&&p.property.length){
+    return p.property.includes('REFEREED');
+  }
+  const pub=(p.pub||'').toLowerCase();
+  if(!pub) return false;
+  const nonRef=['gcn','gamma-ray coordinates','astronomer\'s telegram','atel','arxiv','transient name server','tnsan','circular','telegram','iau circ','iauc','conference','proceedings','workshop'];
+  return !nonRef.some(nr=>pub.includes(nr));
+}
 
-  // ── Yrs Active: always from papers ──
-  const yrs = PAPERS.map(p => parseInt(p.year)).filter(y => !isNaN(y));
-  if (yrs.length)
-    document.getElementById('sYr').textContent =
-      (new Date().getFullYear() - Math.min(...yrs)) + '+';
+function calcStats(papers){
+  const cites=papers.map(p=>p.citation_count??0);
+  const total=cites.reduce((s,c)=>s+c,0);
+  const sorted=[...cites].sort((a,b)=>b-a);
+  let h=0;sorted.forEach((c,i)=>{if(c>=i+1)h=i+1;});
+  const i10=sorted.filter(c=>c>=10).length;
+  return{papers:papers.length,cites:total,h,i10};
+}
 
-  // ── If ADS gave us citation data, use it ──
-  const adsHasCitations = totalCites > 0;
-  if (adsHasCitations) {
-    animNum('sCit', totalCites);
-    animNum('sH',   h);
-    animNum('sI10', i10);
-    // Still fetch Scholar in background to keep cache warm
+function updateStats(){
+  const yrs=PAPERS.map(p=>parseInt(p.year)).filter(y=>!isNaN(y));
+  if(yrs.length) document.getElementById('sYr').textContent=(new Date().getFullYear()-Math.min(...yrs))+'+';
+
+  const refereed=PAPERS.filter(isRefereed);
+  allStats=calcStats(PAPERS);
+  refStats=calcStats(refereed);
+
+  console.log(`[Stats] All: ${allStats.papers} papers, ${allStats.cites} cites, h=${allStats.h} | Refereed: ${refStats.papers} papers, ${refStats.cites} cites, h=${refStats.h}`);
+
+  const adsHasCites=allStats.cites>0;
+
+  if(!adsHasCites){
+    const cached=SC.get();
+    if(cached){
+      const ratio=PAPERS.length?refereed.length/PAPERS.length:0.7;
+      allStats.cites=cached.citations;allStats.h=cached.hIndex;allStats.i10=cached.i10Index;
+      refStats.cites=Math.round(cached.citations*ratio);refStats.h=cached.hIndex;refStats.i10=cached.i10Index;
+    }
+    fetchScholarMetrics(!cached);
+  }else{
     fetchScholarMetrics(false);
-    return;
   }
 
-  // ── No ADS citation data (ORCID fallback) → use Scholar ──
-  const cached = SC.get();
-  if (cached) {
-    // Show cached Scholar stats immediately
-    animNum('sCit', cached.citations);
-    animNum('sH',   cached.hIndex);
-    animNum('sI10', cached.i10Index);
-    // Refresh in background
-    fetchScholarMetrics(false);
-  } else {
-    // Fetch Scholar now (first visit with no cache)
-    fetchScholarMetrics(true);
+  statsMode=0;
+  showStatsMode(0,false);
+
+  const tog=document.getElementById('statsToggle');
+  if(tog) tog.style.display='flex';
+
+  if(statsTimer) clearInterval(statsTimer);
+  statsTimer=setInterval(()=>{
+    statsMode=statsMode===0?1:0;
+    showStatsMode(statsMode,true);
+  },4000);
+}
+
+function showStatsMode(mode,animate){
+  const s=mode===0?allStats:refStats;
+  const label=mode===0?'All Publications':'Refereed Only';
+  const lblEl=document.getElementById('stLabel');
+  const pillEl=document.getElementById('stPill');
+
+  document.getElementById('std0')?.classList.toggle('on',mode===0);
+  document.getElementById('std1')?.classList.toggle('on',mode===1);
+  if(pillEl) pillEl.classList.toggle('refereed',mode===1);
+
+  if(animate){
+    if(lblEl){lblEl.classList.add('fade');setTimeout(()=>{lblEl.textContent=label;lblEl.classList.remove('fade');},260);}
+    animNum('sPap',s.papers,true);
+    animNum('sCit',s.cites, true);
+    animNum('sH',  s.h,     true);
+    animNum('sI10',s.i10,   true);
+  }else{
+    if(lblEl) lblEl.textContent=label;
+    animNum('sPap',s.papers);
+    animNum('sCit',s.cites);
+    animNum('sH',  s.h);
+    animNum('sI10',s.i10);
   }
 }
 
-// updateStats must be called after PAPERS is populated
-// (it's already called in fetchFromADS, fetchFromORCID, enrichWithADS)
-
-async function fetchScholarMetrics(updateDisplay = true) {
-  try {
-    const r = await fetch('/.netlify/functions/scholar-proxy');
-
-    if (!r.ok) throw new Error(`Scholar proxy HTTP ${r.status}`);
-    const data = await r.json();
-    if (data.error) throw new Error(data.error);
-
-    // Cache the result
+async function fetchScholarMetrics(updateDisplay=true){
+  try{
+    const r=await fetch('/.netlify/functions/scholar-proxy');
+    if(!r.ok) throw new Error(`Scholar proxy HTTP ${r.status}`);
+    const data=await r.json();
+    if(data.error) throw new Error(data.error);
     SC.set(data);
-
-    // Update display if requested (i.e. ADS had no citation data)
-    if (updateDisplay) {
-      animNum('sCit', data.citations);
-      animNum('sH',   data.hIndex);
-      animNum('sI10', data.i10Index);
+    if(updateDisplay){
+      const ratio=PAPERS.length?PAPERS.filter(isRefereed).length/PAPERS.length:0.7;
+      allStats.cites=data.citations;allStats.h=data.hIndex;allStats.i10=data.i10Index;
+      refStats.cites=Math.round(data.citations*ratio);refStats.h=data.hIndex;refStats.i10=data.i10Index;
+      showStatsMode(statsMode,false);
     }
-
-    console.log(
-      `[Scholar] citations=${data.citations} ` +
-      `h=${data.hIndex} i10=${data.i10Index}`
-    );
-
-  } catch (e) {
-    console.warn('[Scholar] Could not fetch metrics:', e.message);
-
-    // Last resort: try to show cached values even if expired
-    const stale = (() => {
-      try { return JSON.parse(localStorage.getItem(SC.KEY)); } catch { return null; }
-    })();
-
-    if (stale && updateDisplay) {
-      animNum('sCit', stale.citations ?? 0);
-      animNum('sH',   stale.hIndex   ?? 0);
-      animNum('sI10', stale.i10Index ?? 0);
-    }
+    console.log(`[Scholar] citations=${data.citations} h=${data.hIndex} i10=${data.i10Index}`);
+  }catch(e){
+    console.warn('[Scholar] Could not fetch metrics:',e.message);
+    const stale=(()=>{try{return JSON.parse(localStorage.getItem(SC.KEY));}catch{return null;}})();
+    if(stale&&updateDisplay){animNum('sCit',stale.citations??0);animNum('sH',stale.hIndex??0);animNum('sI10',stale.i10Index??0);}
   }
 }
 
 /* ══════════════════════════════════════════════════════════
-   📄  CV
-   Instant fallback → cache → background PDF parse (cv-web.pdf)
-   Download always uses full cv.pdf
-   ══════════════════════════════════════════════════════════ */
-const CV_CACHE_KEY = 'hk-cv-parsed-v4';
-const CV_CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
+   CV — Instant fallback + background PDF parse
+══════════════════════════════════════════════════════════ */
+const CV_CACHE_KEY='hk-cv-parsed-v4';
+const CV_CACHE_TTL=7*24*60*60*1000;
+
+if(window.pdfjsLib){
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
 
 async function initCV(){
-  // ① Render hardcoded data INSTANTLY — zero wait
   renderFallbackCV();
-  setCVSt(
-    '<i class="fas fa-circle-check" style="margin-right:5px"></i>' +
-    'CV loaded · <span id="cvParseNote">checking for updated version…</span>',
-    'ok'
-  );
-  // ② Try localStorage cache
-  const cached = getCVCache();
+  setCVSt('<i class="fas fa-circle-check" style="margin-right:5px"></i>CV loaded · <span id="cvParseNote">checking for updated version…</span>','ok');
+  const cached=getCVCache();
   if(cached){
     try{
       renderParsedCV(cached.sections);
-      updateCVNote(
-        `parsed from cv-web.pdf · cached ${cached.date} · ` +
-        `<button onclick="clearCVCache()" style="background:none;border:none;color:inherit;` +
-        `text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0">` +
-        `refresh</button>`
-      );
-      return; // Done instantly
-    }catch(e){ clearCVCache(); }
+      updateCVNote(`parsed from cv-web.pdf · cached ${cached.date} · <button onclick="clearCVCache()" style="background:none;border:none;color:inherit;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0">refresh</button>`);
+      return;
+    }catch(e){clearCVCache();}
   }
-  // ③ No cache: parse cv-web.pdf in background (non-blocking)
   parseCVBackground();
 }
 
 async function parseCVBackground(){
-  if(!window.pdfjsLib){ updateCVNote('PDF.js unavailable — showing embedded CV data'); return; }
-  let src = CFG.cvWebPath;
+  if(!window.pdfjsLib){updateCVNote('PDF.js unavailable — showing embedded CV data');return;}
+  let src=CFG.cvWebPath;
   try{
-    // Check if cv-web.pdf exists; fall back to cv.pdf if not
-    const probe = await fetch(src, {method:'HEAD'}).catch(()=>null);
-    if(!probe?.ok){ console.info('[CV] cv-web.pdf not found, using cv.pdf'); src=CFG.cvPath; }
+    const probe=await fetch(src,{method:'HEAD'}).catch(()=>null);
+    if(!probe?.ok){console.info('[CV] cv-web.pdf not found, using cv.pdf');src=CFG.cvPath;}
     updateCVNote('parsing cv-web.pdf…');
-    const sections = await extractCVSections(src);
-    if(!sections || sections.length<2) throw new Error('fewer than 2 sections detected');
+    const sections=await extractCVSections(src);
+    if(!sections||sections.length<2) throw new Error('fewer than 2 sections detected');
     setCVCache(sections);
     renderParsedCV(sections);
-    const fname = src.split('/').pop();
-    updateCVNote(
-      `parsed from ${fname} · ${sections.length} sections · ` +
-      `<button onclick="clearCVCache()" style="background:none;border:none;color:inherit;` +
-      `text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0">` +
-      `refresh</button>`
-    );
+    const fname=src.split('/').pop();
+    updateCVNote(`parsed from ${fname} · ${sections.length} sections · <button onclick="clearCVCache()" style="background:none;border:none;color:inherit;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0">refresh</button>`);
   }catch(e){
     console.warn('[CV] Parse failed:',e.message);
-    updateCVNote(
-      `showing embedded data · ` +
-      `<a href="${CFG.cvPath}" download style="color:inherit;text-decoration:underline">download cv.pdf</a> · ` +
-      `<small style="opacity:.65">${esc(e.message)}</small>`
-    );
+    updateCVNote(`showing embedded data · <a href="${CFG.cvPath}" download style="color:inherit;text-decoration:underline">download cv.pdf</a> · <small style="opacity:.65">${esc(e.message)}</small>`);
   }
 }
 
-function updateCVNote(html){
-  const el=document.getElementById('cvParseNote'); if(el) el.innerHTML=html;
-}
+function updateCVNote(html){const el=document.getElementById('cvParseNote');if(el)el.innerHTML=html;}
 
 function getCVCache(){
   try{
-    const raw=localStorage.getItem(CV_CACHE_KEY); if(!raw) return null;
+    const raw=localStorage.getItem(CV_CACHE_KEY);if(!raw)return null;
     const o=JSON.parse(raw);
-    if(!o?.sections||!o.ts) return null;
-    if(Date.now()-o.ts>CV_CACHE_TTL){ clearCVCache(); return null; }
+    if(!o?.sections||!o.ts)return null;
+    if(Date.now()-o.ts>CV_CACHE_TTL){clearCVCache();return null;}
     return o;
-  }catch{ return null; }
+  }catch{return null;}
 }
 function setCVCache(sections){
-  try{
-    localStorage.setItem(CV_CACHE_KEY,JSON.stringify({
-      sections, ts:Date.now(),
-      date:new Date().toLocaleDateString('en-US',
-             {month:'short',day:'numeric',year:'numeric'}),
-    }));
-  }catch(e){ console.warn('[CV] Cache write failed:',e.message); }
+  try{localStorage.setItem(CV_CACHE_KEY,JSON.stringify({sections,ts:Date.now(),date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}));}
+  catch(e){console.warn('[CV] Cache write failed:',e.message);}
 }
-function clearCVCache(){ localStorage.removeItem(CV_CACHE_KEY); location.reload(); }
+function clearCVCache(){localStorage.removeItem(CV_CACHE_KEY);location.reload();}
 
-function setCVSt(html, cls=''){
-  const el=document.getElementById('cvSt'); if(!el) return;
+function setCVSt(html,cls=''){
+  const el=document.getElementById('cvSt');if(!el)return;
   el.className='cv-st'+(cls?' '+cls:'');
   el.innerHTML=html;
 }
 
-// Download button → always full cv.pdf
 function dlCV(){
   if(CFG.cvSource==='gdrive'&&CFG.cvGDriveId){
     window.open(`https://drive.google.com/uc?id=${CFG.cvGDriveId}&export=download`,'_blank');
   }else{
-    const a=document.createElement('a');
-    a.href=CFG.cvPath; a.download='Harsh_Kumar_CV.pdf'; a.click();
+    const a=document.createElement('a');a.href=CFG.cvPath;a.download='Harsh_Kumar_CV.pdf';a.click();
   }
 }
 
-// ── PDF.js worker ─────────────────────────────────────────────
-if(window.pdfjsLib){
-  pdfjsLib.GlobalWorkerOptions.workerSrc=
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-}
-
-// ── PDF text extraction ───────────────────────────────────────
 async function extractCVSections(url){
   const pdf=await pdfjsLib.getDocument({url,verbosity:0}).promise;
   const items=[];
@@ -1626,50 +1276,36 @@ async function extractCVSections(url){
     const tc=await page.getTextContent({normalizeWhitespace:true});
     for(const it of tc.items){
       if(!it.str||!it.str.trim()) continue;
-      items.push({
-        t:it.str, x:Math.round(it.transform[4]),
-        y:Math.round(vp.height-it.transform[5]),
-        s:Math.round(Math.abs(it.transform[0]))||10, pg,
-      });
+      items.push({t:it.str,x:Math.round(it.transform[4]),y:Math.round(vp.height-it.transform[5]),s:Math.round(Math.abs(it.transform[0]))||10,pg});
     }
   }
-  items.sort((a,b)=>
-    a.pg!==b.pg?a.pg-b.pg:Math.abs(a.y-b.y)>4?a.y-b.y:a.x-b.x
-  );
-  const lines=[];
-  let cur=null;
+  items.sort((a,b)=>a.pg!==b.pg?a.pg-b.pg:Math.abs(a.y-b.y)>4?a.y-b.y:a.x-b.x);
+  const lines=[];let cur=null;
   for(const it of items){
-    if(!cur||cur.pg!==it.pg||Math.abs(cur.y-it.y)>5){
-      if(cur) lines.push(cur);
-      cur={text:it.t,x:it.x,y:it.y,s:it.s,pg:it.pg};
-    }else{
-      cur.text+=' '+it.t; cur.s=Math.max(cur.s,it.s);
-    }
+    if(!cur||cur.pg!==it.pg||Math.abs(cur.y-it.y)>5){if(cur)lines.push(cur);cur={text:it.t,x:it.x,y:it.y,s:it.s,pg:it.pg};}
+    else{cur.text+=' '+it.t;cur.s=Math.max(cur.s,it.s);}
   }
   if(cur) lines.push(cur);
-  const clean=lines
-    .map(l=>({...l,text:l.text.replace(/\s+/g,' ').trim()}))
-    .filter(l=>l.text.length>1&&!/^\d+$/.test(l.text)&&!/^Harsh\s*Kumar\s*\d+$/i.test(l.text));
+  const clean=lines.map(l=>({...l,text:l.text.replace(/\s+/g,' ').trim()})).filter(l=>l.text.length>1&&!/^\d+$/.test(l.text)&&!/^Harsh\s*Kumar\s*\d+$/i.test(l.text));
   if(!clean.length) throw new Error('no text extracted');
   const sz=clean.map(l=>l.s).filter(s=>s>0&&s<100).sort((a,b)=>a-b);
   const med=sz[Math.floor(sz.length/2)];
   const hdrT=med*1.28;
   const SECS=[
-    {k:'education',   pat:/^education$/i,                                                 ico:'fa-graduation-cap',col:'blue'},
-    {k:'awards',      pat:/^awards?\s*(and\s*fellowships?)?$/i,                           ico:'fa-trophy',        col:'amber'},
-    {k:'positions',   pat:/^positions?\s*(of\s*responsibility)?\s*(and\s*memberships?)?$/i,ico:'fa-users-gear',  col:'teal'},
-    {k:'publications',pat:/^publications?/i,                                              ico:'fa-book-open',     col:'purple'},
-    {k:'research',    pat:/^research(\s+interests?)?$/i,                                  ico:'fa-flask',         col:'blue'},
-    {k:'teaching',    pat:/^teaching/i,                                                   ico:'fa-chalkboard',    col:'teal'},
-    {k:'talks',       pat:/^(invited\s*)?(talks?|presentations?)/i,                       ico:'fa-microphone',    col:'purple'},
-    {k:'observing',   pat:/^observing/i,                                                  ico:'fa-satellite-dish',col:'blue'},
-    {k:'grants',      pat:/^(grants?|funding)/i,                                          ico:'fa-coins',         col:'amber'},
-    {k:'skills',      pat:/^(technical\s*)?(skills?|software|computing)/i,               ico:'fa-code',          col:'teal'},
-    {k:'service',     pat:/^(professional\s*)?(service|outreach)/i,                      ico:'fa-hands',         col:'teal'},
-    {k:'references',  pat:/^references?$/i,                                               ico:'fa-address-book',  col:'blue'},
+    {k:'education',   pat:/^education$/i,                                                  ico:'fa-graduation-cap',col:'blue'},
+    {k:'awards',      pat:/^awards?\s*(and\s*fellowships?)?$/i,                            ico:'fa-trophy',        col:'amber'},
+    {k:'positions',   pat:/^positions?\s*(of\s*responsibility)?\s*(and\s*memberships?)?$/i,ico:'fa-users-gear',    col:'teal'},
+    {k:'publications',pat:/^publications?/i,                                               ico:'fa-book-open',     col:'purple'},
+    {k:'research',    pat:/^research(\s+interests?)?$/i,                                   ico:'fa-flask',         col:'blue'},
+    {k:'teaching',    pat:/^teaching/i,                                                    ico:'fa-chalkboard',    col:'teal'},
+    {k:'talks',       pat:/^(invited\s*)?(talks?|presentations?)/i,                        ico:'fa-microphone',    col:'purple'},
+    {k:'observing',   pat:/^observing/i,                                                   ico:'fa-satellite-dish',col:'blue'},
+    {k:'grants',      pat:/^(grants?|funding)/i,                                           ico:'fa-coins',         col:'amber'},
+    {k:'skills',      pat:/^(technical\s*)?(skills?|software|computing)/i,                ico:'fa-code',          col:'teal'},
+    {k:'service',     pat:/^(professional\s*)?(service|outreach)/i,                       ico:'fa-hands',         col:'teal'},
+    {k:'references',  pat:/^references?$/i,                                                ico:'fa-address-book',  col:'blue'},
   ];
-  const sections=[];
-  let sec=null;
+  const sections=[];let sec=null;
   for(const line of clean){
     if(line.pg===1&&line.s>=hdrT*1.4) continue;
     if(line.pg===1&&(line.text.includes('@')||line.text.includes('Homepage'))) continue;
@@ -1677,46 +1313,40 @@ async function extractCVSections(url){
     const isHdr=(matched||line.s>=hdrT)&&line.text.length<65;
     if(isHdr){
       if(sec&&sec.lines.length>0) sections.push(sec);
-      sec={title:line.text.trim(),key:matched?.k||'misc',
-           ico:matched?.ico||'fa-file-lines',col:matched?.col||'blue',lines:[],med};
-    }else if(sec){
-      sec.lines.push(line);
-    }
+      sec={title:line.text.trim(),key:matched?.k||'misc',ico:matched?.ico||'fa-file-lines',col:matched?.col||'blue',lines:[],med};
+    }else if(sec){sec.lines.push(line);}
   }
   if(sec&&sec.lines.length>0) sections.push(sec);
   return sections;
 }
 
-// ── Render parsed sections ────────────────────────────────────
 function renderParsedCV(sections){
-  document.getElementById('cvSecs').innerHTML=
-    sections.map((s,i)=>accordion(`cvP${i}`,s.title,s.ico,s.col,'',renderSecBody(s))).join('');
+  document.getElementById('cvSecs').innerHTML=sections.map((s,i)=>accordion(`cvP${i}`,s.title,s.ico,s.col,'',renderSecBody(s))).join('');
   sections.forEach((_,i)=>setTimeout(()=>openCVA(`cvP${i}`),200+i*160));
 }
 
 function renderSecBody(sec){
   const{key,lines,med}=sec;
-  if(key==='education')    return renderEdu(lines,med);
-  if(key==='awards')       return renderAwd(lines);
-  if(key==='positions')    return renderPos(lines);
+  if(key==='education') return renderEdu(lines,med);
+  if(key==='awards')    return renderAwd(lines);
+  if(key==='positions') return renderPos(lines);
   return renderGen(lines,med);
 }
 
 function renderEdu(lines,med){
   const entries=[];let e=null;
   for(const l of lines){
-    const t=l.text.trim(); if(!t) continue;
+    const t=l.text.trim();if(!t) continue;
     const isInst=l.s>=med*1.05||/^(iit|university|center for astrophysics|nsf|national|institute|harvard|caltech|mit)/i.test(t);
     if(isInst&&!(/^\d/.test(t))){
       if(e) entries.push(e);
       const pts=t.split(/\s{3,}/);
       e={inst:pts[0],loc:pts[1]||'',deg:'',period:'',grade:'',note:'',cur:false};
     }else if(e){
-      const pts=t.split(/\s{3,}/);
-      const main=pts[0].trim();
+      const pts=t.split(/\s{3,}/);const main=pts[0].trim();
       const ym=t.match(/(\d{4}\s*[-–]\s*(?:\d{4}|present))/i);
       if((ym||/^\d{4}/.test(pts[pts.length-1]?.trim()||''))&&!e.deg){
-        e.deg=main; e.period=ym?ym[1]:(pts[pts.length-1]||'');
+        e.deg=main;e.period=ym?ym[1]:(pts[pts.length-1]||'');
         if(/present/i.test(e.period)) e.cur=true;
       }else if(/cgpa|gpa|grade|score|\d+[%.]/i.test(t)){e.grade=t;}
       else if(/thesis|dissertation/i.test(t)){e.note=t;}
@@ -1742,9 +1372,9 @@ function renderEdu(lines,med){
 function renderAwd(lines){
   const list=[];let cur=null;
   for(const l of lines){
-    const t=l.text.trim(); if(!t) continue;
+    const t=l.text.trim();if(!t) continue;
     const m=t.match(/^(\d{4}(?:[-–]\d{2,4})?)\s+(.*)/);
-    if(m){if(cur)list.push(cur); cur={yr:m[1],ttl:m[2],desc:''};}
+    if(m){if(cur)list.push(cur);cur={yr:m[1],ttl:m[2],desc:''};}
     else if(cur){cur.desc=(cur.desc?cur.desc+' ':'')+t;}
     else{list.push({yr:'',ttl:t,desc:''});}
   }
@@ -1760,11 +1390,11 @@ function renderAwd(lines){
 function renderPos(lines){
   const list=[];
   for(const l of lines){
-    const t=l.text.replace(/^[-–•·]\s*/,'').trim(); if(!t) continue;
+    const t=l.text.replace(/^[-–•·]\s*/,'').trim();if(!t) continue;
     const pts=t.split(/\s{3,}/);
     const per=pts.length>1?pts[pts.length-1]:'';
     const tx=per?pts.slice(0,-1).join(' ').trim():t;
-    list.push({tx, pr:per.length<12?per:''});
+    list.push({tx,pr:per.length<12?per:''});
   }
   if(!list.length) return renderGen(lines);
   return `<div class="po-l">${list.map(p=>`
@@ -1780,20 +1410,14 @@ function renderGen(lines,med){
   const mxS=Math.max(...lines.map(l=>l.s));
   let html='',inE=false;
   for(const l of lines){
-    const t=l.text.trim(); if(!t) continue;
-    if(l.s>=mxS*.85){
-      if(inE) html+='</div>';
-      html+=`<div class="gp-e"><div class="gp-main">${esc(t)}</div>`;
-      inE=true;
-    }else{
-      html+=`<div class="gp-line">${esc(t)}</div>`;
-    }
+    const t=l.text.trim();if(!t) continue;
+    if(l.s>=mxS*.85){if(inE)html+='</div>';html+=`<div class="gp-e"><div class="gp-main">${esc(t)}</div>`;inE=true;}
+    else{html+=`<div class="gp-line">${esc(t)}</div>`;}
   }
   if(inE) html+='</div>';
   return html||'<p style="color:var(--tx3);font-size:.84rem">Section extracted but appears empty.</p>';
 }
 
-// ── Fallback CV (hardcoded from screenshot — shown instantly) ─
 function renderFallbackCV(){
   const d=CV_DATA;
   const eduHTML=`<div class="edu-l">${d.education.map(e=>`
@@ -1824,16 +1448,12 @@ function renderFallbackCV(){
   const pubHTML=`
 <div style="text-align:center;padding:2rem 1rem">
   <div style="font-size:2.5rem;margin-bottom:1rem">📄</div>
-  <p style="color:var(--tx2);margin-bottom:1.3rem;font-size:.88rem;max-width:380px;
-     margin-left:auto;margin-right:auto;line-height:1.85">
+  <p style="color:var(--tx2);margin-bottom:1.3rem;font-size:.88rem;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.85">
     Live publication list is auto-fetched from NASA ADS / ORCID on every page visit.
   </p>
   <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
-    <a href="#publications" class="btn btn-p">
-      <i class="fas fa-meteor"></i> View Publication List</a>
-    <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc"
-       target="_blank" class="btn btn-o">
-      <i class="fas fa-arrow-up-right-from-square"></i> NASA ADS</a>
+    <a href="#publications" class="btn btn-p"><i class="fas fa-meteor"></i> View Publication List</a>
+    <a href="https://ui.adsabs.harvard.edu/search/q=orcid%3A${CFG.orcid}&sort=date+desc" target="_blank" class="btn btn-o"><i class="fas fa-arrow-up-right-from-square"></i> NASA ADS</a>
   </div>
 </div>`;
 
@@ -1843,12 +1463,10 @@ function renderFallbackCV(){
     {id:'cvFb2',t:'Positions of Responsibility &amp; Memberships', i:'fa-users-gear',     c:'teal',  ct:`${d.positions.length} entries`,body:posHTML},
     {id:'cvFb3',t:'Publications',                                   i:'fa-book-open',      c:'purple',ct:'',                            body:pubHTML,pub:true},
   ];
-  document.getElementById('cvSecs').innerHTML=
-    secs.map(s=>accordion(s.id,s.t,s.i,s.c,s.ct,s.body,s.pub)).join('');
+  document.getElementById('cvSecs').innerHTML=secs.map(s=>accordion(s.id,s.t,s.i,s.c,s.ct,s.body,s.pub)).join('');
   secs.forEach((s,i)=>setTimeout(()=>openCVA(s.id),180+i*200));
 }
 
-// ── Accordion builder ─────────────────────────────────────────
 function accordion(id,title,ico,col,count,body,isPub=false){
   return `
 <div class="cva" id="${id}">
@@ -1856,8 +1474,8 @@ function accordion(id,title,ico,col,count,body,isPub=false){
     <div class="cva-hl">
       <div class="cva-ic ${col}"><i class="fas ${ico}"></i></div>
       <span class="cva-nm">${title}</span>
-      ${count ?`<span class="cva-ct ${col}">${count}</span>`:''}
-      ${isPub ?`<span class="cva-ct purple" id="cvPubCt">Live</span>`:''}
+      ${count?`<span class="cva-ct ${col}">${count}</span>`:''}
+      ${isPub?`<span class="cva-ct purple" id="cvPubCt">Live</span>`:''}
     </div>
     <i class="fas fa-chevron-down cva-ch"></i>
   </div>
@@ -1865,12 +1483,12 @@ function accordion(id,title,ico,col,count,body,isPub=false){
 </div>`;
 }
 
-function toggleCVA(id){ const el=document.getElementById(id); if(el) el.classList.toggle('open'); }
-function openCVA(id){   const el=document.getElementById(id); if(el) el.classList.add('open'); }
+function toggleCVA(id){const el=document.getElementById(id);if(el)el.classList.toggle('open');}
+function openCVA(id){const el=document.getElementById(id);if(el)el.classList.add('open');}
 
 /* ══════════════════════════════════════════════════════════
    VISITOR COUNTER
-   ══════════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════════ */
 async function hitCounter(){
   try{
     const r=await fetch(`https://api.countapi.xyz/hit/${CFG.ctrNS}/${CFG.ctrKey}`);
@@ -1880,22 +1498,19 @@ async function hitCounter(){
   }catch{}
 }
 
-
+/* ══════════════════════════════════════════════════════════
+   HTML ESCAPE UTILITY
+══════════════════════════════════════════════════════════ */
 const _ed=document.createElement('div');
-function esc(s){ _ed.textContent=String(s??''); return _ed.innerHTML; }
+function esc(s){_ed.textContent=String(s??'');return _ed.innerHTML;}
 
-/* ── Pub scroller: hide fade when user reaches bottom ── */
-function chkScroll(el){
-  const wrap = document.getElementById('plistWrap');
-  if(!wrap) return;
-  const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
-  wrap.classList.toggle('at-bottom', atBottom);
-}
-
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded',()=>{
-  fetchPapers();   // loads from cache instantly on return visits
+  fetchPapers();
   hitCounter();
-  initCV();        // shows fallback instantly, parses PDF in background
+  initCV();
 });
 </script>
 </body>

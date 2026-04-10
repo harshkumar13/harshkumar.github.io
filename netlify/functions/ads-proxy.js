@@ -1,8 +1,6 @@
-// netlify/functions/scholar-proxy.js
-// ─────────────────────────────────────────────────────────────
-// Fetches citation metrics from Google Scholar server-side.
-// Browser can't call Scholar directly (CORS blocked).
-// This runs on Netlify's server — no CORS issue.
+// netlify/functions/ads-proxy.js  v4.1
+// Adds: property field (needed for refereed detection)
+//       checkOnly mode (tiny fast cache-validation response)
 // ─────────────────────────────────────────────────────────────
 
 exports.handler = async function (event) {
@@ -14,88 +12,118 @@ exports.handler = async function (event) {
     return res(405, { error: 'Method not allowed' });
   }
 
-  // Harsh Kumar's Google Scholar user ID
-  const SCHOLAR_ID  = 'fFGkrbAAAAAJ';
-  const scholarUrl  =
-    `https://scholar.google.com/citations?user=${SCHOLAR_ID}&hl=en&sortby=pubdate`;
+  const token = process.env.ADS_TOKEN;
+  if (!token || token.length < 15) {
+    return res(500, {
+      error: 'ADS_TOKEN not set in Netlify environment variables.',
+      hint:  'Dashboard → Site configuration → Environment variables → Add ADS_TOKEN',
+    });
+  }
+
+  const p = event.queryStringParameters || {};
+  const q = p.q || '';
+
+  if (!q.includes('orcid:')) {
+    return res(400, { error: 'Query must contain orcid: filter' });
+  }
+
+  // ── checkOnly mode ──────────────────────────────────────────
+  // Returns only numFound + newest bibcode (~100 bytes).
+  // Used by the browser to decide if local cache is still valid.
+  // ────────────────────────────────────────────────────────────
+  if (p.checkOnly === 'true') {
+    const url = buildADSUrl(q, 'bibcode,year', '1', 'date desc');
+    try {
+      const r = await callADS(url, token);
+      if (!r.ok) return res(r.status, { error: `ADS ${r.status}` });
+      const j = await r.json();
+      return {
+        statusCode: 200,
+        headers: {
+          ...cors(),
+          'Content-Type':  'application/json',
+          'Cache-Control': 'public, s-maxage=600, max-age=600',
+        },
+        body: JSON.stringify({
+          numFound     : j.response?.numFound        ?? 0,
+          newestBibcode: j.response?.docs?.[0]?.bibcode ?? '',
+          newestYear   : j.response?.docs?.[0]?.year    ?? '',
+        }),
+      };
+    } catch (e) {
+      return res(502, { error: e.message });
+    }
+  }
+
+  // ── Full fetch mode ─────────────────────────────────────────
+  // Whitelist every field the browser is allowed to request.
+  // 'property' is required for refereed/non-refereed detection.
+  const ALLOWED_FL = new Set([
+    'title',
+    'author',
+    'year',
+    'pubdate',
+    'bibcode',
+    'doi',
+    'abstract',
+    'citation_count',
+    'pub',
+    'identifier',
+    'read_count',
+    'property',       // ← needed: contains 'REFEREED' flag
+  ]);
+
+  const fl = (p.fl || '')
+    .split(',')
+    .map(f => f.trim())
+    .filter(f => ALLOWED_FL.has(f))
+    .join(',') || 'title,author,year,bibcode';
+
+  const rows = String(Math.min(parseInt(p.rows || '250', 10), 500));
+
+  const SAFE_SORTS = ['date desc', 'date asc', 'citation_count desc'];
+  const sort = SAFE_SORTS.includes(p.sort) ? p.sort : 'date desc';
+
+  const adsUrl = buildADSUrl(q, fl, rows, sort);
 
   try {
-    const r = await fetch(scholarUrl, {
-      headers: {
-        // Mimic a real browser — Scholar blocks obvious bots
-        'User-Agent'     : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ' +
-                           'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-                           'Chrome/120.0.0.0 Safari/537.36',
-        'Accept'         : 'text/html,application/xhtml+xml',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Cache-Control'  : 'no-cache',
-      },
-    });
-
-    if (!r.ok) throw new Error(`Scholar returned HTTP ${r.status}`);
-
-    const html     = await r.text();
-    const metrics  = parseScholarMetrics(html);
-
-    // Sanity check — if all zeros, Scholar probably served a CAPTCHA page
-    if (metrics.citations === 0 && metrics.hIndex === 0) {
-      throw new Error('Scholar metrics are all zero — possible CAPTCHA block');
+    const r = await callADS(adsUrl, token);
+    if (!r.ok) {
+      const msgs = {
+        401: 'ADS token invalid or expired — regenerate at ui.adsabs.harvard.edu/user/settings/token',
+        403: 'ADS token lacks search permission — regenerate your token',
+        429: 'ADS rate limit — wait a few minutes',
+      };
+      return res(r.status, { error: msgs[r.status] || `ADS HTTP ${r.status}` });
     }
-
+    const data = await r.json();
     return {
       statusCode: 200,
       headers: {
         ...cors(),
-        'Content-Type' : 'application/json',
-        // Cache for 6 hours — Scholar stats don't change by the minute
-        'Cache-Control': 'public, s-maxage=21600, max-age=21600',
+        'Content-Type':  'application/json',
+        'Cache-Control': 'public, s-maxage=3600, max-age=86400, stale-while-revalidate=7200',
       },
-      body: JSON.stringify(metrics),
+      body: JSON.stringify(data),
     };
-
   } catch (e) {
-    console.error('[scholar-proxy]', e.message);
-    return res(502, { error: e.message });
+    return res(502, { error: `Network error: ${e.message}` });
   }
 };
 
-// ── Parse Scholar profile HTML ────────────────────────────────
-// The stats table (#gsc_rsb_st) contains six <td class="gsc_rsb_std">
-// in this fixed order:
-//   citations_all, citations_since5yr,
-//   h_all,         h_since5yr,
-//   i10_all,       i10_since5yr
-function parseScholarMetrics(html) {
-  // Primary: match gsc_rsb_std cells
-  const stdRe   = /class="gsc_rsb_std">(\d+)<\/td>/g;
-  const vals    = [...html.matchAll(stdRe)].map(m => parseInt(m[1], 10));
+// ── Helpers ───────────────────────────────────────────────────
+function buildADSUrl(q, fl, rows, sort) {
+  const params = new URLSearchParams({ q, fl, rows, sort });
+  return `https://api.adsabs.harvard.edu/v1/search/query?${params}`;
+}
 
-  if (vals.length >= 6) {
-    return {
-      citations : vals[0],
-      citations5: vals[1],
-      hIndex    : vals[2],
-      hIndex5   : vals[3],
-      i10Index  : vals[4],
-      i10Index5 : vals[5],
-    };
-  }
-
-  // Fallback: try broader numeric extraction if Scholar changed markup
-  const numRe  = />(\d{1,6})<\/td>/g;
-  const nums   = [...html.matchAll(numRe)]
-                   .map(m => parseInt(m[1], 10))
-                   .filter(n => n > 0);
-
-  return {
-    citations : nums[0] ?? 0,
-    citations5: nums[1] ?? 0,
-    hIndex    : nums[2] ?? 0,
-    hIndex5   : nums[3] ?? 0,
-    i10Index  : nums[4] ?? 0,
-    i10Index5 : nums[5] ?? 0,
-  };
+async function callADS(url, token) {
+  return fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'User-Agent'   : 'HarshKumar-AcademicSite/4.1',
+    },
+  });
 }
 
 function cors() {
@@ -105,6 +133,7 @@ function cors() {
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 }
+
 function res(code, body) {
   return {
     statusCode: code,
