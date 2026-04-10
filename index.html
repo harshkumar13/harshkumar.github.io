@@ -1,19 +1,4 @@
 <!DOCTYPE html>
-<!--
-╔══════════════════════════════════════════════════════════════╗
-║  HARSH KUMAR · ACADEMIC WEBSITE v4.0  (complete)            ║
-║  ─────────────────────────────────────────────────────────  ║
-║  REQUIRED FILES (same folder as index.html):                ║
-║    photo.jpg     → profile photo                            ║
-║    cv.pdf        → full CV (download button only)           ║
-║    cv-web.pdf    → short 2-3 page CV (webpage display)      ║
-║    netlify/functions/ads-proxy.js                           ║
-║    netlify.toml                                             ║
-║                                                             ║
-║  SECTION ORDER: About → Research → CV → Publications →      ║
-║                 Contact                                     ║
-╚══════════════════════════════════════════════════════════════╝
--->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -451,9 +436,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
     <div class="h-loc"><i class="fas fa-location-dot"></i> Cambridge, MA · USA</div>
     <p class="h-desc">
       Exploring gamma-ray bursts, kilonovae, superluminous supernovae, and tidal disruption events
-      through multi-wavelength observations with the
-      <strong style="color:var(--tx)">GROWTH-India Telescope</strong>
-      and global observatory networks.
+      through multi-wavelength observations.
     </p>
     <div class="h-btns">
       <a href="#cv" class="btn btn-p"><i class="fas fa-file-lines"></i> My CV</a>
@@ -607,13 +590,13 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
       <div class="rc rv d1">
         <span class="rc-ico">🌊</span>
         <h3>Kilonovae &amp; GW Counterparts</h3>
-        <p>Rapid follow-up photometry and spectroscopy of <em>r</em>-process nucleosynthesis transients from neutron-star mergers. Led GROWTH-India campaigns for LIGO/Virgo/KAGRA O3 and O4 observing runs.</p>
+        <p>Rapid follow-up photometry and spectroscopy of <em>r</em>-process nucleosynthesis transients from neutron-star mergers. Led GROWTH-India campaigns for LIGO/Virgo/KAGRA O3 and Berger-Villar groups' efforts during O4 observing runs.</p>
       </div>
 
       <div class="rc rv">
         <span class="rc-ico">🌀</span>
         <h3>Tidal Disruption Events</h3>
-        <p>Multi-wavelength monitoring of stars disrupted by supermassive black holes, probing accretion disc formation, relativistic jet launching, and the census of quiescent black holes in galactic nuclei.</p>
+        <p>Multi-wavelength monitoring of stars disrupted by supermassive black holes, probing accretion disc formation, relativistic jet launching.</p>
       </div>
       <div class="rc rv d1">
         <span class="rc-ico">🔭</span>
@@ -1006,13 +989,12 @@ document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
    ══════════════════════════════════════════════════════════ */
 (function(){
   const phrases = [
-    'γ-Ray Burst Researcher',
-    'Kilonova Observer',
     'Superluminous SN Expert',
     'Tidal Disruption Event Watcher',
-    'GROWTH-India Team Lead',
+    'Kilonova Observer',
+    'Formar GIT Student Team Lead',
+    'γ-Ray Burst Researcher',
     'Multi-Messenger Astronomer',
-    'NSF-AI Junior Investigator',
   ];
   let pi=0, ci=0, del=false;
   const el = document.getElementById('typer');
@@ -1044,16 +1026,7 @@ function animNum(id, target){
   requestAnimationFrame(step);
 }
 
-/* ══════════════════════════════════════════════════════════
-   🔭  PUBLICATIONS
-   Smart Cache + ORCID Primary + ADS Enrichment
-   ──────────────────────────────────────────────────────────
-   First visit  → try ADS proxy → fallback to ORCID public API
-                  → ADS enrichment runs in background
-   Return visit → render cached papers INSTANTLY (~0ms)
-                  → background checkOnly call (~200ms, tiny)
-                  → if new papers found: silent full re-fetch
-   ══════════════════════════════════════════════════════════ */
+
 let PAPERS = [];
 let curF   = 'all';
 
