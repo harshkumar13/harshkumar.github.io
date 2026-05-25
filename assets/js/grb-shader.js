@@ -208,11 +208,11 @@ void main(){
     }
   }
   col *= 1.0 - 0.30 * pow(length(uv*vec2(0.9,1.0)), 2.4);
-  // Cheap chromatic aberration
-  float ca = length(uv) * 0.0024;
-  vec2 dir = normalize(uv + 1e-5);
-  vec3 caCol = vec3(dispatch(ai, uv - dir*ca, p).r, col.g, dispatch(ai, uv + dir*ca, p).b);
-  col = mix(col, caCol, 0.16);
+  // Cheap chromatic-aberration *feel* — single channel-shift, no extra evals.
+  float ca = length(uv) * 0.40;
+  col.r *= 1.0 + ca * 0.045;
+  col.b *= 1.0 + ca * 0.06;
+  col.g *= 1.0 - ca * 0.03;
   col = col / (1.0 + col);
   col = pow(col, vec3(0.82));
   col += hash12(gl_FragCoord.xy + uTime*60.0)*0.012 - 0.006;
