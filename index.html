@@ -1178,15 +1178,35 @@ function chkScroll(el){
 }
 
 /* ══════════════════════════════════════════════════════════
-   STATS — NASA ADS is the single source of truth.
+   STATS — papers/refereed-flag come from NASA ADS; citations,
+   h-index and i10-index come from Google Scholar via
+   /.netlify/functions/scholar-proxy (cached 12h client-side).
    Refereed detection: explicit REFEREED property (when present),
    else positive match against a curated list of refereed astronomy
    journals. Default to FALSE for unknowns — never over-count.
 ══════════════════════════════════════════════════════════ */
+const SC={
+  KEY:'hk-scholar-v3',TTL:12*60*60*1000,
+  get(){
+    try{
+      const raw=localStorage.getItem(this.KEY); if(!raw) return null;
+      const o=JSON.parse(raw);
+      if(!o?.ts||!Number.isFinite(o.hIndex)) return null;
+      if(Date.now()-o.ts>this.TTL){this.clear();return null;}
+      return o;
+    }catch{return null;}
+  },
+  set(d){
+    try{localStorage.setItem(this.KEY,JSON.stringify({...d,ts:Date.now()}));}
+    catch(e){console.warn('[Scholar] cache write failed:',e.message);}
+  },
+  clear(){localStorage.removeItem(this.KEY);},
+};
+
 let statsTimer=null;
 let statsMode=0;
-let allStats={papers:0,cites:0,h:0,i10:0};
-let refStats={papers:0,cites:0,h:0,i10:0};
+let allStats={papers:0,cites:null,h:null,i10:null};
+let refStats={papers:0,cites:null,h:null,i10:null};
 
 // Curated list of refereed-journal substrings (positive match). Conservative.
 const REF_JOURNALS=[
@@ -1228,18 +1248,17 @@ function updateStats(){
   if(yrs.length) document.getElementById('sYr').textContent=(new Date().getFullYear()-Math.min(...yrs))+'+';
 
   const refereed=PAPERS.filter(isRefereed);
-  allStats=calcStats(PAPERS);
-  refStats=calcStats(refereed);
+  // Paper counts come from ADS. Citations/h/i10 come from Scholar (see applyScholar).
+  allStats={papers:PAPERS.length,   cites:null, h:null, i10:null};
+  refStats={papers:refereed.length, cites:null, h:null, i10:null};
 
-  console.log(`[Stats] All: ${allStats.papers} papers, ${allStats.cites} cites, h=${allStats.h}, i10=${allStats.i10} | Refereed: ${refStats.papers} papers, ${refStats.cites} cites, h=${refStats.h}, i10=${refStats.i10}`);
+  console.log(`[Stats] All: ${allStats.papers} papers | Refereed: ${refStats.papers} papers`);
 
-  // Honesty rule: if no citation data is available from ADS (e.g. ORCID-only
-  // fallback path), report cites/h/i10 as "data unavailable" (null → "—")
-  // rather than zero, so the user knows the proxy/cache needs a refresh.
-  if(allStats.cites===0){
-    allStats.cites=null; allStats.h=null; allStats.i10=null;
-    refStats.cites=null; refStats.h=null; refStats.i10=null;
-  }
+  // Seed from cache immediately so first paint isn't all dashes
+  const cached=SC.get();
+  if(cached) applyScholar(cached, refereed.length/Math.max(PAPERS.length,1));
+  // Always refresh in the background
+  fetchScholarMetrics(refereed.length/Math.max(PAPERS.length,1));
 
   statsMode=0;
   showStatsMode(0,false);
@@ -1252,6 +1271,36 @@ function updateStats(){
     statsMode=statsMode===0?1:0;
     showStatsMode(statsMode,true);
   },4500);
+}
+
+function applyScholar(data, refRatio){
+  if(!data||!Number.isFinite(data.hIndex)) return;
+  allStats.cites=data.citations;
+  allStats.h=data.hIndex;
+  allStats.i10=data.i10Index;
+  // Refereed citations: scale by refereed-paper ratio.
+  // h-index and i10 are Scholar-derived and bound by the full corpus;
+  // we show the same value for both modes (Scholar doesn't split refereed/non).
+  refStats.cites=Math.round((data.citations||0)*refRatio);
+  refStats.h=data.hIndex;
+  refStats.i10=data.i10Index;
+}
+
+async function fetchScholarMetrics(refRatio){
+  try{
+    const r=await fetch('/.netlify/functions/scholar-proxy',{cache:'no-store'});
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data=await r.json();
+    if(data.error) throw new Error(data.error);
+    if(!Number.isFinite(data.hIndex)) throw new Error('malformed response');
+    SC.set(data);
+    applyScholar(data, refRatio);
+    showStatsMode(statsMode,false);
+    console.log(`[Scholar] citations=${data.citations} h=${data.hIndex} i10=${data.i10Index}`);
+  }catch(e){
+    console.warn('[Scholar] fetch failed:',e.message);
+    // Keep whatever the cache already painted (or "—" if cache is empty)
+  }
 }
 
 function showStatsMode(mode,animate){
