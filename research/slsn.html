@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Superluminous Supernovae — magnetar-powered explosions ten times brighter than ordinary SNe, with extreme progenitors and rich light-curve physics.">
+<title>Superluminous Supernovae — Harsh Kumar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="../assets/css/deep-dive.css">
+</head>
+<body>
+
+<div id="pb"></div>
+<canvas id="cosmic"></canvas>
+<aside id="actDots">
+  <a class="act-dot" data-label="Pulsations" href="#act-pulsations"></a>
+  <a class="act-dot" data-label="CCSN"       href="#act-ccsn"></a>
+  <a class="act-dot" data-label="Magnetar"   href="#act-magnetar"></a>
+  <a class="act-dot" data-label="Peak"       href="#act-peak"></a>
+  <a class="act-dot" data-label="Nebular"    href="#act-nebular"></a>
+</aside>
+
+<nav id="nav">
+  <a href="../index.html#research" class="back"><i class="fas fa-arrow-left"></i> All Topics</a>
+  <div class="title">Superluminous <em>Supernovae</em></div>
+  <div class="right"><span class="vis"><i class="fas fa-eye"></i><strong id="vCnt">—</strong> visitors</span></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-in">
+    <span class="kicker">Research Deep Dive · 03</span>
+    <h1>Superluminous <span class="accent">Supernovae</span></h1>
+    <p class="lede">SLSNe outshine ordinary core-collapse events by a factor of ten or more. Their progenitors lose massive shells of material in pre-explosion pulsations, and their light curves are pumped by exotic central engines — millisecond magnetars and circumstellar interaction.</p>
+    <span class="cue">Scroll into the progenitor <i class="fas fa-chevron-down"></i></span>
+  </div>
+</section>
+
+<section class="act" id="act-pulsations">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 01 · years pre-explosion</span>
+      <h2>Pulsational mass loss</h2>
+      <p>The progenitors of hydrogen-poor SLSNe are massive (≳ 30 M<sub>☉</sub>), low-metallicity, rapidly rotating stars. Many of them undergo <strong>pulsational pair-instability</strong> or violent late-stage instabilities that eject shells of stellar material in the years leading up to explosion.</p>
+      <p>Those shells become the circumstellar medium (CSM) that will later be shocked by the supernova ejecta — turning kinetic energy into radiation.</p>
+      <div class="meta"><b>Progenitor:</b> M ≳ 30 M<sub>☉</sub> · low Z &nbsp;|&nbsp; <b>Mass-loss episodes:</b> 0.1–10 M<sub>☉</sub> per shell</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-ccsn">
+  <div class="wrap">
+    <div class="story right">
+      <span class="tag">Act 02 · t = 0</span>
+      <h2>Core collapse</h2>
+      <p>The star's iron core collapses. An ordinary supernova explosion is launched — but on its own, it cannot account for the extreme luminosity that follows. The energy source has to be something else.</p>
+      <p>If a millisecond magnetar forms at the center, or if the ejecta interacts with dense CSM, the picture changes dramatically.</p>
+      <div class="meta"><b>Kinetic energy:</b> ~ 10<sup>51</sup> erg &nbsp;|&nbsp; <b>Initial peak:</b> shock breakout, brief UV flash</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-magnetar">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 03 · days post-explosion</span>
+      <h2>The magnetar engine</h2>
+      <p>A newly formed, <strong>rapidly spinning, highly magnetized neutron star</strong> (P ≈ 1–10 ms, B ≈ 10<sup>14</sup> G) spins down via magnetic dipole radiation. Its rotational energy reservoir of ~ 10<sup>52</sup> erg is dumped into the surrounding ejecta — orders of magnitude more than radioactive decay alone could provide.</p>
+      <p>The wind nebula inflates a bubble inside the ejecta, thermalizing and re-radiating as observed optical/UV light.</p>
+      <div class="meta"><b>P<sub>spin</sub>:</b> ~ 1–10 ms &nbsp;|&nbsp; <b>B:</b> 10<sup>13</sup>–10<sup>15</sup> G &nbsp;|&nbsp; <b>τ<sub>spin-down</sub>:</b> days–weeks</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-peak">
+  <div class="wrap">
+    <div class="story right">
+      <span class="tag">Act 04 · ~30–80 days</span>
+      <h2>The superluminous peak</h2>
+      <p>Peak absolute magnitudes brighter than M ≈ −21 — sometimes M ≈ −22 or beyond. SLSNe-I are blue at peak, with characteristic O <small>II</small> absorption features that distinguish them from other transients.</p>
+      <p>The shape of the rise and decline encodes the central engine: <strong>magnetar spin-down powering</strong> produces a smoother, slower decline; <strong>CSM interaction</strong> produces erratic light curves with bumps and re-brightenings.</p>
+      <div class="meta"><b>Peak magnitude:</b> M ≲ −21 &nbsp;|&nbsp; <b>Rise time:</b> ~ 30–80 d &nbsp;|&nbsp; <b>Spectrum:</b> O <small>II</small>, blue continuum</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-nebular">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 05 · 100 days+</span>
+      <h2>Nebular phase &amp; late-time physics</h2>
+      <p>As the ejecta becomes optically thin, the spectrum transitions to a <strong>nebular</strong> regime dominated by forbidden emission lines. The line widths and strengths probe the ejecta mass, composition, and central-engine luminosity — and sometimes show bumpy late-time photometric behavior that hints at CSM shells.</p>
+      <p>SLSNe are valuable cosmologically as well: their extreme brightness makes them potentially detectable at z ≳ 4 with current and upcoming facilities (Roman, JWST, Rubin).</p>
+      <div class="meta"><b>Nebular onset:</b> ~ 100 d &nbsp;|&nbsp; <b>Diagnostics:</b> [O <small>I</small>], [Ca <small>II</small>], [O <small>III</small>]</div>
+    </div>
+  </div>
+</section>
+
+<div class="papers-wrap">
+  <h3>Selected reading</h3>
+  <a class="paper-card" href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641%20(title%3Asuperluminous%20OR%20title%3ASLSN)&sort=date%20desc" target="_blank">
+    <div class="t">My SLSN papers on ADS</div>
+    <div class="a">Harsh Kumar et al.</div>
+    <div class="j"><span class="yr">live</span><span>filtered on ADS</span></div>
+  </a>
+  <a class="paper-card" href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641%20title%3Amagnetar&sort=date%20desc" target="_blank">
+    <div class="t">Magnetar engine modelling</div>
+    <div class="a">Harsh Kumar et al.</div>
+    <div class="j"><span class="yr">live</span><span>"magnetar" title filter</span></div>
+  </a>
+</div>
+
+<div class="bottom-cta">
+  <a href="../index.html#research"><i class="fas fa-arrow-left"></i> Back to all research topics</a>
+</div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-c">© 2026 <strong>Harsh Kumar</strong></div>
+    <div class="ft-c"><a href="../index.html">Main site</a> · <a href="https://orcid.org/0000-0003-0871-4641" target="_blank">ORCID</a></div>
+  </div>
+</footer>
+
+<script>
+const pb = document.getElementById('pb');
+const navEl = document.getElementById('nav');
+addEventListener('scroll', () => {
+  const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+  pb.style.width = (max > 0 ? y / max * 100 : 0) + '%';
+  navEl.classList.toggle('solid', y > 50);
+});
+document.querySelectorAll('#actDots .act-dot').forEach(d => {
+  d.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(d.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+  });
+});
+(async () => {
+  const el = document.getElementById('vCnt');
+  if (!el) return;
+  const NS='harshkumar-cfa', KEY='visits';
+  const visited = sessionStorage.getItem('hk-visited');
+  const path = visited ? `get/${NS}/${KEY}` : `hit/${NS}/${KEY}`;
+  try {
+    const r = await fetch(`https://abacus.jasoncameron.dev/${path}`);
+    if (!r.ok) throw new Error();
+    const j = await r.json();
+    const v = Number(j?.value ?? j?.count ?? 0);
+    if (v > 0) { el.textContent = v.toLocaleString(); sessionStorage.setItem('hk-visited','1'); }
+  } catch { el.textContent = '—'; }
+})();
+</script>
+
+<script type="module">
+import { CosmicEngine } from '../assets/js/cosmic-engine.js';
+import { SLSN_FRAGMENT, SLSN_ACTS } from '../assets/js/slsn-shader.js';
+const engine = new CosmicEngine({
+  canvas: '#cosmic',
+  fragmentShader: SLSN_FRAGMENT,
+  acts: SLSN_ACTS,
+  onTick: (e) => {
+    const idx = Math.floor(e.actIndex);
+    document.querySelectorAll('#actDots .act-dot').forEach((d,i) => d.classList.toggle('on', i === idx));
+  },
+});
+engine.start();
+</script>
+</body>
+</html>

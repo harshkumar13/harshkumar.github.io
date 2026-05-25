@@ -39,7 +39,61 @@ img{display:block;max-width:100%}
 
 .wrap{max-width:1060px;margin:0 auto;padding:0 1.5rem}
 section{position:relative;z-index:1;padding:5.5rem 1.5rem}
-canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+canvas#cosmic{position:fixed;inset:0;z-index:0;pointer-events:none;width:100vw;height:100vh}
+
+/* Cinematic-scroll layout overlay
+   Each section reserves vertical room so the shader has scroll progress.
+   Section content is wrapped in an .act-card that sits over the shader. */
+section{min-height:120vh}
+#hero{min-height:100vh}
+@media(max-width:640px){
+  section{min-height:100vh;padding:3.8rem 1rem}
+}
+@media(prefers-reduced-motion:reduce){
+  section{min-height:auto;padding:3rem 1.5rem}
+  #hero{min-height:auto;padding:6rem 1.5rem 3rem}
+}
+section .wrap{position:relative;z-index:2}
+.act-card{background:linear-gradient(180deg,rgba(6,9,29,.55),rgba(6,9,29,.78));
+  backdrop-filter:blur(6px) saturate(120%);
+  -webkit-backdrop-filter:blur(6px) saturate(120%);
+  border:1px solid var(--bdr);border-radius:var(--rl);padding:2.2rem 1.8rem;
+  box-shadow:0 8px 48px rgba(0,0,0,.32);}
+@media(max-width:640px){.act-card{padding:1.4rem 1.1rem}}
+
+/* Act indicator — fixed left-rail dots showing scroll progress through acts */
+#actDots{position:fixed;left:1.1rem;top:50%;transform:translateY(-50%);z-index:90;
+  display:flex;flex-direction:column;gap:.85rem;opacity:.7;transition:opacity .25s}
+#actDots:hover{opacity:1}
+.act-dot{width:8px;height:8px;border-radius:50%;background:var(--bdr2);
+  border:1px solid rgba(255,255,255,.15);cursor:pointer;transition:all .25s;position:relative}
+.act-dot.on{background:var(--bll);box-shadow:0 0 14px var(--bl),0 0 4px var(--blll);transform:scale(1.35)}
+.act-dot:hover{background:var(--tll)}
+.act-dot::after{content:attr(data-label);position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:1px;
+  text-transform:uppercase;color:var(--tx2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.act-dot:hover::after{opacity:1}
+@media(max-width:640px){#actDots{display:none}}
+
+/* Deep-dive callout cards */
+.dd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.9rem;margin-top:1.6rem}
+.dd-card{position:relative;display:flex;flex-direction:column;gap:.4rem;
+  padding:1.1rem 1.2rem;border-radius:var(--r);
+  background:linear-gradient(135deg,rgba(74,143,212,.06),rgba(42,157,143,.04));
+  border:1px solid var(--bdr2);text-decoration:none;color:inherit;
+  transition:all .25s;overflow:hidden}
+.dd-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--bl),var(--tl));opacity:.55;transition:opacity .25s}
+.dd-card:hover{transform:translateY(-3px);border-color:var(--bll);
+  box-shadow:0 8px 28px rgba(74,143,212,.18)}
+.dd-card:hover::before{opacity:1}
+.dd-card .dd-emoji{font-size:1.6rem}
+.dd-card .dd-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--blll)}
+.dd-card .dd-line{font-size:.78rem;color:var(--tx2);line-height:1.55}
+.dd-card .dd-go{margin-top:.4rem;font-size:.72rem;color:var(--tll);
+  font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+.dd-card .dd-go i{transition:transform .25s;margin-left:.2rem}
+.dd-card:hover .dd-go i{transform:translateX(3px)}
 
 #nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(6,9,29,.3);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid transparent;transition:all .35s}
 #nav.solid{background:rgba(6,9,29,.9);border-bottom-color:var(--bdr);padding:.78rem 2.5rem}
@@ -79,17 +133,17 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .h-in{max-width:780px}
 .h-badge{display:inline-flex;align-items:center;gap:7px;padding:.3rem .95rem;border-radius:50px;border:1px solid rgba(74,143,212,.28);background:rgba(74,143,212,.06);font-size:.75rem;font-weight:500;color:var(--bll);margin-bottom:1.6rem;animation:fadeD .8s ease both}
 .h-badge .ld{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:blink 2.2s ease-in-out infinite}
-.h-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,9.5vw,7rem);font-weight:700;line-height:.95;letter-spacing:2px;margin-bottom:.9rem;animation:fadeU .8s .1s ease both}
+.h-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,9.5vw,7rem);font-weight:700;line-height:.95;letter-spacing:2px;margin-bottom:.9rem;animation:fadeU .8s .1s ease both;text-shadow:0 2px 24px rgba(6,9,29,.85),0 1px 3px rgba(6,9,29,.95)}
 .h-name .fn{color:var(--blll)}
 .h-name .ln{color:var(--amll)}
-.h-sub{font-size:clamp(.92rem,2vw,1.05rem);color:var(--tx2);margin-bottom:.35rem;animation:fadeU .8s .2s ease both}
+.h-sub{font-size:clamp(.92rem,2vw,1.05rem);color:var(--tx2);margin-bottom:.35rem;animation:fadeU .8s .2s ease both;text-shadow:0 1px 6px rgba(6,9,29,.85)}
 .typ-row{display:flex;align-items:center;justify-content:center;gap:2px;font-family:'JetBrains Mono',monospace;font-size:.87rem;color:var(--tll);min-height:1.6em;margin-bottom:.5rem;animation:fadeU .8s .25s ease both}
 .t-cur{display:inline-block;width:2px;height:1em;background:var(--tll);animation:cur .85s step-end infinite;margin-left:1px}
 .h-loc{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;color:var(--aml);margin-bottom:2rem;animation:fadeU .8s .3s ease both}
 .h-desc{font-size:.97rem;color:var(--tx2);max-width:580px;margin:0 auto 2.5rem;line-height:1.9;animation:fadeU .8s .4s ease both}
 .h-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;animation:fadeU .8s .5s ease both;margin-bottom:3.5rem}
 
-.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:580px;margin:0 auto;animation:fadeU .8s .65s ease both}
+.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:580px;margin:0 auto;animation:fadeU .8s .65s ease both;background:rgba(6,9,29,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .sv{flex:1;min-width:90px;text-align:center;padding:1rem .7rem;border-right:1px solid var(--bdr)}
 .sv:last-child{border-right:none}
 .sv-n{display:block;font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:500;color:var(--bll);line-height:1.2;transition:color .4s}
@@ -158,7 +212,14 @@ canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .rc p{font-size:.83rem;color:var(--tx2);line-height:1.8}
 
 #cv{background:linear-gradient(180deg,transparent,rgba(42,157,143,.015) 50%,transparent)}
-.cvhc{display:flex;align-items:center;gap:1.3rem;padding:1.4rem 1.6rem;background:var(--card);border:1px solid var(--bdr);border-radius:var(--rl);margin-bottom:1.4rem;position:relative;overflow:hidden}
+.cvhc{display:flex;align-items:center;gap:1.3rem;padding:1.4rem 1.6rem;background:linear-gradient(135deg,rgba(74,143,212,.06),rgba(42,157,143,.05),rgba(200,149,42,.04));border:1px solid var(--bdr2);border-radius:var(--rl);margin-bottom:.95rem;position:relative;overflow:hidden;box-shadow:0 4px 22px rgba(74,143,212,.10)}
+
+.cv-glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem;margin-bottom:1.3rem}
+.glance-item{display:flex;align-items:flex-start;gap:.7rem;padding:.85rem 1rem;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);transition:all .22s}
+.glance-item:hover{border-color:rgba(74,143,212,.28);background:rgba(74,143,212,.04);transform:translateY(-2px)}
+.glance-item > i{font-size:.95rem;color:var(--bll);margin-top:.18rem;width:18px;text-align:center;flex-shrink:0}
+.glance-item .g-l{font-size:.62rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--tx3);margin-bottom:.12rem}
+.glance-item .g-v{font-size:.78rem;color:var(--tx);line-height:1.55}
 .cvhc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--bl),var(--tl),var(--am))}
 .cv-av{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:var(--bg3);border:1px solid rgba(74,143,212,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--bll)}
 .cvhi{flex:1}
@@ -344,7 +405,15 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
 <body>
 
 <div id="pb"></div>
-<canvas id="stars"></canvas>
+<canvas id="cosmic"></canvas>
+<aside id="actDots" aria-label="Section navigation">
+  <a class="act-dot" data-label="Birth"          href="#hero"></a>
+  <a class="act-dot" data-label="Main Sequence"  href="#about"></a>
+  <a class="act-dot" data-label="Transients"     href="#research"></a>
+  <a class="act-dot" data-label="Worldline (CV)" href="#cv"></a>
+  <a class="act-dot" data-label="Citations"      href="#publications"></a>
+  <a class="act-dot" data-label="Signal"         href="#contact"></a>
+</aside>
 
 <div id="mm">
   <button class="mmX" onclick="mClose()"><i class="fas fa-xmark"></i></button>
@@ -519,6 +588,38 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
         <p>Applying machine-learning methods to transient classification, automated survey pipelines, and neural-network approaches to time domain astronomy as a Junior Investigator at IAIFI (NSF).</p>
       </div>
     </div>
+
+    <div class="rv d2" style="margin-top:2.6rem">
+      <div style="text-align:center;font-size:.68rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--aml);margin-bottom:.4rem">Scroll a topic into focus</div>
+      <h3 style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin-bottom:.4rem">Deep Dives</h3>
+      <p style="text-align:center;color:var(--tx2);font-size:.88rem;max-width:540px;margin:0 auto 1.4rem;line-height:1.85">Each transient class gets its own scroll-driven shader story — from progenitor to remnant.</p>
+      <div class="dd-grid">
+        <a class="dd-card" href="research/grb.html">
+          <span class="dd-emoji">💥</span>
+          <span class="dd-title">Gamma-Ray Bursts</span>
+          <span class="dd-line">Collapsar → bipolar relativistic jets → multi-wavelength afterglow</span>
+          <span class="dd-go">Enter the jet <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a class="dd-card" href="research/kilonova.html">
+          <span class="dd-emoji">🌊</span>
+          <span class="dd-title">Kilonovae</span>
+          <span class="dd-line">NS–NS spiral-in → merger flash → <em>r</em>-process glow</span>
+          <span class="dd-go">Watch the chirp <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a class="dd-card" href="research/slsn.html">
+          <span class="dd-emoji">💫</span>
+          <span class="dd-title">Superluminous SNe</span>
+          <span class="dd-line">Pulsations → core collapse → magnetar-powered light curve</span>
+          <span class="dd-go">See the engine <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a class="dd-card" href="research/tde.html">
+          <span class="dd-emoji">🌀</span>
+          <span class="dd-title">Tidal Disruption</span>
+          <span class="dd-line">Stellar orbit → tidal stretching → debris stream → accretion disk</span>
+          <span class="dd-go">Approach the SMBH <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -535,6 +636,14 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
           <p style="font-size:.77rem;color:var(--tx3);margin-top:.2rem"><i class="fas fa-envelope" style="margin-right:4px;color:var(--bll)"></i>harsh.kumar@cfa.harvard.edu &nbsp;·&nbsp; <i class="fab fa-orcid" style="margin-right:3px;color:#a6ce39"></i>0000-0003-0871-4641</p>
         </div>
         <div class="cv-dls"><button class="btn btn-p" onclick="dlCV()"><i class="fas fa-download"></i> Download Full CV</button></div>
+      </div>
+
+      <!-- Research-at-a-glance metrics strip (cinematic) -->
+      <div class="cv-glance">
+        <div class="glance-item"><i class="fas fa-satellite-dish"></i><div><div class="g-l">Telescopes</div><div class="g-v">GROWTH-India · Swift · Fermi · XMM · Gemini</div></div></div>
+        <div class="glance-item"><i class="fas fa-flask"></i><div><div class="g-l">Surveys</div><div class="g-v">ZTF · ATLAS · YSE · BlackGEM · LIGO/Virgo/KAGRA EM</div></div></div>
+        <div class="glance-item"><i class="fas fa-bullhorn"></i><div><div class="g-l">Real-time alerts</div><div class="g-v">GCN circulars · TNS · ATel</div></div></div>
+        <div class="glance-item"><i class="fas fa-globe"></i><div><div class="g-l">Locations</div><div class="g-v">Cambridge USA · Hanle 4500 m · Mumbai</div></div></div>
       </div>
       <div class="cv-st" id="cvSt"><i class="fas fa-circle-notch fa-spin" style="margin-right:5px"></i><span>Loading CV…</span></div>
       <div id="cvSecs">
@@ -679,10 +788,13 @@ const CV_DATA={
 };
 
 /* ══════════════════════════════════════════════════════════
-   STAR FIELD + SHOOTING STARS
+   LEGACY 2D STAR FIELD — disabled; WebGL engine in cosmic-engine.js
+   handles the backdrop now. Kept as no-op to avoid breaking init.
 ══════════════════════════════════════════════════════════ */
 (function(){
-  const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+  const cv=document.getElementById('stars');
+  if(!cv) return;  // shader path active — skip the 2D fallback entirely
+  const cx=cv.getContext('2d');
   let stars=[],shots=[],raf,timer=0;
   function resize(){cv.width=innerWidth;cv.height=innerHeight}
   function mkStars(){
@@ -793,7 +905,7 @@ let PAPERS=[];
 let curF='all';
 
 const PC={
-  KEY:'hk-papers-v4',TTL:7*24*60*60*1000,
+  KEY:'hk-papers-v5',TTL:24*60*60*1000,  // 24h: ADS-truth checked every visit via checkOnly
   get(){
     try{
       const raw=localStorage.getItem(this.KEY);if(!raw)return null;
@@ -1487,15 +1599,40 @@ function toggleCVA(id){const el=document.getElementById(id);if(el)el.classList.t
 function openCVA(id){const el=document.getElementById(id);if(el)el.classList.add('open');}
 
 /* ══════════════════════════════════════════════════════════
-   VISITOR COUNTER
+   VISITOR COUNTER — Abacus (jasoncameron.dev)
+   Per-session increment via sessionStorage flag; otherwise just GET.
 ══════════════════════════════════════════════════════════ */
 async function hitCounter(){
+  const NS='harshkumar-cfa', KEY='visits';
+  const el=document.getElementById('vCnt');
+  if(!el) return;
+  const visited=sessionStorage.getItem('hk-visited');
+  const path = visited ? `get/${NS}/${KEY}` : `hit/${NS}/${KEY}`;
   try{
-    const r=await fetch(`https://api.countapi.xyz/hit/${CFG.ctrNS}/${CFG.ctrKey}`);
-    if(!r.ok) throw 0;
+    const r=await fetch(`https://abacus.jasoncameron.dev/${path}`);
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const j=await r.json();
-    if(j?.value) document.getElementById('vCnt').textContent=Number(j.value).toLocaleString();
-  }catch{}
+    const v=Number(j?.value ?? j?.count ?? 0);
+    if(v>0){
+      const cur=parseInt((el.textContent||'0').replace(/[^0-9]/g,''))||0;
+      const dur = cur===0 ? 1400 : 700;
+      const t0=performance.now();
+      const step=ts=>{
+        const p=Math.min((ts-t0)/dur,1);
+        const e=p*p*(3-2*p);
+        el.textContent=Math.round(cur+e*(v-cur)).toLocaleString();
+        if(p<1) requestAnimationFrame(step);
+        else    el.textContent=v.toLocaleString();
+      };
+      requestAnimationFrame(step);
+      sessionStorage.setItem('hk-visited','1');
+    } else {
+      el.textContent='—';
+    }
+  }catch(e){
+    console.warn('[Counter] failed:',e.message);
+    el.textContent='—';
+  }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1511,6 +1648,33 @@ document.addEventListener('DOMContentLoaded',()=>{
   fetchPapers();
   hitCounter();
   initCV();
+});
+</script>
+
+<script type="module">
+import { CosmicEngine } from './assets/js/cosmic-engine.js';
+import { MAIN_FRAGMENT, MAIN_ACTS } from './assets/js/main-shader.js';
+
+const engine = new CosmicEngine({
+  canvas: '#cosmic',
+  fragmentShader: MAIN_FRAGMENT,
+  acts: MAIN_ACTS,
+  onTick: (e) => {
+    const idx = Math.floor(e.actIndex);
+    document.querySelectorAll('#actDots .act-dot').forEach((d, i) => {
+      d.classList.toggle('on', i === idx);
+    });
+  },
+});
+engine.start();
+
+// Smooth-scroll for act dots
+document.querySelectorAll('#actDots .act-dot').forEach(d => {
+  d.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(d.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 });
 </script>
 </body>

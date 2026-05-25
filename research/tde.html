@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Tidal Disruption Events — stars torn apart by supermassive black holes, lighting up the accretion disk and revealing the dormant SMBH for the first time.">
+<title>Tidal Disruption Events — Harsh Kumar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="../assets/css/deep-dive.css">
+</head>
+<body>
+
+<div id="pb"></div>
+<canvas id="cosmic"></canvas>
+<aside id="actDots">
+  <a class="act-dot" data-label="Orbit"   href="#act-orbit"></a>
+  <a class="act-dot" data-label="Stretch" href="#act-stretch"></a>
+  <a class="act-dot" data-label="Stream"  href="#act-stream"></a>
+  <a class="act-dot" data-label="Disk"    href="#act-disk"></a>
+  <a class="act-dot" data-label="Jet"     href="#act-jet"></a>
+</aside>
+
+<nav id="nav">
+  <a href="../index.html#research" class="back"><i class="fas fa-arrow-left"></i> All Topics</a>
+  <div class="title">Tidal Disruption <em>Events</em></div>
+  <div class="right"><span class="vis"><i class="fas fa-eye"></i><strong id="vCnt">—</strong> visitors</span></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-in">
+    <span class="kicker">Research Deep Dive · 04</span>
+    <h1>Tidal Disruption <span class="accent">Events</span></h1>
+    <p class="lede">Once every 10<sup>4</sup>–10<sup>5</sup> years, a star wanders too close to its galaxy's central black hole and is shredded. Half the stellar debris is flung away; half falls back and powers a luminous, evolving accretion disk that briefly turns a dormant SMBH into a transient.</p>
+    <span class="cue">Approach the SMBH <i class="fas fa-chevron-down"></i></span>
+  </div>
+</section>
+
+<section class="act" id="act-orbit">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 01 · t &lt; 0</span>
+      <h2>The fatal orbit</h2>
+      <p>Two-body relaxation in the dense nuclear star cluster of a galaxy occasionally scatters a star onto an orbit whose periastron lies inside the <strong>tidal radius</strong> of the central SMBH (typically r<sub>t</sub> ≈ 10–100 r<sub>g</sub>).</p>
+      <p>The star arrives essentially unbound — a nearly parabolic orbit — and is about to be subjected to differential gravitational forces strong enough to overcome its self-gravity.</p>
+      <div class="meta"><b>SMBH mass:</b> 10<sup>5</sup>–10<sup>8</sup> M<sub>☉</sub> &nbsp;|&nbsp; <b>Tidal radius:</b> r<sub>t</sub> ≈ R<sub>★</sub>(M<sub>BH</sub>/M<sub>★</sub>)<sup>1/3</sup></div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-stretch">
+  <div class="wrap">
+    <div class="story right">
+      <span class="tag">Act 02 · t ≈ 0</span>
+      <h2>Spaghettification at periastron</h2>
+      <p>At periastron the tidal force exceeds the star's self-gravity. The star is stretched into a long, thin debris stream — the textbook "spaghettification" — within a fraction of an orbital period.</p>
+      <p>Roughly <strong>half the debris becomes unbound</strong> and is launched on hyperbolic trajectories; the other half remains bound to the SMBH, with a spread in orbital energies determined by the depth of penetration into the tidal radius.</p>
+      <div class="meta"><b>Penetration parameter:</b> β = r<sub>t</sub>/r<sub>p</sub> &nbsp;|&nbsp; <b>Survival:</b> partial disruptions are common</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-stream">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 03 · weeks–months</span>
+      <h2>Fallback &amp; circularization</h2>
+      <p>The most-bound debris returns to periastron first. The fallback rate famously scales as <strong>t<sup>−5/3</sup></strong>, the iconic light-curve signature TDEs were predicted to show before any were observed.</p>
+      <p>How this stream circularizes into a coherent accretion disk — via stream–stream collisions, magnetic stresses, or general-relativistic apsidal precession — is one of the central open questions in TDE physics today.</p>
+      <div class="meta"><b>Fallback law:</b> Ṁ ∝ t<sup>−5/3</sup> &nbsp;|&nbsp; <b>Circularization timescale:</b> debated</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-disk">
+  <div class="wrap">
+    <div class="story right">
+      <span class="tag">Act 04 · months → year</span>
+      <h2>The accretion disk lights up</h2>
+      <p>Once a hot, geometrically thin accretion disk forms, the SMBH briefly transitions from quiescent to bright. The emission spans UV through optical — and in many TDEs, soft X-rays from the inner disk regions.</p>
+      <p>The fact that <strong>optical and X-ray TDEs differ systematically</strong> in their light curves, spectra, and host-galaxy demographics is still being worked out — possibly viewing-angle effects through a reprocessing layer, possibly genuinely different physical channels.</p>
+      <div class="meta"><b>Peak L<sub>bol</sub>:</b> ~ 10<sup>44</sup> erg/s &nbsp;|&nbsp; <b>Bands:</b> UV/optical (broad lines) + soft X-ray</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-jet">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 05 · rare events</span>
+      <h2>Relativistic jets &amp; outliers</h2>
+      <p>A handful of TDEs (Swift J1644+57, AT2022cmc, …) have launched <strong>relativistic jets</strong> with luminosities exceeding 10<sup>47</sup> erg/s — beamed emission visible to high redshift. They probe how rapidly an SMBH can be spun up and how robustly it can launch a Blandford–Znajek-style jet.</p>
+      <p>The full TDE population — including these outliers — is one of the best laboratories we have for measuring SMBH masses, spins, and demographics at the low-mass end where AGN surveys lose sensitivity.</p>
+      <div class="meta"><b>Jet TDEs:</b> &lt; 1% of TDEs &nbsp;|&nbsp; <b>Diagnostics for:</b> M<sub>BH</sub>, a<sub>★</sub>, accretion physics</div>
+    </div>
+  </div>
+</section>
+
+<div class="papers-wrap">
+  <h3>Selected reading</h3>
+  <a class="paper-card" href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641%20(title%3Atidal%20OR%20title%3ATDE)&sort=date%20desc" target="_blank">
+    <div class="t">My TDE papers on ADS</div>
+    <div class="a">Harsh Kumar et al.</div>
+    <div class="j"><span class="yr">live</span><span>filtered on ADS</span></div>
+  </a>
+  <a class="paper-card" href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641%20title%3A%22disruption%22&sort=date%20desc" target="_blank">
+    <div class="t">"Disruption" — all my TDE-related work</div>
+    <div class="a">Harsh Kumar et al.</div>
+    <div class="j"><span class="yr">live</span><span>broader title filter on ADS</span></div>
+  </a>
+</div>
+
+<div class="bottom-cta">
+  <a href="../index.html#research"><i class="fas fa-arrow-left"></i> Back to all research topics</a>
+</div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-c">© 2026 <strong>Harsh Kumar</strong></div>
+    <div class="ft-c"><a href="../index.html">Main site</a> · <a href="https://orcid.org/0000-0003-0871-4641" target="_blank">ORCID</a></div>
+  </div>
+</footer>
+
+<script>
+const pb = document.getElementById('pb');
+const navEl = document.getElementById('nav');
+addEventListener('scroll', () => {
+  const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+  pb.style.width = (max > 0 ? y / max * 100 : 0) + '%';
+  navEl.classList.toggle('solid', y > 50);
+});
+document.querySelectorAll('#actDots .act-dot').forEach(d => {
+  d.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(d.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+  });
+});
+(async () => {
+  const el = document.getElementById('vCnt');
+  if (!el) return;
+  const NS='harshkumar-cfa', KEY='visits';
+  const visited = sessionStorage.getItem('hk-visited');
+  const path = visited ? `get/${NS}/${KEY}` : `hit/${NS}/${KEY}`;
+  try {
+    const r = await fetch(`https://abacus.jasoncameron.dev/${path}`);
+    if (!r.ok) throw new Error();
+    const j = await r.json();
+    const v = Number(j?.value ?? j?.count ?? 0);
+    if (v > 0) { el.textContent = v.toLocaleString(); sessionStorage.setItem('hk-visited','1'); }
+  } catch { el.textContent = '—'; }
+})();
+</script>
+
+<script type="module">
+import { CosmicEngine } from '../assets/js/cosmic-engine.js';
+import { TDE_FRAGMENT, TDE_ACTS } from '../assets/js/tde-shader.js';
+const engine = new CosmicEngine({
+  canvas: '#cosmic',
+  fragmentShader: TDE_FRAGMENT,
+  acts: TDE_ACTS,
+  onTick: (e) => {
+    const idx = Math.floor(e.actIndex);
+    document.querySelectorAll('#actDots .act-dot').forEach((d,i) => d.classList.toggle('on', i === idx));
+  },
+});
+engine.start();
+</script>
+</body>
+</html>
