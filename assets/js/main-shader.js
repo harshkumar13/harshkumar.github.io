@@ -20,15 +20,17 @@ vec3 actBirth(vec2 uv, float p){
   vec4 neb = volNebula(q, vec2(0.0), radius, hot, cold, density, t);
   col = col * neb.w + neb.rgb;
 
-  // Bipolar Herbig-Haro outflow appears mid-collapse, accretion disk forms late
+  // Horizontal collimated Herbig-Haro outflow appears mid-collapse. The
+  // earlier bipolar relJet calls looked fuzzy and read as two separate
+  // beams — cleanJet renders a single readable jet along the X axis with
+  // spine + cocoon + internal-shock knots + bow-shock tips.
   float ign = smoothstep(0.35, 0.85, p);
   if(ign > 0.001){
-    // Two cone-jets along y axis (north + south)
-    vec3 jetN = relJet(q, vec2(0.0, 1.0), 0.95, 0.05, 4.0 + ign*8.0, vec3(0.5,0.8,1.3), t);
-    vec3 jetS = relJet(q, vec2(0.0,-1.0), 0.95, 0.05, 4.0 + ign*8.0, vec3(0.5,0.8,1.3), t);
-    col += (jetN + jetS) * ign;
-    // Tilted protoplanetary disk (very edge-on so it reads as a line)
-    col += accretionDisk(q, 0.78, 0.0, 0.045, t) * ign * 0.75;
+    vec3 jet = cleanJet(q, vec2(1.0, 0.0), 1.05, 0.045, vec3(0.55, 0.80, 1.25), t);
+    col += jet * ign;
+    // Edge-on protoplanetary disk (perpendicular to the jet)
+    float diskMask = exp(-pow(q.x/0.18, 2.0)) * exp(-pow(q.y/0.012, 2.0));
+    col += diskMask * vec3(1.20, 0.95, 0.65) * ign * 0.9;
   }
 
   // Protostar core ignites near the end
@@ -259,44 +261,49 @@ vec3 actCitations(vec2 uv, float p){
 // =============================================================
 vec3 actGravitationalWave(vec2 uv, float p){
   float t = uTime;
-  vec3 col = deepSky(uv) * 0.85;
+  vec3 col = deepSky(uv) * 0.70;            // slightly dimmer starfield
 
-  // Two compact objects spiraling — sep and omega chirp
+  // Calmer chirp: ~1/3 the peak orbital frequency, smoother sep curve.
+  // Earlier values (omega up to 28) made the inspiral look frantic; the
+  // user reads this as "chaotic". 9 rad/s peak feels like a real LIGO chirp
+  // played slowed down — the eye still tracks the inspiral but it doesn't
+  // distract while you read the contact section.
   float chirp = pow(1.0 - clamp(p*0.95 + 0.05, 0.0, 1.0), 1.3);
-  float omega = mix(2.5, 28.0, 1.0 - chirp);
-  float sep   = mix(0.04, 0.32, chirp);
+  float omega = mix(1.4, 9.0, 1.0 - chirp);
+  float sep   = mix(0.05, 0.32, chirp);
   vec2 a = vec2(cos(t*omega), sin(t*omega)) * sep;
   vec2 b = -a;
   float coal = smoothstep(0.06, 0.0, sep);
 
-  // Spacetime grid warped by both masses
-  col += spacetimeGrid2(uv, a, 0.06, b, 0.06, vec3(0.25, 0.42, 0.75), 7.0) * 0.55;
+  // Spacetime grid — dialed back so it's a backdrop hint, not a foreground texture
+  col += spacetimeGrid2(uv, a, 0.05, b, 0.05, vec3(0.22, 0.38, 0.66), 6.0) * 0.30;
 
-  // + and × polarization rings — strain pattern radiating outward
-  float freq  = mix(6.0, 30.0, 1.0 - chirp);
-  float phase = t * omega * 1.5;
-  float hp = gwPlus(uv, freq, phase);
-  float hx = gwCross(uv, freq, phase + PI*0.5);
-  float strain = hp * 0.55 + hx * 0.45;
-  vec3 strainCol = mix(vec3(0.55, 0.85, 1.10), vec3(0.95, 0.65, 1.10), 0.5+0.5*sin(t*0.3));
-  col += smoothstep(0.55, 1.0, abs(strain)) * strainCol * 0.85;
+  // Single-mode strain pattern (plus only) — was plus+cross which doubled the
+  // visual complexity. Lower amplitude and a softer threshold so the ripples
+  // read as gentle concentric waves rather than a busy interference field.
+  float freq  = mix(4.5, 12.0, 1.0 - chirp);
+  float phase = t * omega * 1.2;
+  float hp    = gwPlus(uv, freq, phase);
+  col += smoothstep(0.72, 1.0, abs(hp)) * vec3(0.50, 0.78, 1.05) * 0.40;
 
-  // The compact objects themselves — bright spheres with gravitational glow
-  col += hotGlow(vec3(0.0), uv, a, vec3(0.90, 0.95, 1.15)*1.3, 0.04);
-  col += hotGlow(vec3(0.0), uv, b, vec3(1.10, 0.85, 0.95)*1.3, 0.04);
-  col += exp(-length(uv-a)*50.0) * vec3(1.0,1.0,1.05) * 1.6;
-  col += exp(-length(uv-b)*50.0) * vec3(1.0,0.95,1.0) * 1.6;
+  // Compact objects — softer glow, no over-bright cores
+  col += hotGlow(vec3(0.0), uv, a, vec3(0.85, 0.92, 1.10), 0.035);
+  col += hotGlow(vec3(0.0), uv, b, vec3(1.00, 0.85, 0.95), 0.035);
+  col += exp(-length(uv-a)*55.0) * vec3(0.95, 0.95, 1.00) * 0.95;
+  col += exp(-length(uv-b)*55.0) * vec3(0.95, 0.90, 0.95) * 0.95;
 
-  // Merger flash + ringdown
+  // Gentle merger flash (was 2.4× white-hot pop — too distracting near the
+  // contact form). Tapered amplitude + softer falloff.
   float merge = pow(coal, 4.0);
-  col += merge * exp(-length(uv)*3.5) * vec3(1.0, 1.0, 0.95) * 2.4;
+  col += merge * exp(-length(uv)*3.0) * vec3(0.95, 0.95, 0.90) * 1.10;
 
-  // Late-time outgoing ringdown ripples
-  float ringR = mix(0.0, 1.4, smoothstep(0.0, 0.4, coal));
-  float ring = exp(-pow((length(uv) - ringR)/0.06, 2.0)) * coal * (1.0 - smoothstep(0.0, 1.3, length(uv)));
-  col += ring * vec3(0.55, 0.85, 1.10) * 1.0;
+  // Single calm ringdown ripple instead of an expanding shell — slower, dim.
+  float ringR = mix(0.0, 1.0, smoothstep(0.0, 0.5, coal));
+  float ring  = exp(-pow((length(uv) - ringR)/0.10, 2.0)) * coal
+              * (1.0 - smoothstep(0.0, 1.2, length(uv)));
+  col += ring * vec3(0.45, 0.72, 0.98) * 0.42;
 
-  return col;
+  return col * 0.78;                        // global opacity damp
 }
 
 // =============================================================
@@ -327,8 +334,9 @@ void main(){
     col = deepSky(uv) * 0.9;
   } else {
     col = dispatchAct(ai, uv, p);
-    if(p > 0.88 && ai+1 < int(uActCount)){
-      float blend = smoothstep(0.88, 1.0, p);
+    // Cross-fade only in the final 6% of an act (was 12%) — uniform branch
+    if(p > 0.94 && ai+1 < int(uActCount)){
+      float blend = smoothstep(0.94, 1.0, p);
       vec3 nxt = dispatchAct(ai+1, uv, 0.0);
       col = mix(col, nxt, blend * 0.65);
     }
@@ -337,14 +345,12 @@ void main(){
   // Cinematic vignette
   col *= 1.0 - 0.32 * pow(length(uv*vec2(0.9,1.0)), 2.4);
 
-  // Cheap chromatic aberration toward edges
-  float ca = length(uv) * 0.0026;
-  vec2 dir = normalize(uv + 1e-5);
-  vec3 caCol;
-  caCol.r = dispatchAct(ai, uv - dir*ca, p).r;
-  caCol.g = col.g;
-  caCol.b = dispatchAct(ai, uv + dir*ca, p).b;
-  col = mix(col, caCol, 0.18);
+  // Cheap chromatic-aberration *feel* via channel shift on the already-computed
+  // color — no extra dispatchAct calls. Saves 2× full-scene evaluations per pixel.
+  float ca = length(uv) * 0.40;
+  col.r *= 1.0 + ca * 0.04;
+  col.b *= 1.0 + ca * 0.06;
+  col.g *= 1.0 - ca * 0.03;
 
   // Filmic tonemap (Reinhard-extended)
   col = col / (1.0 + col);

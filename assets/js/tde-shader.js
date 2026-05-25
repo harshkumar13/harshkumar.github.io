@@ -48,12 +48,22 @@ vec3 warmDisk(vec2 uv, float tilt, float spin, float rs, float t){
   return col;
 }
 
-// Act 0 — Stellar orbit: a star approaches a quiescent SMBH
+// Eccentric Keplerian-ish orbit (analytic, no integrator). Returns the
+// position of a body at orbital phase τ for the given semi-axis & eccentricity.
+vec2 starOrbitAt(float tau, float r, float ecc){
+  // Slightly compressed in y so the orbit reads as inclined — gives depth
+  return vec2(cos(tau)*r*(1.0 + ecc*cos(tau)), sin(tau)*r*0.7);
+}
+
+// Act 0 — Stellar orbit: a single bright star approaches the SMBH.
+// The trailing tail is rendered as a *continuous tube* (distance-to-curve
+// segments), not a string of point samples — so it reads as one luminous
+// stream that grows as the star sweeps around its orbit.
 vec3 actOrbit(vec2 uv, float p){
   float t = uTime;
   vec3 col = deepSky(uv);
 
-  // Background grav-lensing
+  // Background gravitational lensing near the BH
   vec2 lensed = uv;
   float lr = length(uv);
   float defl = 0.05 / max(lr, 0.06);
@@ -62,23 +72,42 @@ vec3 actOrbit(vec2 uv, float p){
 
   // Quiescent SMBH — dark sphere + warm photon ring
   float horizonR = 0.06;
-  float ringR = 0.085;
+  float ringR    = 0.085;
   col *= smoothstep(horizonR*0.9, horizonR*1.1, lr);
-  col += exp(-pow((lr-ringR)/0.005, 2.0)) * vec3(1.10, 0.85, 0.45) * 1.0;
+  col += exp(-pow((lr-ringR)/0.005, 2.0)) * vec3(1.10, 0.85, 0.45);
 
-  // Eccentric orbit of the star (yellow)
-  float ph = uTime*0.4 + p*4.0;
-  float ecc = 0.65;
+  // Orbital parameters — star slowly spirals inward as the act progresses
+  float ph       = t*0.40 + p*4.0;
+  float ecc      = 0.65;
   float starOrbR = mix(0.55, 0.18, p);
-  vec2 starPos = vec2(cos(ph)*starOrbR*(1.0+ecc*cos(ph)), sin(ph)*starOrbR*0.7);
-  col += exp(-length(uv-starPos)*40.0) * vec3(1.05, 0.85, 0.50) * 1.7;
-  col = hotGlow(col, uv, starPos, vec3(1.0,0.80,0.40)*1.2, 0.05);
-  for(int i=1;i<10;i++){
-    float fi = float(i);
-    float pt = ph - fi*0.07;
-    vec2 tp = vec2(cos(pt)*starOrbR*(1.0+ecc*cos(pt)), sin(pt)*starOrbR*0.7);
-    col += exp(-length(uv-tp)*55.0) * vec3(1.05, 0.80, 0.45) * (0.65 - fi*0.06);
+
+  // Continuous trail: stitch ~20 short segments along the orbit, fading older
+  // pieces. Each segment contributes its distance-to-segment, summed in
+  // emission space — overlapping segments make a seamless glow tube.
+  //
+  // Trail length grows with progress: at p=0 the trail is short (just starting
+  // its first orbit), at p=1 the tail wraps most of the way around.
+  float trailLen = mix(1.2, 3.4, p);
+  vec2 prev = starOrbitAt(ph, starOrbR, ecc);
+  vec3 tailTint = vec3(1.05, 0.78, 0.40);
+  for(int i=1;i<22;i++){
+    float fi  = float(i);
+    float u   = fi/21.0;                 // 0=close to star → 1=tail end
+    float tau = ph - u*trailLen;
+    vec2  cur = starOrbitAt(tau, starOrbR, ecc);
+    float d   = sdSeg(uv, prev, cur);
+    // Tube width ~0.012; fade with age so older segments dim out.
+    float age = 1.0 - smoothstep(0.4, 1.0, u);
+    col += exp(-d * 220.0) * tailTint * 0.95 * age;
+    col += exp(-d *  60.0) * tailTint * 0.18 * age;   // soft outer halo
+    prev = cur;
   }
+
+  // The star itself — a single bright Gaussian + warm halo
+  vec2 starPos = starOrbitAt(ph, starOrbR, ecc);
+  col += exp(-length(uv-starPos) * 65.0) * vec3(1.20, 0.95, 0.60) * 2.0;
+  col = hotGlow(col, uv, starPos, vec3(1.10, 0.85, 0.45)*1.3, 0.06);
+
   return col;
 }
 
@@ -97,45 +126,62 @@ vec3 actTidalStretch(vec2 uv, float p){
   vec2 dp = (uv - starPos) / vec2(stretchX, stretchY);
   float strecthD = length(dp);
   float starSh = smoothstep(1.2, 0.0, strecthD);
-  // Stay warm throughout — no blue
   vec3 starCol = mix(vec3(1.0, 0.75, 0.40), vec3(1.20, 0.95, 0.55), p);
   col += starSh * starCol * 1.4;
 
-  // Tidal fingers pulled toward BH (warm)
-  float tail = exp(-pow((uv.x - starPos.x*0.5)*7.0, 2.0)) * exp(-pow(uv.y*15.0,2.0)) * smoothstep(0.5,1.0,p);
-  col += tail * vec3(1.10, 0.70, 0.30) * 0.85;
+  // Continuous tidal stream pulled toward the BH — segment tube, not dots.
+  // The stream is a line from the star to near the horizon, slightly curved.
+  vec2 bh = vec2(0.0, 0.0);
+  vec2 prev = starPos;
+  for(int i=1;i<14;i++){
+    float fi = float(i);
+    float u  = fi/13.0;
+    // Linear interp from star → BH with a slight bow so the stream curls in
+    vec2 cur = mix(starPos, bh, u) + vec2(0.0, sin(u*PI)*0.04);
+    float d  = sdSeg(uv, prev, cur);
+    float w  = smoothstep(0.6, 1.0, p) * (1.0 - 0.7*u);
+    col += exp(-d * 200.0) * vec3(1.10, 0.75, 0.35) * w;
+    col += exp(-d *  55.0) * vec3(1.10, 0.70, 0.30) * w * 0.18;
+    prev = cur;
+  }
   return col;
 }
 
-// Act 2 — Debris stream, fallback, circularization
+// Act 2 — Debris stream → fallback → circularizing disk.
+// The stream is now a single continuous spiral (logarithmic), not 48 dots.
 vec3 actStream(vec2 uv, float p){
   float t = uTime;
   vec3 col = deepSky(uv);
 
   col += warmDisk(uv, 0.45, 0.55, 0.045, t) * mix(0.35, 1.0, p);
 
-  // Returning fallback stream — warm glowing curl
-  for(int i=0;i<48;i++){
-    float fi = float(i);
-    float ang = fi*0.32 + t*0.35 - p*2.2;
-    float rad = 0.40 - fi*0.0055 + 0.04*sin(t*0.5 + fi*0.6);
-    vec2 sp = vec2(cos(ang)*rad, sin(ang)*rad*0.32);
-    float dd = length(uv - sp);
-    float wt = exp(-pow(fi - p*40.0, 2.0)*0.05);
-    col += exp(-dd*55.0) * vec3(1.10, 0.75, 0.40) * 1.0 * wt;
+  // Logarithmic fallback spiral — stitched as a smooth tube.
+  // Star material returns to pericenter, winding down toward the BH.
+  float head = t*0.35 - p*1.2;             // leading edge phase
+  float r0   = 0.46;                       // outer radius
+  float pitch= 0.18;                       // tightness (lower = looser)
+  // Sample 24 segments along the spiral
+  float tau0 = head;
+  vec2 prev  = vec2(cos(tau0)*r0, sin(tau0)*r0*0.32);
+  for(int i=1;i<24;i++){
+    float fi  = float(i);
+    float u   = fi/23.0;
+    float tau = head - u*5.5;             // spans ~5.5 rad of spiral
+    float rad = r0 * exp(-u*1.2);          // shrinks toward BH
+    vec2  cur = vec2(cos(tau)*rad, sin(tau)*rad*0.32);
+    float d   = sdSeg(uv, prev, cur);
+    float age = 1.0 - smoothstep(0.55, 1.0, u);
+    col += exp(-d * 230.0) * vec3(1.10, 0.78, 0.40) * 0.95 * age;
+    col += exp(-d *  60.0) * vec3(1.05, 0.65, 0.30) * 0.16 * age;
+    prev = cur;
   }
 
-  // Ejected debris (going outward)
+  // Ejected (unbound) debris — a soft elongated arm shooting away
   float ejX = uv.x + 0.6 - p*0.5;
   float ejY = uv.y * 6.0;
-  float ej = exp(-pow(ejX, 2.0)*8.0 - pow(ejY, 2.0));
-  col += ej * vec3(1.00, 0.60, 0.30) * 0.6;
-  for(int j=0;j<5;j++){
-    float fj=float(j);
-    float ex = uv.x + 0.6 - p*0.5 + fj*0.07;
-    float ey = uv.y * (6.0 + fj*1.5);
-    col += exp(-pow(ex, 2.0)*12.0 - pow(ey, 2.0))*vec3(1.05, 0.60, 0.30)*0.20*(1.0-fj/5.0);
-  }
+  float ej  = exp(-pow(ejX, 2.0)*8.0 - pow(ejY, 2.0));
+  col += ej * vec3(1.00, 0.60, 0.30) * 0.55;
+
   return col;
 }
 
@@ -218,10 +264,12 @@ void main(){
     }
   }
   col *= 1.0 - 0.30 * pow(length(uv*vec2(0.9,1.0)), 2.4);
-  float ca = length(uv) * 0.0024;
-  vec2 dir = normalize(uv + 1e-5);
-  vec3 caCol = vec3(dispatch(ai, uv - dir*ca, p).r, col.g, dispatch(ai, uv + dir*ca, p).b);
-  col = mix(col, caCol, 0.12);
+  // Cheap chromatic-aberration *feel* via channel shift on the already-
+  // computed color — avoids 2× full-scene evaluations per pixel.
+  float ca = length(uv) * 0.40;
+  col.r *= 1.0 + ca * 0.035;
+  col.b *= 1.0 + ca * 0.055;
+  col.g *= 1.0 - ca * 0.028;
   col = col / (1.0 + col);
   col = pow(col, vec3(0.82));
   col += hash12(gl_FragCoord.xy + uTime*60.0)*0.012 - 0.006;

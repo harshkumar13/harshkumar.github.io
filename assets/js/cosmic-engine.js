@@ -21,6 +21,19 @@ uniform float uPixelRatio;
 uniform float uReduced;    // 1.0 if prefers-reduced-motion
 `;
 
+// Device-tier detection: pick a render-scale that keeps FPS smooth.
+// 0 = low (mobile / low core count / small RAM), 1 = mid, 2 = high desktop.
+function _detectTier() {
+  const ua = navigator.userAgent || '';
+  const mobile = /Mobi|Android|iPhone|iPad|iPod|Mobile|BlackBerry/i.test(ua);
+  const cores  = navigator.hardwareConcurrency || 4;
+  const memGB  = navigator.deviceMemory || 4;        // Chrome-only; defaults if unknown
+  const minSide = Math.min(innerWidth, innerHeight);
+  if (mobile || cores <= 4 || memGB <= 2 || minSide < 600) return 0;
+  if (cores <= 6 || memGB <= 4) return 1;
+  return 2;
+}
+
 export class CosmicEngine {
   constructor({ canvas, fragmentShader, acts = [], onTick = null }) {
     this.canvas = typeof canvas === 'string' ? document.querySelector(canvas) : canvas;
@@ -33,6 +46,16 @@ export class CosmicEngine {
     this.startTime = performance.now();
     this.running = false;
     this.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.tier = _detectTier();
+    // Render-scale: how much of viewport we actually rasterize.
+    // Aggressive on low-end (0.6 of CSS pixels) — the shader is the bottleneck.
+    this._baseScale = this.reduced ? 0.6 : [0.6, 0.85, 1.0][this.tier];
+    this._scale = this._baseScale;
+    // FPS tracking for dynamic downscale
+    this._fpsFrames = 0;
+    this._fpsT0 = performance.now();
+    this._lastTickMs = this._fpsT0;
+    this._downgraded = false;
     this._init();
   }
 
@@ -79,12 +102,42 @@ export class CosmicEngine {
     gl.bindVertexArray(this.vao);
 
     this._resize();
-    addEventListener('resize', () => this._resize(), { passive: true });
-    addEventListener('scroll', () => this._updateAct(), { passive: true });
-    addEventListener('pointermove', e => {
-      this.mouse[0] = e.clientX / innerWidth;
-      this.mouse[1] = 1.0 - e.clientY / innerHeight;
+
+    // Throttle scroll + resize through RAF so layout reads coalesce into one
+    // per frame even when the user scrolls a touchpad/wheel rapidly.
+    let scrollScheduled = false;
+    addEventListener('scroll', () => {
+      if (scrollScheduled) return;
+      scrollScheduled = true;
+      requestAnimationFrame(() => { scrollScheduled = false; this._updateAct(); });
     }, { passive: true });
+
+    let resizeScheduled = false;
+    addEventListener('resize', () => {
+      if (resizeScheduled) return;
+      resizeScheduled = true;
+      requestAnimationFrame(() => { resizeScheduled = false; this._resize(); this._updateAct(); });
+    }, { passive: true });
+
+    // Pointer parallax — only attach on devices with a fine pointer (skips
+    // touch-only phones, where it would only fire during taps anyway).
+    if (matchMedia('(pointer: fine)').matches) {
+      let pmScheduled = false, pmX = 0.5, pmY = 0.5;
+      addEventListener('pointermove', e => {
+        pmX = e.clientX / innerWidth;
+        pmY = 1.0 - e.clientY / innerHeight;
+        if (pmScheduled) return;
+        pmScheduled = true;
+        requestAnimationFrame(() => { pmScheduled = false; this.mouse[0] = pmX; this.mouse[1] = pmY; });
+      }, { passive: true });
+    }
+
+    // Pause when tab is hidden — saves battery and avoids background GPU work.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.stop();
+      else if (!this.running) this.start();
+    });
+
     this._updateAct();
   }
 
@@ -103,12 +156,15 @@ export class CosmicEngine {
   }
 
   _resize() {
-    const dpr = Math.min(devicePixelRatio || 1, this.reduced ? 1.0 : 1.5);
+    // Effective pixel ratio = devicePixelRatio × our tier-based render scale.
+    // Retina/4K screens used to render at ~2.25× viewport pixels; on low-end
+    // we now drop to ~0.6× which is the single biggest fragment-cost saving.
+    const dpr = Math.min(devicePixelRatio || 1, 1.5) * this._scale;
     const w = innerWidth, h = innerHeight;
     this.canvas.style.width = w + 'px';
     this.canvas.style.height = h + 'px';
-    this.canvas.width  = Math.round(w * dpr);
-    this.canvas.height = Math.round(h * dpr);
+    this.canvas.width  = Math.max(1, Math.round(w * dpr));
+    this.canvas.height = Math.max(1, Math.round(h * dpr));
     this.dpr = dpr;
     if (this.gl) this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
   }
@@ -140,15 +196,35 @@ export class CosmicEngine {
   start() {
     if (this.unsupported || this.running) return;
     this.running = true;
+    this._fpsT0 = performance.now();
+    this._fpsFrames = 0;
     const loop = () => {
       if (!this.running) return;
       this._render();
+      this._sampleFps();
       this.raf = requestAnimationFrame(loop);
     };
     loop();
   }
 
   stop() { this.running = false; if (this.raf) cancelAnimationFrame(this.raf); }
+
+  // Every ~60 frames, measure FPS. If we're below ~40 FPS and haven't
+  // downgraded yet, drop render scale by 25% and resize. One-shot — keeps
+  // smoothness on a hot phone without ping-ponging.
+  _sampleFps() {
+    this._fpsFrames++;
+    if (this._fpsFrames < 60) return;
+    const now = performance.now();
+    const fps = (this._fpsFrames * 1000) / (now - this._fpsT0);
+    this._fpsFrames = 0;
+    this._fpsT0 = now;
+    if (!this._downgraded && fps < 40) {
+      this._downgraded = true;
+      this._scale = Math.max(0.45, this._scale * 0.75);
+      this._resize();
+    }
+  }
 
   _render() {
     const gl = this.gl;
@@ -202,22 +278,25 @@ float vnoise3(vec3 p){
 }
 
 // ── FBM (rotated octaves for less axis bias) ─────────────────────────
+// Octave counts trimmed (6→4, 5→3, 5→3) for mobile/integrated-GPU performance —
+// the extra octaves only contribute high-frequency noise that is below the
+// pixel scale anyway, so visual loss is minimal.
 float fbm(vec2 p){
   float s=0., a=0.5;
   mat2 m = mat2(1.6,1.2,-1.2,1.6);
-  for(int i=0;i<6;i++){ s += a*vnoise(p); p = m*p; a *= 0.5; }
+  for(int i=0;i<4;i++){ s += a*vnoise(p); p = m*p; a *= 0.5; }
   return s;
 }
 float fbm3(vec3 p){
   float s=0., a=0.5;
-  for(int i=0;i<5;i++){ s += a*vnoise3(p); p *= 2.03; a *= 0.5; }
+  for(int i=0;i<3;i++){ s += a*vnoise3(p); p *= 2.03; a *= 0.5; }
   return s;
 }
 // Ridged fbm (mountain-like; great for plasma filaments)
 float rfbm(vec2 p){
   float s=0., a=0.5;
   mat2 m = mat2(1.6,1.2,-1.2,1.6);
-  for(int i=0;i<5;i++){ s += a*(1.0 - abs(vnoise(p)*2.0-1.0)); p = m*p; a *= 0.5; }
+  for(int i=0;i<3;i++){ s += a*(1.0 - abs(vnoise(p)*2.0-1.0)); p = m*p; a *= 0.5; }
   return s;
 }
 // Domain-warped fbm — cinematic, painterly clouds
@@ -313,25 +392,25 @@ float pulse(float x, float c, float w){ return smoothstep(c-w, c, x) - smoothste
 // Returns accumulated (emission, transmittance) — usable to composite over background.
 // p2: uv. center: cloud center. radius: extent. innerHot/outerCold: color stops.
 vec4 volNebula(vec2 p2, vec2 center, float radius, vec3 innerHot, vec3 outerCold, float density, float t){
-  // Ray from "camera" along +z; we sample 3D density at z slabs
+  // Ray from "camera" along +z; we sample 3D density at z slabs.
+  // Steps reduced 16→8 and warpFbm3 swapped for cheaper fbm3 — the dominant
+  // cost was a 5-octave 3D domain-warp at every step (≈80 noise lookups/pixel).
   vec3 ro = vec3(p2 - center, -radius*1.4);
   vec3 rd = vec3(0., 0., 1.);
-  float dt = (radius*2.8) / 16.0;
+  float dt = (radius*2.8) / 8.0;
   vec3 acc = vec3(0.0);
   float trans = 1.0;
-  for(int i=0;i<16;i++){
+  for(int i=0;i<8;i++){
     vec3 P = ro + rd * (float(i)+0.5) * dt;
     float r3 = length(P) / radius;
     if(r3 > 1.6) continue;
-    // Density: radial falloff × domain-warped 3D fbm
+    // Density: radial falloff × 3D fbm (no domain warp inside the loop)
     float d = exp(-r3*r3*1.6);
-    d *= 0.5 + 1.6*warpFbm3(P*2.4 + vec3(0., 0., t*0.12), t);
+    d *= 0.5 + 1.6*fbm3(P*2.4 + vec3(0., 0., t*0.12));
     d *= density;
     if(d < 0.005) continue;
-    // Temperature: hotter toward the centre
     float temp = exp(-r3*1.2);
     vec3 c = mix(outerCold, innerHot, temp);
-    // Beer's-law absorption
     float a = 1.0 - exp(-d * dt * 2.6);
     acc += c * a * trans;
     trans *= 1.0 - a;
@@ -499,6 +578,43 @@ float gwCross(vec2 uv, float freq, float phase){
   return sin(2.0*a) * sin(freq*r - phase) * exp(-r*0.6);
 }
 
+// ── Clean cinematic collimated jet (protostellar / AGN style) ────────
+// Single bipolar jet along a chosen axis. Produces:
+//   • a bright collimated spine that tapers with distance
+//   • a soft Gaussian sheath / cocoon around it
+//   • internal-shock knots that drift outward
+//   • two bow-shock heads at the tips
+// Use this when you want a *single readable jet* — relJet has more
+// noise/structure and reads as a fuzzy beam.
+vec3 cleanJet(vec2 uv, vec2 axis, float len, float width, vec3 tint, float t){
+  vec2 ax = normalize(axis);
+  float along = dot(uv, ax);
+  vec2  perp  = uv - along*ax;
+  float across= length(perp);
+  // Symmetric: render |along| as distance from origin along the axis
+  float L = abs(along);
+  if(L > len*1.15) return vec3(0.0);
+  // Tapered half-width: thin near origin, opens slightly, then narrows at tip
+  float taper = mix(0.55, 1.0, smoothstep(0.0, len*0.25, L))
+              * mix(1.0, 0.30, smoothstep(len*0.55, len*1.0, L));
+  float w     = width * taper;
+  // Bright collimated spine
+  float spine = exp(-pow(across/(w*0.45), 2.0));
+  // Soft cocoon / sheath
+  float sheath= exp(-pow(across/(w*1.6), 2.0)) * 0.45;
+  // Internal-shock knots drifting outward (advection by sign(along))
+  float knot  = pow(0.5 + 0.5*sin(L*16.0 - t*1.8*sign(along+1e-6)), 4.0);
+  knot       *= smoothstep(len*0.05, len*0.18, L) * (1.0 - smoothstep(len*0.85, len, L));
+  // Length envelope: fade in/out over the jet length
+  float lenEnv= smoothstep(0.0, len*0.08, L) * (1.0 - smoothstep(len*0.88, len*1.1, L));
+  // Bow-shock head (curved bright cap near the tip)
+  float bowD  = abs(L - len*0.93);
+  float bow   = exp(-pow(bowD/(len*0.04), 2.0)) * exp(-pow(across/(w*2.6), 2.0));
+  vec3 col = tint * (spine*1.4 + sheath + knot*0.7) * lenEnv
+           + tint * bow * 1.1;
+  return col * 1.2;
+}
+
 // ── Relativistic jet with Lorentz boost and knots ────────────────────
 // dir: unit vector for jet axis; lor: bulk Lorentz factor (1..30)
 vec3 relJet(vec2 uv, vec2 dir, float len, float width, float lor, vec3 tint, float t){
@@ -519,6 +635,14 @@ vec3 relJet(vec2 uv, vec2 dir, float len, float width, float lor, vec3 tint, flo
   // Color: bluer at relativistic boost
   vec3 col = mix(tint, vec3(0.55,0.75,1.4), clamp(lor/30.0, 0.0, 1.0));
   return col * intensity * 1.4;
+}
+
+// ── Distance from a point to a line segment (cheap, continuous) ──────
+// Used to draw smooth glowing tubes/trails instead of dotted point loops.
+float sdSeg(vec2 p, vec2 a, vec2 b){
+  vec2 ba = b - a;
+  float h = clamp(dot(p - a, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
+  return length(p - a - ba*h);
 }
 
 // ── World line for Minkowski diagram (CV act) ────────────────────────

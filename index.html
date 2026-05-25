@@ -11,16 +11,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
 <style>
 :root{
   --bg:#000000;--bg2:#080808;--bg3:#111111;
-  --card:rgba(255,255,255,.045);--card2:rgba(255,255,255,.075);
+  /* Cards bumped from .045/.075 → .12/.16: visible over the shader without
+     looking heavy. Body text colors brightened (tx2 .60→ #b8b2a3 etc.) for
+     contrast on a moving background. */
+  --card:rgba(255,255,255,.12);--card2:rgba(255,255,255,.16);
   --bdr:rgba(255,255,255,.10);--bdr2:rgba(255,255,255,.18);
   --bl:#5aa3e0;--bll:#88bff0;--blll:#c2dcf6;
   --am:#d4a13e;--aml:#ecbf6b;--amll:#f5d9a0;
   --tl:#3aae9d;--tll:#5dd1c0;
-  --tx:#f0ece0;--tx2:#9a958a;--tx3:#605c54;
+  --tx:#f4f0e6;--tx2:#bdb6a8;--tx3:#7a7569;
   --gr:#3dba7f;--rd:#e05a5a;
   --r:10px;--rl:16px;
 }
@@ -54,9 +57,25 @@ section{min-height:120vh}
   #hero{min-height:auto;padding:6rem 1.5rem 3rem}
 }
 section .wrap{position:relative;z-index:2}
-.act-card{background:linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.92));
-  backdrop-filter:blur(14px) saturate(120%);
-  -webkit-backdrop-filter:blur(14px) saturate(120%);
+/* Readable backing for section content — sweet-spot opacity: the shader is
+   clearly visible *through* the card, but text still has enough contrast
+   to read comfortably. On mobile we bump opacity a touch since smaller
+   text on a phone needs more contrast. */
+section:not(#hero) > .wrap{
+  background:linear-gradient(180deg,rgba(8,8,10,.48) 0%,rgba(4,4,6,.62) 30%,rgba(4,4,6,.66) 70%,rgba(8,8,10,.48) 100%);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  padding:2.4rem 2rem;
+  box-shadow:0 12px 56px rgba(0,0,0,.55),inset 0 0 36px rgba(0,0,0,.25);
+}
+@media(max-width:640px){
+  section:not(#hero) > .wrap{
+    background:linear-gradient(180deg,rgba(8,8,10,.66) 0%,rgba(4,4,6,.78) 30%,rgba(4,4,6,.82) 70%,rgba(8,8,10,.66) 100%);
+    padding:1.55rem 1.1rem;border-radius:13px;
+  }
+}
+/* Legacy .act-card class — kept for backward compatibility */
+.act-card{background:linear-gradient(180deg,rgba(0,0,0,.82),rgba(0,0,0,.94));
   border:1px solid var(--bdr);border-radius:var(--rl);padding:2.2rem 1.8rem;
   box-shadow:0 8px 48px rgba(0,0,0,.55),inset 0 0 24px rgba(0,0,0,.4);}
 @media(max-width:640px){.act-card{padding:1.4rem 1.1rem}}
@@ -95,7 +114,10 @@ section .wrap{position:relative;z-index:2}
 .dd-card .dd-go i{transition:transform .25s;margin-left:.2rem}
 .dd-card:hover .dd-go i{transform:translateX(3px)}
 
-#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(0,0,0,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid transparent;transition:all .35s}
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(0,0,0,.78);border-bottom:1px solid transparent;transition:all .35s}
+@media(hover:hover) and (pointer:fine) and (min-width:900px){
+  #nav{background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+}
 #nav.solid{background:rgba(0,0,0,.92);border-bottom-color:var(--bdr);padding:.78rem 2.5rem}
 .nav-brand{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.12rem;font-weight:600;letter-spacing:.4px;color:var(--tx);white-space:nowrap}
 .nav-brand em{font-style:normal;color:var(--aml)}
@@ -143,7 +165,10 @@ section .wrap{position:relative;z-index:2}
 .h-desc{font-size:.97rem;color:var(--tx2);max-width:580px;margin:0 auto 2.5rem;line-height:1.9;animation:fadeU .8s .4s ease both}
 .h-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;animation:fadeU .8s .5s ease both;margin-bottom:3.5rem}
 
-.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:580px;margin:0 auto;animation:fadeU .8s .65s ease both;background:rgba(0,0,0,.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 4px 24px rgba(0,0,0,.45)}
+.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:580px;margin:0 auto;animation:fadeU .8s .65s ease both;background:rgba(0,0,0,.86);box-shadow:0 4px 24px rgba(0,0,0,.45)}
+@media(hover:hover) and (pointer:fine) and (min-width:900px){
+  .ss{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+}
 .sv{flex:1;min-width:90px;text-align:center;padding:1rem .7rem;border-right:1px solid var(--bdr)}
 .sv:last-child{border-right:none}
 .sv-n{display:block;font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:500;color:var(--bll);line-height:1.2;transition:color .4s}
@@ -182,9 +207,13 @@ section .wrap{position:relative;z-index:2}
 .pc-soc{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bdr)}
 .ps{width:30px;height:30px;background:var(--card2);border:1px solid var(--bdr);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--tx2);transition:all .2s}
 .ps:hover{border-color:var(--bl);color:var(--bll);transform:translateY(-3px)}
-.at h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:.9rem}
-.at p{color:var(--tx2);margin-bottom:.9rem;line-height:1.9;font-size:.93rem}
+.at h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:.9rem;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.at p{color:var(--tx2);margin-bottom:.9rem;line-height:1.9;font-size:.93rem;text-shadow:0 1px 2px rgba(0,0,0,.55)}
 .at strong{color:var(--tx)}
+/* Section headings sit directly on the wrap backing — give them a slight
+   shadow so they read cleanly when the shader pokes through. */
+.sh-title{text-shadow:0 2px 10px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.85)}
+.sh-tag{text-shadow:0 1px 3px rgba(0,0,0,.75)}
 .tags{display:flex;flex-wrap:wrap;gap:.38rem;margin:1.2rem 0}
 .tag{padding:.22rem .65rem;background:var(--card);border:1px solid var(--bdr);border-radius:50px;font-size:.73rem;color:var(--tx2);transition:all .2s;cursor:default}
 .tag:hover{border-color:var(--bl);color:var(--blll);background:rgba(74,143,212,.06)}
@@ -372,6 +401,37 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
 #top{position:fixed;bottom:1.8rem;right:1.8rem;z-index:50;width:36px;height:36px;background:var(--bl);border:none;border-radius:8px;color:#fff;font-size:.8rem;cursor:pointer;opacity:0;transform:translateY(10px);transition:all .28s;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(74,143,212,.38)}
 #top.show{opacity:1;transform:translateY(0)}
 #top:hover{background:var(--bll);transform:translateY(-3px)}
+
+/* ── Animation-intensity slider (bottom-left, always available) ──────
+   Lets the visitor dim the WebGL backdrop without leaving the page.
+   Collapses to a small chip on hover-out so it doesn't intrude. */
+#fxCtl{position:fixed;bottom:1.6rem;left:1.4rem;z-index:60;display:flex;align-items:center;gap:.55rem;
+  padding:.4rem .8rem;background:rgba(8,8,10,.78);border:1px solid var(--bdr2);border-radius:50px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 4px 18px rgba(0,0,0,.45);
+  transition:all .28s cubic-bezier(.16,1,.3,1);
+  font-family:'JetBrains Mono',monospace;color:var(--tx2)}
+#fxCtl:hover{border-color:rgba(74,143,212,.35);color:var(--tx)}
+#fxCtl .fx-ico{color:var(--bll);font-size:.85rem;line-height:1;cursor:pointer;width:18px;text-align:center}
+#fxCtl .fx-lbl{font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);user-select:none}
+#fxCtl input[type=range]{
+  -webkit-appearance:none;appearance:none;width:120px;height:4px;border-radius:2px;
+  background:linear-gradient(90deg,var(--bl) 0%,var(--bl) var(--fxPct,100%),rgba(255,255,255,.13) var(--fxPct,100%),rgba(255,255,255,.13) 100%);
+  outline:none;cursor:pointer;margin:0}
+#fxCtl input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--bll);border:2px solid #fff;box-shadow:0 0 8px rgba(74,143,212,.55);cursor:pointer;transition:transform .15s}
+#fxCtl input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.18)}
+#fxCtl input[type=range]::-moz-range-thumb{
+  width:14px;height:14px;border-radius:50%;background:var(--bll);border:2px solid #fff;
+  box-shadow:0 0 8px rgba(74,143,212,.55);cursor:pointer}
+#fxCtl .fx-val{font-size:.68rem;color:var(--bll);min-width:30px;text-align:right;font-weight:500}
+@media(max-width:640px){
+  #fxCtl{bottom:1rem;left:1rem;padding:.32rem .65rem;gap:.4rem}
+  #fxCtl input[type=range]{width:88px}
+  #fxCtl .fx-lbl{display:none}
+}
+canvas#cosmic{transition:opacity .25s ease}
 
 @keyframes fadeU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
@@ -640,9 +700,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
 
       <!-- Research-at-a-glance metrics strip (cinematic) -->
       <div class="cv-glance">
-        <div class="glance-item"><i class="fas fa-satellite-dish"></i><div><div class="g-l">Telescopes</div><div class="g-v">GROWTH-India · Swift · Fermi · XMM · Gemini</div></div></div>
-        <div class="glance-item"><i class="fas fa-flask"></i><div><div class="g-l">Surveys</div><div class="g-v">ZTF · ATLAS · YSE · BlackGEM · LIGO/Virgo/KAGRA EM</div></div></div>
-        <div class="glance-item"><i class="fas fa-bullhorn"></i><div><div class="g-l">Real-time alerts</div><div class="g-v">GCN circulars · TNS · ATel</div></div></div>
+        <div class="glance-item"><i class="fas fa-satellite-dish"></i><div><div class="g-l">Telescopes</div><div class="g-v">GROWTH-India · Magellan · MMT · KeplerCam · FAST · Swift · Fermi · XMM · Gemini</div></div></div>
         <div class="glance-item"><i class="fas fa-globe"></i><div><div class="g-l">Locations</div><div class="g-v">Cambridge USA · Hanle 4500 m · Mumbai</div></div></div>
       </div>
       <div class="cv-st" id="cvSt"><i class="fas fa-circle-notch fa-spin" style="margin-right:5px"></i><span>Loading CV…</span></div>
@@ -730,6 +788,14 @@ footer{position:relative;z-index:1;border-top:1px solid var(--bdr);padding:1.5re
   </div>
 </footer>
 <button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"><i class="fas fa-chevron-up"></i></button>
+
+<!-- Animation-intensity slider — lets the visitor dim the WebGL backdrop -->
+<div id="fxCtl" title="Background animation intensity">
+  <i class="fas fa-wand-magic-sparkles fx-ico" id="fxToggle" title="Toggle animation"></i>
+  <span class="fx-lbl">FX</span>
+  <input type="range" id="fxSlider" min="0" max="100" step="1" value="100" aria-label="Background animation intensity">
+  <span class="fx-val" id="fxVal">100%</span>
+</div>
 
 <script>
 /* ══════════════════════════════════════════════════════════
@@ -825,6 +891,46 @@ const CV_DATA={
 })();
 
 /* ══════════════════════════════════════════════════════════
+   ANIMATION INTENSITY SLIDER
+   Controls the opacity of the WebGL backdrop. 0 = pure black bg,
+   100 = full animation. Persisted to localStorage so the preference
+   carries across visits.
+══════════════════════════════════════════════════════════ */
+(function(){
+  const slider = document.getElementById('fxSlider');
+  const valEl  = document.getElementById('fxVal');
+  const ico    = document.getElementById('fxToggle');
+  const cvs    = document.getElementById('cosmic');
+  if(!slider || !cvs) return;
+  const KEY = 'hk-fx-intensity';
+  let lastNonZero = 100;
+
+  function apply(v){
+    v = Math.max(0, Math.min(100, v|0));
+    cvs.style.opacity = (v/100).toFixed(2);
+    valEl.textContent = v + '%';
+    slider.value = v;
+    // Drive the gradient fill of the track via a CSS var
+    slider.style.setProperty('--fxPct', v + '%');
+    ico.style.color = v === 0 ? 'var(--tx3)' : 'var(--bll)';
+    try{ localStorage.setItem(KEY, String(v)); }catch(e){}
+    if(v > 0) lastNonZero = v;
+  }
+
+  // Restore preference
+  let saved = 100;
+  try{ const s = localStorage.getItem(KEY); if(s !== null) saved = parseInt(s,10); }catch(e){}
+  apply(isNaN(saved) ? 100 : saved);
+
+  slider.addEventListener('input', e => apply(parseInt(e.target.value,10)));
+  // Click the icon to quickly toggle animation off/on
+  ico.addEventListener('click', () => {
+    const cur = parseInt(slider.value,10);
+    apply(cur === 0 ? (lastNonZero || 100) : 0);
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════
    SCROLL — progress bar, navbar, active link
 ══════════════════════════════════════════════════════════ */
 const navEl=document.getElementById('nav');
@@ -833,15 +939,34 @@ const pbEl=document.getElementById('pb');
 const secIds=['about','research','cv','publications','contact'];
 const navAs=document.querySelectorAll('.nav-links a');
 
+// Coalesce scroll work into one RAF per frame, and cache section offsetTops
+// (recomputed only on resize / when DOM-content swaps in). Reading layout
+// inside the scroll handler was forcing reflows during cinematic scroll.
+let _secTops=[];
+function _recalcSecTops(){
+  _secTops=secIds.map(id=>{const el=document.getElementById(id);return{id,top:el?el.offsetTop:Infinity}});
+}
+_recalcSecTops();
+addEventListener('resize',()=>{_recalcSecTops()},{passive:true});
+// Recompute after the page settles (papers / CV / images can change heights)
+setTimeout(_recalcSecTops,800);
+setTimeout(_recalcSecTops,2500);
+
+let _scrollTicking=false;
 window.addEventListener('scroll',()=>{
-  const y=scrollY,max=document.documentElement.scrollHeight-innerHeight;
-  pbEl.style.width=(max>0?y/max*100:0)+'%';
-  navEl.classList.toggle('solid',y>50);
-  topBtn.classList.toggle('show',y>400);
-  let cur='';
-  secIds.forEach(id=>{const el=document.getElementById(id);if(el&&y>=el.offsetTop-140)cur=id;});
-  navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${cur}`));
-});
+  if(_scrollTicking) return;
+  _scrollTicking=true;
+  requestAnimationFrame(()=>{
+    _scrollTicking=false;
+    const y=scrollY,max=document.documentElement.scrollHeight-innerHeight;
+    pbEl.style.width=(max>0?y/max*100:0)+'%';
+    navEl.classList.toggle('solid',y>50);
+    topBtn.classList.toggle('show',y>400);
+    let cur='';
+    for(const s of _secTops){if(y>=s.top-140)cur=s.id;}
+    navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${cur}`));
+  });
+},{passive:true});
 
 /* ══════════════════════════════════════════════════════════
    MOBILE MENU
