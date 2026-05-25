@@ -276,23 +276,25 @@ float starLayer(vec2 uv, float density, float sharp, float twinkleSpd, float pha
 float stars(vec2 uv, float density, float sharp){
   return starLayer(uv, density, sharp, 1.5, 0.0);
 }
-// Multi-layer parallax field with subtle galactic-plane wash + dust lanes
+// Multi-layer parallax field with subtle galactic-plane wash + dust lanes.
+// Black-theme: base is true black, milky-way band is dim warm/neutral
+// (no overall blue cast), stars are slightly warm.
 vec3 deepSky(vec2 uv){
-  vec3 col = vec3(0.005, 0.008, 0.020);
-  // Galactic plane: diagonal Milky-Way-like wash
+  vec3 col = vec3(0.0, 0.0, 0.0);
+  // Galactic plane: diagonal Milky-Way wash (very subtle, warm/neutral)
   vec2 gp = rot(0.5) * uv;
   float band = exp(-pow(gp.y*2.2, 2.0));
   float bandTex = warpFbm(gp*3.0 + vec2(uTime*0.01, 0.), uTime*0.02);
-  vec3 bandCol = mix(vec3(0.18,0.20,0.30), vec3(0.35,0.25,0.18), 0.5+0.5*sin(gp.x*3.0));
-  col += band * (0.06 + 0.06*bandTex) * bandCol;
+  vec3 bandCol = mix(vec3(0.10,0.09,0.08), vec3(0.20,0.15,0.10), 0.5+0.5*sin(gp.x*3.0));
+  col += band * (0.05 + 0.04*bandTex) * bandCol;
   // Dust lanes (subtractive)
   float dust = smoothstep(0.45, 0.85, fbm(gp*5.0 + vec2(0., uTime*0.005)));
   col *= 1.0 - dust * band * 0.55;
-  // Four parallax layers
-  col += vec3(starLayer(uv*1.0,  90.,  1.0, 0.4, 7.0)) * vec3(0.85,0.90,1.10) * 0.65;
-  col += vec3(starLayer(uv*1.4, 220.,  1.0, 0.9, 13.0)) * vec3(0.95,0.95,1.05) * 0.50;
-  col += vec3(starLayer(uv*1.9, 460.,  0.9, 1.6, 21.0)) * vec3(1.00,0.96,0.88) * 0.35;
-  col += vec3(starLayer(uv*2.6, 900.,  0.7, 2.4, 29.0)) * vec3(1.00,0.93,0.80) * 0.22;
+  // Four parallax layers — keep stars warm so they read on pure black
+  col += vec3(starLayer(uv*1.0,  90.,  1.0, 0.4, 7.0)) * vec3(1.00,0.95,0.85) * 0.65;
+  col += vec3(starLayer(uv*1.4, 220.,  1.0, 0.9, 13.0)) * vec3(1.00,0.96,0.88) * 0.50;
+  col += vec3(starLayer(uv*1.9, 460.,  0.9, 1.6, 21.0)) * vec3(1.00,0.92,0.78) * 0.35;
+  col += vec3(starLayer(uv*2.6, 900.,  0.7, 2.4, 29.0)) * vec3(1.00,0.90,0.72) * 0.22;
   return col;
 }
 

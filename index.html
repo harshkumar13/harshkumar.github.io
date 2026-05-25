@@ -14,13 +14,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{
-  --bg:#06091d;--bg2:#0a0d24;--bg3:#0e1230;
-  --card:rgba(255,255,255,.034);--card2:rgba(255,255,255,.058);
-  --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.13);
-  --bl:#4a8fd4;--bll:#7ab5e8;--blll:#b8d6f5;
-  --am:#c8952a;--aml:#e8b860;--amll:#f7d898;
-  --tl:#2a9d8f;--tll:#52c9bb;
-  --tx:#dce6f5;--tx2:#8a9bb8;--tx3:#4a5870;
+  --bg:#000000;--bg2:#080808;--bg3:#111111;
+  --card:rgba(255,255,255,.045);--card2:rgba(255,255,255,.075);
+  --bdr:rgba(255,255,255,.10);--bdr2:rgba(255,255,255,.18);
+  --bl:#5aa3e0;--bll:#88bff0;--blll:#c2dcf6;
+  --am:#d4a13e;--aml:#ecbf6b;--amll:#f5d9a0;
+  --tl:#3aae9d;--tll:#5dd1c0;
+  --tx:#f0ece0;--tx2:#9a958a;--tx3:#605c54;
   --gr:#3dba7f;--rd:#e05a5a;
   --r:10px;--rl:16px;
 }
@@ -54,11 +54,11 @@ section{min-height:120vh}
   #hero{min-height:auto;padding:6rem 1.5rem 3rem}
 }
 section .wrap{position:relative;z-index:2}
-.act-card{background:linear-gradient(180deg,rgba(6,9,29,.55),rgba(6,9,29,.78));
-  backdrop-filter:blur(6px) saturate(120%);
-  -webkit-backdrop-filter:blur(6px) saturate(120%);
+.act-card{background:linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.92));
+  backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
   border:1px solid var(--bdr);border-radius:var(--rl);padding:2.2rem 1.8rem;
-  box-shadow:0 8px 48px rgba(0,0,0,.32);}
+  box-shadow:0 8px 48px rgba(0,0,0,.55),inset 0 0 24px rgba(0,0,0,.4);}
 @media(max-width:640px){.act-card{padding:1.4rem 1.1rem}}
 
 /* Act indicator — fixed left-rail dots showing scroll progress through acts */
@@ -95,8 +95,8 @@ section .wrap{position:relative;z-index:2}
 .dd-card .dd-go i{transition:transform .25s;margin-left:.2rem}
 .dd-card:hover .dd-go i{transform:translateX(3px)}
 
-#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(6,9,29,.3);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid transparent;transition:all .35s}
-#nav.solid{background:rgba(6,9,29,.9);border-bottom-color:var(--bdr);padding:.78rem 2.5rem}
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(0,0,0,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid transparent;transition:all .35s}
+#nav.solid{background:rgba(0,0,0,.92);border-bottom-color:var(--bdr);padding:.78rem 2.5rem}
 .nav-brand{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.12rem;font-weight:600;letter-spacing:.4px;color:var(--tx);white-space:nowrap}
 .nav-brand em{font-style:normal;color:var(--aml)}
 .nav-links{list-style:none;display:flex;gap:0}
@@ -105,7 +105,7 @@ section .wrap{position:relative;z-index:2}
 .nav-links a.active{color:var(--bll)}
 .hburg{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
 .hburg span{display:block;width:22px;height:2px;background:var(--tx);border-radius:1px;transition:all .3s}
-#mm{display:none;position:fixed;inset:0;z-index:99;background:rgba(6,9,29,.97);backdrop-filter:blur(18px);flex-direction:column;align-items:center;justify-content:center;gap:1.8rem}
+#mm{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.97);backdrop-filter:blur(18px);flex-direction:column;align-items:center;justify-content:center;gap:1.8rem}
 #mm.open{display:flex}
 #mm a{font-size:1.7rem;font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--tx2);transition:color .2s}
 #mm a:hover{color:var(--bll)}
@@ -133,17 +133,17 @@ section .wrap{position:relative;z-index:2}
 .h-in{max-width:780px}
 .h-badge{display:inline-flex;align-items:center;gap:7px;padding:.3rem .95rem;border-radius:50px;border:1px solid rgba(74,143,212,.28);background:rgba(74,143,212,.06);font-size:.75rem;font-weight:500;color:var(--bll);margin-bottom:1.6rem;animation:fadeD .8s ease both}
 .h-badge .ld{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:blink 2.2s ease-in-out infinite}
-.h-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,9.5vw,7rem);font-weight:700;line-height:.95;letter-spacing:2px;margin-bottom:.9rem;animation:fadeU .8s .1s ease both;text-shadow:0 2px 24px rgba(6,9,29,.85),0 1px 3px rgba(6,9,29,.95)}
+.h-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,9.5vw,7rem);font-weight:700;line-height:.95;letter-spacing:2px;margin-bottom:.9rem;animation:fadeU .8s .1s ease both;text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 3px rgba(0,0,0,.95)}
 .h-name .fn{color:var(--blll)}
 .h-name .ln{color:var(--amll)}
-.h-sub{font-size:clamp(.92rem,2vw,1.05rem);color:var(--tx2);margin-bottom:.35rem;animation:fadeU .8s .2s ease both;text-shadow:0 1px 6px rgba(6,9,29,.85)}
+.h-sub{font-size:clamp(.92rem,2vw,1.05rem);color:var(--tx2);margin-bottom:.35rem;animation:fadeU .8s .2s ease both;text-shadow:0 1px 6px rgba(0,0,0,.85)}
 .typ-row{display:flex;align-items:center;justify-content:center;gap:2px;font-family:'JetBrains Mono',monospace;font-size:.87rem;color:var(--tll);min-height:1.6em;margin-bottom:.5rem;animation:fadeU .8s .25s ease both}
 .t-cur{display:inline-block;width:2px;height:1em;background:var(--tll);animation:cur .85s step-end infinite;margin-left:1px}
 .h-loc{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;color:var(--aml);margin-bottom:2rem;animation:fadeU .8s .3s ease both}
 .h-desc{font-size:.97rem;color:var(--tx2);max-width:580px;margin:0 auto 2.5rem;line-height:1.9;animation:fadeU .8s .4s ease both}
 .h-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;animation:fadeU .8s .5s ease both;margin-bottom:3.5rem}
 
-.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:580px;margin:0 auto;animation:fadeU .8s .65s ease both;background:rgba(6,9,29,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.ss{display:flex;justify-content:center;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;max-width:580px;margin:0 auto;animation:fadeU .8s .65s ease both;background:rgba(0,0,0,.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 4px 24px rgba(0,0,0,.45)}
 .sv{flex:1;min-width:90px;text-align:center;padding:1rem .7rem;border-right:1px solid var(--bdr)}
 .sv:last-child{border-right:none}
 .sv-n{display:block;font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:500;color:var(--bll);line-height:1.2;transition:color .4s}
@@ -905,7 +905,7 @@ let PAPERS=[];
 let curF='all';
 
 const PC={
-  KEY:'hk-papers-v5',TTL:24*60*60*1000,  // 24h: ADS-truth checked every visit via checkOnly
+  KEY:'hk-papers-v6',TTL:24*60*60*1000,  // 24h: ADS-truth checked every visit via checkOnly
   get(){
     try{
       const raw=localStorage.getItem(this.KEY);if(!raw)return null;
@@ -1178,39 +1178,40 @@ function chkScroll(el){
 }
 
 /* ══════════════════════════════════════════════════════════
-   STATS — All vs Refereed toggle with Scholar fallback
+   STATS — NASA ADS is the single source of truth.
+   Refereed detection: explicit REFEREED property (when present),
+   else positive match against a curated list of refereed astronomy
+   journals. Default to FALSE for unknowns — never over-count.
 ══════════════════════════════════════════════════════════ */
-const SC={
-  KEY:'hk-scholar-v2',TTL:6*60*60*1000,
-  get(){
-    try{
-      const raw=localStorage.getItem(this.KEY);if(!raw)return null;
-      const o=JSON.parse(raw);
-      if(!o?.hIndex||!o.ts)return null;
-      if(Date.now()-o.ts>this.TTL){this.clear();return null;}
-      return o;
-    }catch{return null;}
-  },
-  set(d){
-    try{localStorage.setItem(this.KEY,JSON.stringify({...d,ts:Date.now()}));}
-    catch(e){console.warn('[Scholar] Cache write failed:',e.message);}
-  },
-  clear(){localStorage.removeItem(this.KEY);},
-};
-
 let statsTimer=null;
 let statsMode=0;
 let allStats={papers:0,cites:0,h:0,i10:0};
 let refStats={papers:0,cites:0,h:0,i10:0};
 
+// Curated list of refereed-journal substrings (positive match). Conservative.
+const REF_JOURNALS=[
+  'astrophys','astron.','astron ','astronomical journal','astrophysical journal',
+  'monthly notices','mnras','nature','science','physical review',
+  'phys. rev','phys rev','icarus','solar physics','space science reviews',
+  'space sci. rev','journal of cosmology','jcap','pasj','pasp','iaus','symposium',
+  // Common abbreviations seen in ADS pub field
+  'apj','apjl','apjs','a&a','aj,','aa,','natastron','nat astron','nat. astron',
+  'commun. phys','comm. phys','natcomm','nat. commun'
+];
+const NON_REF=[
+  'gcn','astronomer\'s telegram','atel','arxiv','transient name server','tnsan',
+  'circular','telegram','iau circ','iauc','conference proceedings','workshop',
+  'aas meeting','meeting abstracts','dissert','thesis'
+];
+
 function isRefereed(p){
   if(Array.isArray(p.property)&&p.property.length){
     return p.property.includes('REFEREED');
   }
-  const pub=(p.pub||'').toLowerCase();
-  if(!pub) return false;
-  const nonRef=['gcn','gamma-ray coordinates','astronomer\'s telegram','atel','arxiv','transient name server','tnsan','circular','telegram','iau circ','iauc','conference','proceedings','workshop'];
-  return !nonRef.some(nr=>pub.includes(nr));
+  const pub=(p.pub||'').toLowerCase().trim();
+  if(!pub) return false;  // honest: no signal → don't count
+  if(NON_REF.some(nr=>pub.includes(nr))) return false;
+  return REF_JOURNALS.some(j=>pub.includes(j));
 }
 
 function calcStats(papers){
@@ -1230,20 +1231,14 @@ function updateStats(){
   allStats=calcStats(PAPERS);
   refStats=calcStats(refereed);
 
-  console.log(`[Stats] All: ${allStats.papers} papers, ${allStats.cites} cites, h=${allStats.h} | Refereed: ${refStats.papers} papers, ${refStats.cites} cites, h=${refStats.h}`);
+  console.log(`[Stats] All: ${allStats.papers} papers, ${allStats.cites} cites, h=${allStats.h}, i10=${allStats.i10} | Refereed: ${refStats.papers} papers, ${refStats.cites} cites, h=${refStats.h}, i10=${refStats.i10}`);
 
-  const adsHasCites=allStats.cites>0;
-
-  if(!adsHasCites){
-    const cached=SC.get();
-    if(cached){
-      const ratio=PAPERS.length?refereed.length/PAPERS.length:0.7;
-      allStats.cites=cached.citations;allStats.h=cached.hIndex;allStats.i10=cached.i10Index;
-      refStats.cites=Math.round(cached.citations*ratio);refStats.h=cached.hIndex;refStats.i10=cached.i10Index;
-    }
-    fetchScholarMetrics(!cached);
-  }else{
-    fetchScholarMetrics(false);
+  // Honesty rule: if no citation data is available from ADS (e.g. ORCID-only
+  // fallback path), report cites/h/i10 as "data unavailable" (null → "—")
+  // rather than zero, so the user knows the proxy/cache needs a refresh.
+  if(allStats.cites===0){
+    allStats.cites=null; allStats.h=null; allStats.i10=null;
+    refStats.cites=null; refStats.h=null; refStats.i10=null;
   }
 
   statsMode=0;
@@ -1256,7 +1251,7 @@ function updateStats(){
   statsTimer=setInterval(()=>{
     statsMode=statsMode===0?1:0;
     showStatsMode(statsMode,true);
-  },4000);
+  },4500);
 }
 
 function showStatsMode(mode,animate){
@@ -1281,27 +1276,6 @@ function showStatsMode(mode,animate){
     animNum('sCit',s.cites);
     animNum('sH',  s.h);
     animNum('sI10',s.i10);
-  }
-}
-
-async function fetchScholarMetrics(updateDisplay=true){
-  try{
-    const r=await fetch('/.netlify/functions/scholar-proxy');
-    if(!r.ok) throw new Error(`Scholar proxy HTTP ${r.status}`);
-    const data=await r.json();
-    if(data.error) throw new Error(data.error);
-    SC.set(data);
-    if(updateDisplay){
-      const ratio=PAPERS.length?PAPERS.filter(isRefereed).length/PAPERS.length:0.7;
-      allStats.cites=data.citations;allStats.h=data.hIndex;allStats.i10=data.i10Index;
-      refStats.cites=Math.round(data.citations*ratio);refStats.h=data.hIndex;refStats.i10=data.i10Index;
-      showStatsMode(statsMode,false);
-    }
-    console.log(`[Scholar] citations=${data.citations} h=${data.hIndex} i10=${data.i10Index}`);
-  }catch(e){
-    console.warn('[Scholar] Could not fetch metrics:',e.message);
-    const stale=(()=>{try{return JSON.parse(localStorage.getItem(SC.KEY));}catch{return null;}})();
-    if(stale&&updateDisplay){animNum('sCit',stale.citations??0);animNum('sH',stale.hIndex??0);animNum('sI10',stale.i10Index??0);}
   }
 }
 

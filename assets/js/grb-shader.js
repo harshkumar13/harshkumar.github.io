@@ -137,21 +137,27 @@ vec3 actPromptEmission(vec2 uv, float p){
   return col;
 }
 
-// Act 4 — Afterglow: forward-shock expansion + multi-wavelength bands
+// Act 4 — Afterglow: forward-shock expansion + multi-wavelength bands.
+// Shocks are turbulent (rfbm angular bumps), not smooth orbits — these
+// are expanding shells of relativistic plasma, not gravitationally bound
+// orbital structures.
 vec3 actAfterglow(vec2 uv, float p){
   float t = uTime;
   vec3 col = deepSky(uv);
   vec2 q = uv;
   float r = length(q);
+  float ang = atan(q.y, q.x);
 
-  // Multi-band rings — X-ray (blue, inside) → optical → IR (outside)
+  // Multi-band turbulent shock fronts — each band gets ridged angular bumps
   for(int i=0;i<4;i++){
     float fi = float(i);
     float bandT = p - fi*0.10;
     if(bandT < 0.0) continue;
     float ringR = mix(0.15, 0.95, bandT);
-    float ringTh = 0.04 + 0.04*bandT;
-    float ring = exp(-pow((r-ringR)/ringTh, 2.0));
+    float ringTh = 0.05 + 0.05*bandT;
+    // Angular bumps make this clearly a turbulent shock, not a planetary orbit
+    float bump = 0.45 + 0.55*rfbm(vec2(ang*4.0 + fi*2.1, t*0.15 + fi));
+    float ring = exp(-pow((r-ringR)/ringTh, 2.0)) * bump;
     vec3 bandCol =
       fi < 0.5 ? vec3(0.5, 0.85, 1.40) :    // X-ray hard
       fi < 1.5 ? vec3(1.10, 1.10, 1.10) :   // optical
@@ -161,9 +167,10 @@ vec3 actAfterglow(vec2 uv, float p){
     col += ring * bandCol * fade * 1.4;
   }
 
-  // Faint forward shock surface (a brighter halo at outer band edge)
-  float fs = exp(-pow((r-mix(0.18,1.1,p))/0.05, 2.0));
-  col += fs * vec3(1.0, 0.95, 0.85) * 1.0;
+  // Filamentary shocked material inside the forward shock (visibly turbulent)
+  float fil = rfbm(vec2(ang*5.0, r*5.0 + t*0.2));
+  float filBand = exp(-pow((r-0.55*p)/0.30, 2.0)) * p;
+  col += pow(fil, 1.8) * filBand * vec3(1.0, 0.80, 0.50) * 0.4;
 
   // Jet break — late narrowing fan along axis
   float jetBreak = smoothstep(0.55, 0.95, p);

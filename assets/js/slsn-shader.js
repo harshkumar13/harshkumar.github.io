@@ -91,19 +91,19 @@ vec3 actMagnetar(vec2 uv, float p){
   col = hotGlow(col, uv, vec2(0.0), vec3(0.6,0.85,1.4), 0.10);
   col += lensFlare(uv, vec2(0.0), vec3(0.5,0.75,1.35), 0.60);
 
-  // Outer ejecta shell (containment boundary)
+  // Outer ejecta shell — turbulent, not a smooth orbit
   float shellR = mix(0.50, 0.90, p);
-  float shell = exp(-pow((r-shellR)/0.08, 2.0));
-  col += shell * vec3(1.0, 0.75, 0.45) * 0.7;
+  float shellBumps = 0.55 + 0.55*rfbm(vec2(ang*5.0, t*0.2));
+  float shell = exp(-pow((r-shellR)/0.10, 2.0)) * shellBumps;
+  col += shell * vec3(1.0, 0.75, 0.45) * 0.8;
 
-  // Magnetic-field lines (faint streaks)
-  for(int i=0;i<4;i++){
-    float fi = float(i);
-    float ph = ang*1.5 + fi*1.6 + spin*0.5 + r*5.0;
-    float streak = pow(0.5+0.5*sin(ph), 8.0);
-    streak *= exp(-pow((r-0.30-fi*0.04)/0.06, 2.0)) * 0.5;
-    col += streak * vec3(0.55, 0.85, 1.30) * 0.5;
-  }
+  // Plasma turbulence inside the wind nebula (replaces orbit-like
+  // magnetic-field lines — supernova remnants are chaotic plasma, not
+  // stable orbits, so make this read as turbulence).
+  float plasma = rfbm(vec2(uv.x*7.0, uv.y*7.0 + t*0.4));
+  plasma += 0.55 * rfbm(vec2(uv.x*16.0 + t*0.3, uv.y*16.0));
+  float plasmaBand = exp(-pow((r-0.35)/0.22, 2.0));
+  col += pow(plasma, 1.8) * plasmaBand * vec3(0.60, 0.85, 1.20) * 0.55;
   return col;
 }
 

@@ -122,68 +122,54 @@ vec3 actMainSequence(vec2 uv, float p){
 }
 
 // =============================================================
-// ACT 2 — RESEARCH · Transient family (depth-stacked carousel)
+// ACT 2 — RESEARCH · A single focal supernova remnant with a
+// pulsar at its heart; palette and structure morph subtly through
+// the transient-class colors as scroll progresses (GRB → kilonova →
+// SLSN → TDE), but it's always ONE coherent scene.
 // =============================================================
-vec3 transientScene(vec2 uv, int kind, float t){
-  vec3 c = vec3(0.0);
-  float r = length(uv);
-  if(kind == 0){
-    // GRB — collapsar with bipolar jets, hot core, lensing of background
-    vec3 jetN = relJet(uv, vec2(0.0, 1.0), 0.70, 0.05, 18.0, vec3(0.8,0.95,1.3), t);
-    vec3 jetS = relJet(uv, vec2(0.0,-1.0), 0.70, 0.05, 18.0, vec3(0.8,0.95,1.3), t);
-    c += jetN + jetS;
-    c += exp(-r*12.0) * blackbody(15000.) * 1.6;
-    // Cocoon
-    c += exp(-r*4.0) * vec3(1.0, 0.70, 0.40) * 0.55;
-  } else if(kind == 1){
-    // Kilonova — small NS-NS spiral + ejecta
-    float omega = 8.0;
-    vec2 a = vec2(cos(t*omega), sin(t*omega))*0.12;
-    vec2 b = -a;
-    c += exp(-length(uv-a)*40.0) * vec3(0.85, 0.90, 1.10) * 1.6;
-    c += exp(-length(uv-b)*40.0) * vec3(1.10, 0.85, 0.95) * 1.6;
-    vec4 neb = volNebula(uv, vec2(0.0), 0.50, vec3(1.4,0.55,0.40), vec3(0.30,0.55,1.10), 1.0, t);
-    c += neb.rgb * 0.9;
-  } else if(kind == 2){
-    // SLSN — bright photosphere with magnetar central engine
-    float photR = 0.32;
-    float phot = smoothstep(photR, photR*0.85, r);
-    c += phot * vec3(0.75, 0.95, 1.40) * 1.6;
-    // Spikes
-    float ang = atan(uv.y, uv.x);
-    float sp = pow(0.5+0.5*sin(ang*10.0 + t*0.7), 6.0);
-    c += sp * exp(-pow((r-photR-0.10)/0.10,2.0)) * vec3(0.85,1.05,1.30) * 0.7;
-    // Halo
-    c += exp(-pow((r-photR-0.1)/0.32, 2.0)) * vec3(0.40, 0.70, 1.10) * 0.7;
-    // Magnetar core
-    c += exp(-r*r*900.0) * vec3(1.4,1.0,0.7) * 2.6;
-  } else {
-    // TDE — Kerr-like accretion disk
-    c += accretionDisk(uv, 0.55, 0.6, 0.045, t);
-  }
-  return c;
-}
 vec3 actResearch(vec2 uv, float p){
   float t = uTime;
   vec3 col = deepSky(uv);
-  // Subtle global tilt
-  vec2 q = rot(0.06*sin(t*0.2)) * uv;
 
-  // Four scenes in a horizontal sweep — slide across as p advances
-  float sweep = p * 4.0; // 0..4
-  for(int i=0;i<4;i++){
-    float fi = float(i);
-    float dist = sweep - fi - 0.5;
-    float scale = mix(0.85, 0.40, abs(dist)*0.5); // closer focus larger
-    float alpha = exp(-pow(dist*1.4, 2.0)); // bell curve focus
-    if(alpha < 0.04) continue;
-    vec2 local = (q - vec2(dist*0.55, 0.05)) / scale;
-    vec3 s = transientScene(local*1.2, i, t + fi*7.0);
-    col += s * alpha;
-  }
-  // Foreground caption strip — a horizontal line of light marking the carousel
-  float line = exp(-pow(uv.y+0.40, 2.0)*40.0);
-  col += line * vec3(0.20, 0.30, 0.45) * 0.30;
+  // Subtle camera drift
+  vec2 q = rot(0.05*sin(t*0.18)) * uv;
+  float r = length(q);
+  float ang = atan(q.y, q.x);
+
+  // Palette morph through 4 transient regimes
+  // 0..0.25 = GRB warm-blue
+  // 0.25..0.50 = Kilonova red/blue
+  // 0.50..0.75 = SLSN violet/blue
+  // 0.75..1.0  = TDE warm orange
+  vec3 hot  = mix(vec3(1.0,0.85,0.55), vec3(1.30,0.55,0.40), smoothstep(0.10,0.35,p));
+  hot       = mix(hot,                   vec3(0.65,0.85,1.30), smoothstep(0.40,0.65,p));
+  hot       = mix(hot,                   vec3(1.10,0.70,0.30), smoothstep(0.70,0.95,p));
+  vec3 cold = vec3(0.20,0.10,0.05);
+
+  // Volumetric SNR / remnant nebula — the centerpiece
+  vec4 neb = volNebula(q, vec2(0.0), 0.85, hot, cold, 1.5, t);
+  col = col*neb.w + neb.rgb;
+
+  // Filamentary shock front — ridged turbulence in radial coords
+  float fil = rfbm(vec2(ang*4.0, r*4.5 + t*0.18));
+  fil = pow(fil, 1.5);
+  float bandR = exp(-pow((r-0.55)/0.20, 2.0));
+  col += fil * bandR * hot * 0.45;
+
+  // Central pulsar/magnetar with lighthouse beam
+  float core = exp(-r*r*900.0);
+  col += core * vec3(1.20, 1.10, 0.95) * 2.6;
+  col = hotGlow(col, q, vec2(0.0), vec3(1.0, 0.9, 0.7), 0.08);
+
+  // Lighthouse beam (two opposite cones rotating)
+  float spin = uTime * 1.0;
+  float beamPattern = pow(0.5+0.5*cos(ang - spin), 36.0) + pow(0.5+0.5*cos(ang - spin + PI), 36.0);
+  float beamRadial = exp(-r*1.6);
+  col += beamPattern * beamRadial * vec3(0.85, 0.95, 1.20) * 0.85;
+
+  // Anamorphic lens flare
+  col += lensFlare(q, vec2(0.0), vec3(1.0, 0.92, 0.75), 0.55);
+
   return col;
 }
 
@@ -364,8 +350,6 @@ void main(){
   col = col / (1.0 + col);
   // Subtle gain in midtones, gamma
   col = pow(col, vec3(0.82));
-  // Slight blue lift in shadows
-  col += (1.0 - col) * vec3(0.005, 0.008, 0.020) * 0.4;
 
   // Film grain
   float grain = hash12(gl_FragCoord.xy + uTime*60.0) - 0.5;
