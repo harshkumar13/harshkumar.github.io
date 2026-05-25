@@ -2,134 +2,157 @@ import { COSMIC_LIB } from './cosmic-engine.js';
 
 export const TDE_FRAGMENT = COSMIC_LIB + `
 
-// Act 0 — Stellar orbit: star on a parabolic/eccentric orbit around a SMBH
-// Act 1 — Tidal stretching: at periastron the star is stretched into spaghetti
-// Act 2 — Debris stream: half-bound, half-ejected debris falls back
-// Act 3 — Accretion disk: hot disk forms; BH "switches on"
-// Act 4 — Multi-band emission + jet (optical/UV/X-ray + occasional jet)
-
-vec3 drawBH(vec2 uv, float horiz, float diskInner, float diskOuter, float tilt, float bright){
-  vec3 col = vec3(0.0);
-  // Event horizon — dark disk
-  float r = length(uv);
-  // Accretion disk in ellipse (tilt = y compress factor)
-  vec2 dp = uv;
-  dp.y /= max(tilt, 0.04);
-  float dr = length(dp);
-  float disk = smoothstep(diskOuter, diskOuter-0.02, dr) * (1.0 - smoothstep(diskInner+0.02, diskInner, dr));
-  // Angular swirling
-  float a = atan(uv.y, uv.x);
-  float swirl = 0.5+0.5*sin(a*3.0 + dr*30.0 - uTime*2.5);
-  col += disk * palTDE(swirl*0.4 + 0.1) * (1.2 + 0.7*swirl) * bright;
-  // Event horizon dark
-  col *= smoothstep(horiz, horiz+0.01, r);
-  return col;
-}
-
+// Act 0 — Stellar orbit: a star approaches a quiescent SMBH on a parabolic orbit
 vec3 actOrbit(vec2 uv, float p){
-  vec3 col = vec3(0.005, 0.008, 0.022);
-  col += stars(uv*2.0, 270., 0.9) * 0.35;
-  float r = length(uv);
-  // SMBH (no disk yet)
-  col *= smoothstep(0.05, 0.06, r);
-  // Soft accretion glow (pre-existing low-rate)
-  col += exp(-r*r*100.0)*vec3(0.7,0.6,0.5)*0.7;
-  // Orbiting star — eccentric
-  float t = uTime*0.4 + p*4.0;
+  float t = uTime;
+  vec3 col = deepSky(uv);
+
+  // Background grav-lensing of the starfield through the SMBH
+  // (cheap: warp uv toward center)
+  vec2 lensed = uv;
+  float lr = length(uv);
+  float defl = 0.05 / max(lr, 0.06);
+  lensed = uv - normalize(uv)*defl*0.6;
+  col = mix(col, deepSky(lensed), smoothstep(0.5, 0.05, lr));
+
+  // Quiet SMBH — dark sphere with thin photon ring
+  float horizonR = 0.06;
+  float ringR = 0.085;
+  col *= smoothstep(horizonR*0.9, horizonR*1.1, lr);
+  col += exp(-pow((lr-ringR)/0.005, 2.0)) * vec3(1.0, 0.85, 0.55) * 1.0;
+
+  // Eccentric orbit of the star
+  float ph = uTime*0.4 + p*4.0;
   float ecc = 0.65;
-  float ph = t;
-  float starR_orbit = mix(0.5, 0.15, p);
-  vec2 starPos = vec2(cos(ph)*starR_orbit*(1.0+ecc*cos(ph)), sin(ph)*starR_orbit*0.7);
-  float d = length(uv-starPos);
-  col += exp(-d*40.0) * vec3(1.0, 0.9, 0.6) * 1.5;
-  // Star trail
-  for(int i=1;i<8;i++){
-    float fi=float(i);
-    float pt = ph - fi*0.08;
-    vec2 tp = vec2(cos(pt)*starR_orbit*(1.0+ecc*cos(pt)), sin(pt)*starR_orbit*0.7);
-    float td = length(uv-tp);
-    col += exp(-td*55.0)*vec3(1.0,0.85,0.55)*0.55*(1.0-fi/8.0);
+  float starOrbR = mix(0.55, 0.18, p);
+  vec2 starPos = vec2(cos(ph)*starOrbR*(1.0+ecc*cos(ph)), sin(ph)*starOrbR*0.7);
+
+  // Star + heat trail
+  col += exp(-length(uv-starPos)*40.0) * vec3(1.0, 0.90, 0.65) * 1.7;
+  col = hotGlow(col, uv, starPos, vec3(1.0,0.9,0.65)*1.2, 0.05);
+
+  for(int i=1;i<10;i++){
+    float fi = float(i);
+    float pt = ph - fi*0.07;
+    vec2 tp = vec2(cos(pt)*starOrbR*(1.0+ecc*cos(pt)), sin(pt)*starOrbR*0.7);
+    col += exp(-length(uv-tp)*55.0)*vec3(1.0, 0.85, 0.55) * (0.65 - fi*0.06);
   }
   return col;
 }
 
+// Act 1 — Tidal stretching: star elongates at periastron
 vec3 actTidalStretch(vec2 uv, float p){
-  vec3 col = vec3(0.005, 0.008, 0.022);
-  col += stars(uv*2.0, 260., 0.9) * 0.3;
-  float r = length(uv);
-  // BH
-  col *= smoothstep(0.05, 0.06, r);
-  col += exp(-r*r*120.0)*vec3(0.85,0.7,0.55)*0.95;
-  // Stretched star — elongating ellipse near BH
+  float t = uTime;
+  vec3 col = deepSky(uv);
+
+  // SMBH with low-rate disk
+  col += accretionDisk(uv, 0.50, 0.5, 0.040, t) * mix(0.20, 0.85, p);
+
+  // Stretched star — elongating ellipse
   float stretchX = mix(0.04, 0.30, p);
-  float stretchY = mix(0.04, 0.02, p);
-  vec2 starPos = vec2(0.20 - 0.10*p, 0.0);
+  float stretchY = mix(0.04, 0.020, p);
+  vec2 starPos = vec2(0.22 - 0.10*p, 0.0);
   vec2 dp = (uv - starPos) / vec2(stretchX, stretchY);
   float strecthD = length(dp);
   float starSh = smoothstep(1.2, 0.0, strecthD);
-  vec3 starCol = blackbody(mix(5500., 6800., p));
-  col += starSh * starCol * 1.2;
-  // Tidal hint — small disturbance toward BH
-  float trail = exp(-pow((uv.x-starPos.x*0.5)*8.0, 2.0)) * exp(-pow(uv.y*15.0,2.0)) * smoothstep(0.5,1.0,p);
-  col += trail*vec3(1.0,0.7,0.4)*0.7;
+  vec3 starCol = blackbody(mix(5800., 7800., p));
+  col += starSh * starCol * 1.4;
+
+  // Tidal "fingers" — heated material being pulled toward BH
+  float tail = exp(-pow((uv.x - starPos.x*0.5)*7.0, 2.0)) * exp(-pow(uv.y*15.0,2.0)) * smoothstep(0.5,1.0,p);
+  col += tail * vec3(1.0, 0.65, 0.40) * 0.85;
+
+  // Subtle relativistic time-delay shimmer near BH
+  float shimmer = sin(length(uv)*20.0 - t*4.0)*0.5+0.5;
+  col += exp(-length(uv)*8.0) * shimmer * vec3(0.45, 0.35, 0.55) * 0.3;
   return col;
 }
 
+// Act 2 — Debris stream: fallback, t^(-5/3) circularization
 vec3 actStream(vec2 uv, float p){
-  vec3 col = vec3(0.005, 0.008, 0.022);
-  col += stars(uv*2.0, 250., 0.85) * 0.3;
-  float r = length(uv);
-  // BH + faint disk forming
-  col += drawBH(uv, 0.05, 0.08, 0.30, mix(0.7, 0.32, p), mix(0.3, 0.85, p));
-  // Returning debris stream — bright curl
-  for(int i=0;i<40;i++){
-    float fi=float(i);
-    float ang = fi*0.35 + uTime*0.4 - p*3.0;
-    float rad = 0.35 - fi*0.006 + 0.05*sin(uTime*0.6 + fi*0.7);
-    vec2 sp = vec2(cos(ang)*rad, sin(ang)*rad*0.35);
+  float t = uTime;
+  vec3 col = deepSky(uv);
+
+  // Forming accretion disk (low intensity early, brighter later)
+  col += accretionDisk(uv, 0.45, 0.55, 0.045, t) * mix(0.35, 1.0, p);
+
+  // Returning fallback stream — a glowing curl
+  for(int i=0;i<48;i++){
+    float fi = float(i);
+    float ang = fi*0.32 + t*0.35 - p*2.2;
+    float rad = 0.40 - fi*0.0055 + 0.04*sin(t*0.5 + fi*0.6);
+    vec2 sp = vec2(cos(ang)*rad, sin(ang)*rad*0.32);
     float dd = length(uv - sp);
-    float weight = exp(-pow(fi - p*30.0,2.0)*0.08);
-    col += exp(-dd*55.0) * vec3(1.0, 0.7, 0.45) * 0.85 * weight;
+    float wt = exp(-pow(fi - p*40.0, 2.0)*0.05);
+    col += exp(-dd*55.0) * vec3(1.0, 0.70, 0.45) * 1.0 * wt;
   }
-  // Ejected debris (going outward)
-  float ejX = uv.x + 0.6 - p*0.4;
-  float ejY = uv.y * 5.0;
-  float ej = exp(-pow(ejX, 2.0)*8.0 - pow(ejY,2.0));
-  col += ej * vec3(0.95, 0.55, 0.3) * 0.55;
+
+  // Ejected debris (going outward in opposite direction)
+  float ejX = uv.x + 0.6 - p*0.5;
+  float ejY = uv.y * 6.0;
+  float ej = exp(-pow(ejX, 2.0)*8.0 - pow(ejY, 2.0));
+  col += ej * vec3(0.95, 0.55, 0.30) * 0.6;
+  // Trailing whisp
+  for(int j=0;j<5;j++){
+    float fj=float(j);
+    float ex = uv.x + 0.6 - p*0.5 + fj*0.07;
+    float ey = uv.y * (6.0 + fj*1.5);
+    col += exp(-pow(ex, 2.0)*12.0 - pow(ey, 2.0))*vec3(1.0, 0.55, 0.30)*0.20*(1.0-fj/5.0);
+  }
   return col;
 }
 
+// Act 3 — Mature accretion disk (Kerr-like, with photon ring and Doppler beaming)
 vec3 actDisk(vec2 uv, float p){
-  vec3 col = vec3(0.005, 0.008, 0.022);
-  col += stars(uv*2.0, 240., 0.85) * 0.3;
-  // Mature, bright accretion disk
-  col += drawBH(uv, 0.05, 0.07, 0.40 + 0.05*p, 0.30, 1.4);
-  // Inner disk hot UV emission
-  vec2 dp = uv;
-  dp.y /= 0.30;
+  float t = uTime;
+  vec3 col = deepSky(uv);
+
+  // Tilted disk — becomes more face-on as we "rotate" the camera through scroll
+  float tilt = mix(0.65, 0.30, p);
+  float spin = 0.70;
+  col += accretionDisk(uv, tilt, spin, 0.050 + 0.005*p, t);
+
+  // UV-emitting hot inner disk
+  vec2 dp = uv; dp.y /= max(1.0 - tilt*0.85, 0.10);
   float dr = length(dp);
-  float hot = exp(-pow((dr-0.10)/0.06, 2.0));
-  col += hot * vec3(0.6, 0.85, 1.4) * 1.5;
-  // Outer wind
-  float wind = exp(-pow((length(uv)-0.55)/0.25, 2.0));
-  col += wind * vec3(1.0, 0.7, 0.45) * 0.6;
+  float innerHot = exp(-pow((dr-0.10)/0.05, 2.0));
+  col += innerHot * vec3(0.65, 0.95, 1.45) * 1.7;
+
+  // Outer wind / corona
+  float wind = exp(-pow((length(uv)-0.50)/0.22, 2.0));
+  col += wind * vec3(1.05, 0.70, 0.45) * 0.7;
+
+  // Gravitational lensing flare (Einstein-ring-ish brightening behind BH)
+  float gl = exp(-pow((length(uv) - 0.18)/0.012, 2.0)) * (0.4 + 0.3*sin(t*0.3));
+  col += gl * vec3(1.0, 0.85, 0.55) * 0.65;
+
+  col = hotGlow(col, uv, vec2(0.0), vec3(0.55,0.75,1.20), 0.10);
+  col += lensFlare(uv, vec2(0.0), vec3(0.55, 0.80, 1.30), 0.40);
   return col;
 }
 
+// Act 4 — Rare relativistic jet (BZ-like, ultra-collimated)
 vec3 actJet(vec2 uv, float p){
-  vec3 col = vec3(0.005, 0.008, 0.022);
-  col += stars(uv*2.0, 230., 0.85) * 0.3;
-  col += drawBH(uv, 0.05, 0.07, 0.42, 0.30, 1.25);
-  // Relativistic jet (rare TDEs)
-  float jetX = abs(uv.x);
-  float jet = (1.0 - smoothstep(0.04, 0.10, jetX)) * (1.0 - smoothstep(0.6, 0.95, abs(uv.y))) * smoothstep(0.0, 0.4, p);
-  // Knots in jet
-  float knot = 0.5+0.5*sin(abs(uv.y)*20.0 - uTime*5.0);
-  jet *= 0.55 + 0.45*knot;
-  col += jet * vec3(0.7, 1.0, 1.4) * 1.6;
-  // Multi-band emission glow
-  float glow = exp(-length(uv)*2.0);
-  col += glow * vec3(0.55, 0.85, 1.15) * 0.45 * smoothstep(0.0,0.6,p);
+  float t = uTime;
+  vec3 col = deepSky(uv) * 0.95;
+
+  // Edge-on accretion disk to make the jet stand out perpendicular
+  col += accretionDisk(uv, 0.78, 0.95, 0.050, t) * 0.95;
+
+  // Relativistic bipolar jet with strong Doppler boost
+  vec3 jetN = relJet(uv, vec2(0.0,  1.0), 1.10, 0.045, 25.0, vec3(0.65, 0.95, 1.50), t);
+  vec3 jetS = relJet(uv, vec2(0.0, -1.0), 1.10, 0.045, 25.0, vec3(0.65, 0.95, 1.50), t);
+  col += (jetN + jetS) * mix(0.6, 1.4, p);
+
+  // Bow-shock head
+  float headY = 1.10;
+  float bow = exp(-pow((abs(uv.y) - headY)/0.05, 2.0)) * smoothstep(0.18, 0.0, abs(uv.x));
+  col += bow * vec3(1.3, 0.95, 0.55) * 1.0;
+
+  // Central glow
+  col += exp(-length(uv)*length(uv)*250.0) * vec3(0.7, 0.9, 1.5) * 2.4;
+  col = hotGlow(col, uv, vec2(0.0), vec3(0.55,0.85,1.40), 0.12);
+  col += lensFlare(uv, vec2(0.0), vec3(0.55, 0.80, 1.35), 0.55);
   return col;
 }
 
@@ -144,22 +167,28 @@ vec3 dispatch(int ai, vec2 uv, float p){
 void main(){
   vec2 fc = gl_FragCoord.xy / uResolution.xy;
   vec2 uv = (fc - 0.5) * vec2(uResolution.x/uResolution.y, 1.0);
+  uv += (uMouse - 0.5) * 0.012;
   float aIdx = clamp(uActIndex, 0.0, max(uActCount - 0.001, 0.0));
   int   ai   = int(floor(aIdx));
   float p    = fract(aIdx);
   vec3 col;
   if(uReduced > 0.5){
-    col = vec3(0.01,0.02,0.05) + stars(uv*2.0, 220., 1.0)*0.6;
+    col = deepSky(uv) * 0.9;
   } else {
     col = dispatch(ai, uv, p);
-    if(p > 0.92 && ai+1 < int(uActCount)){
-      float b = (p - 0.92) / 0.08;
-      col = mix(col, dispatch(ai+1, uv, 0.0), b*0.5);
+    if(p > 0.88 && ai+1 < int(uActCount)){
+      float b = smoothstep(0.88, 1.0, p);
+      col = mix(col, dispatch(ai+1, uv, 0.0), b*0.6);
     }
   }
-  col *= 1.0 - 0.25 * pow(length(uv*vec2(0.9,1.0)), 2.5);
+  col *= 1.0 - 0.30 * pow(length(uv*vec2(0.9,1.0)), 2.4);
+  float ca = length(uv) * 0.0024;
+  vec2 dir = normalize(uv + 1e-5);
+  vec3 caCol = vec3(dispatch(ai, uv - dir*ca, p).r, col.g, dispatch(ai, uv + dir*ca, p).b);
+  col = mix(col, caCol, 0.16);
   col = col / (1.0 + col);
-  col = pow(col, vec3(0.85));
+  col = pow(col, vec3(0.82));
+  col += hash12(gl_FragCoord.xy + uTime*60.0)*0.012 - 0.006;
   outColor = vec4(col, 1.0);
 }
 `;
