@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kilonovae — neutron-star merger transients: gravitational-wave inspiral, r-process nucleosynthesis, and the EM counterpart hunt.">
+<title>Kilonovae — Harsh Kumar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="../assets/css/deep-dive.css">
+</head>
+<body>
+
+<div id="pb"></div>
+<canvas id="cosmic"></canvas>
+<aside id="actDots">
+  <a class="act-dot" data-label="Inspiral"      href="#act-inspiral"></a>
+  <a class="act-dot" data-label="Final Orbit"   href="#act-finalorbit"></a>
+  <a class="act-dot" data-label="Merger"        href="#act-merger"></a>
+  <a class="act-dot" data-label="Blue KN"       href="#act-bluekn"></a>
+  <a class="act-dot" data-label="Red KN"        href="#act-redkn"></a>
+</aside>
+
+<nav id="nav">
+  <a href="../index.html#research" class="back"><i class="fas fa-arrow-left"></i> All Topics</a>
+  <div class="title">Kilo<em>novae</em></div>
+  <div class="right"><span class="vis"><i class="fas fa-eye"></i><strong id="vCnt">—</strong> visitors</span></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-in">
+    <span class="kicker">Research Deep Dive · 02</span>
+    <h1>Kilo<span class="accent">novae</span></h1>
+    <p class="lede">When two neutron stars spiral together and merge, gravitational waves chirp through spacetime and a few hundredths of a solar mass of neutron-rich ejecta forges the periodic table's heaviest elements in seconds.</p>
+    <span class="cue">Scroll into the inspiral <i class="fas fa-chevron-down"></i></span>
+  </div>
+</section>
+
+<section class="act" id="act-inspiral">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 01 · 100 Myr → minutes pre-merger</span>
+      <h2>The long, quiet spiral</h2>
+      <p>Two neutron stars, born in supernovae hundreds of millions of years ago, lose orbital energy to <strong>gravitational-wave emission</strong>. The orbit decays slowly at first, then dramatically as the inspiral approaches its final seconds.</p>
+      <p>This phase is electromagnetically silent — only LIGO/Virgo/KAGRA can hear it. The chirp frequency rises from ~10 Hz into the kHz band as the orbit tightens.</p>
+      <div class="meta"><b>Detectors:</b> LIGO–Virgo–KAGRA, future ET / CE &nbsp;|&nbsp; <b>Frequency:</b> 10 Hz → kHz</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-finalorbit">
+  <div class="wrap">
+    <div class="story right">
+      <span class="tag">Act 02 · final seconds</span>
+      <h2>Tidal deformation, last orbits</h2>
+      <p>In the final few orbits, the neutron stars tidally deform each other. The deformation imprints itself on the gravitational waveform via the <strong>tidal deformability Λ</strong>, which constrains the <em>equation of state</em> of dense matter — physics inaccessible in any earthbound lab.</p>
+      <p>Sky localization arrives within seconds of merger; the EM follow-up clock starts ticking immediately.</p>
+      <div class="meta"><b>Orbits remaining:</b> ~ a few &nbsp;|&nbsp; <b>EM trigger latency:</b> ~30 s typical</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-merger">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 03 · t = 0</span>
+      <h2>Merger</h2>
+      <p>Coalescence. A hot, hypermassive neutron star may briefly survive before collapsing to a black hole. Up to <strong>~10<sup>−2</sup>–10<sup>−1</sup> M<sub>☉</sub></strong> of neutron-rich material is ejected: a dynamical, lanthanide-rich equatorial component, plus a polar wind from the post-merger disk.</p>
+      <p>If a relativistic jet succeeds, we see a short GRB. GW170817 / GRB 170817A was the canonical example.</p>
+      <div class="meta"><b>Ejected mass:</b> 10<sup>−2</sup>–10<sup>−1</sup> M<sub>☉</sub> &nbsp;|&nbsp; <b>Velocities:</b> 0.1–0.3 c</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-bluekn">
+  <div class="wrap">
+    <div class="story right">
+      <span class="tag">Act 04 · hours → 2 days</span>
+      <h2>The blue kilonova</h2>
+      <p>The polar wind ejecta is <strong>lanthanide-poor</strong> — low opacity, so emission peaks early and blue (UV-optical) within a day of merger. This is the component that must be caught fast, before it fades.</p>
+      <p>The rapid-response photometric programs I built during my Ph.D. with the <strong>GROWTH-India Telescope</strong> were designed for exactly this hunt — get on sky within hours of an O3/O4 trigger, cover the LIGO error region, and identify the new transient against the noise of catalogued sources.</p>
+      <div class="meta"><b>Opacity:</b> κ ≈ 0.5 cm²/g (Fe-like) &nbsp;|&nbsp; <b>Peak:</b> u/g/r-band</div>
+    </div>
+  </div>
+</section>
+
+<section class="act" id="act-redkn">
+  <div class="wrap">
+    <div class="story">
+      <span class="tag">Act 05 · 2 days → 2 weeks</span>
+      <h2>The red kilonova and the r-process forge</h2>
+      <p>The lanthanide-rich tidal ejecta has opacities up to 100× higher, so it peaks later in <strong>NIR bands</strong> and persists for days to weeks. Spectroscopy reveals broad features from strontium, tellurium, and other heavy r-process elements — direct observational evidence for the long-suspected origin of the universe's heaviest elements.</p>
+      <p>Late-time radio emission probes the merger remnant's energetics and the structure of the circumbinary medium.</p>
+      <div class="meta"><b>Opacity:</b> κ ≈ 10 cm²/g (lanthanide-rich) &nbsp;|&nbsp; <b>Peak:</b> NIR (J/H/K)</div>
+    </div>
+  </div>
+</section>
+
+<div class="papers-wrap">
+  <h3>Selected reading</h3>
+  <a class="paper-card" href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641%20(title%3Akilonova%20OR%20title%3A%22gravitational%20wave%22)&sort=date%20desc" target="_blank">
+    <div class="t">My kilonova / GW counterpart papers</div>
+    <div class="a">Harsh Kumar et al.</div>
+    <div class="j"><span class="yr">live</span><span>filtered on ADS</span></div>
+  </a>
+  <a class="paper-card" href="https://ui.adsabs.harvard.edu/search/q=orcid%3A0000-0003-0871-4641%20title%3AGROWTH&sort=date%20desc" target="_blank">
+    <div class="t">GROWTH-India follow-up programs</div>
+    <div class="a">Harsh Kumar et al.</div>
+    <div class="j"><span class="yr">live</span><span>O3/O4 LIGO follow-up campaigns</span></div>
+  </a>
+</div>
+
+<div class="bottom-cta">
+  <a href="../index.html#research"><i class="fas fa-arrow-left"></i> Back to all research topics</a>
+</div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-c">© 2026 <strong>Harsh Kumar</strong></div>
+    <div class="ft-c"><a href="../index.html">Main site</a> · <a href="https://orcid.org/0000-0003-0871-4641" target="_blank">ORCID</a></div>
+  </div>
+</footer>
+
+<script>
+const pb = document.getElementById('pb');
+const navEl = document.getElementById('nav');
+addEventListener('scroll', () => {
+  const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+  pb.style.width = (max > 0 ? y / max * 100 : 0) + '%';
+  navEl.classList.toggle('solid', y > 50);
+});
+document.querySelectorAll('#actDots .act-dot').forEach(d => {
+  d.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(d.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+  });
+});
+(async () => {
+  const el = document.getElementById('vCnt');
+  if (!el) return;
+  const NS='harshkumar-cfa', KEY='visits';
+  const visited = sessionStorage.getItem('hk-visited');
+  const path = visited ? `get/${NS}/${KEY}` : `hit/${NS}/${KEY}`;
+  try {
+    const r = await fetch(`https://abacus.jasoncameron.dev/${path}`);
+    if (!r.ok) throw new Error();
+    const j = await r.json();
+    const v = Number(j?.value ?? j?.count ?? 0);
+    if (v > 0) { el.textContent = v.toLocaleString(); sessionStorage.setItem('hk-visited','1'); }
+  } catch { el.textContent = '—'; }
+})();
+</script>
+
+<script type="module">
+import { CosmicEngine } from '../assets/js/cosmic-engine.js';
+import { KN_FRAGMENT, KN_ACTS } from '../assets/js/kilonova-shader.js';
+const engine = new CosmicEngine({
+  canvas: '#cosmic',
+  fragmentShader: KN_FRAGMENT,
+  acts: KN_ACTS,
+  onTick: (e) => {
+    const idx = Math.floor(e.actIndex);
+    document.querySelectorAll('#actDots .act-dot').forEach((d,i) => d.classList.toggle('on', i === idx));
+  },
+});
+engine.start();
+</script>
+</body>
+</html>
