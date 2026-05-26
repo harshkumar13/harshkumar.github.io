@@ -37,12 +37,28 @@ exports.handler = async function (event) {
     }
 
     // Extract the six numbers from the right-side stats box.
-    // Order in the page DOM: cites-all, cites-recent, h-all, h-recent, i10-all, i10-recent
-    const cells = [...html.matchAll(/<td[^>]*class="gsc_rsb_std"[^>]*>([\d,]+)<\/td>/g)]
+    // Order in the page DOM: cites-all, cites-recent, h-all, h-recent, i10-all, i10-recent.
+    // Keep the class match flexible; Google can add classes or reorder attrs.
+    const cells = [...html.matchAll(/<td\b[^>]*class=["'][^"']*\bgsc_rsb_std\b[^"']*["'][^>]*>\s*([\d,]+)\s*<\/td>/gi)]
       .map(m => parseInt(m[1].replace(/,/g, ''), 10))
       .filter(n => Number.isFinite(n));
 
     if (cells.length < 6) {
+      const meta = html.match(/<meta\s+name=["']description["']\s+content=["'][^"']*Cited by\s+([\d,]+)/i);
+      const citations = meta ? parseInt(meta[1].replace(/,/g, ''), 10) : NaN;
+      if (Number.isFinite(citations)) {
+        return json(206, {
+          citations,
+          citationsRecent: null,
+          hIndex: null,
+          hIndexRecent: null,
+          i10Index: null,
+          i10IndexRecent: null,
+          source: 'scholar.google.com meta',
+          fetchedAt: new Date().toISOString(),
+          warning: 'Scholar stats table was not present; returned citation meta only',
+        });
+      }
       return json(502, { error: 'Could not parse Scholar metrics', cellsFound: cells.length });
     }
 

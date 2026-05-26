@@ -29,7 +29,7 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;line-height:1.7;overflow-x:hidden}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7;overflow-x:hidden}
 ::selection{background:rgba(74,143,212,.22)}
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
@@ -807,6 +807,17 @@ const CFG={
   adsToken   :'',
   orcid      :'0000-0003-0871-4641',
   authorMatch:['kumar, h','kumar, harsh'],
+  activeStartYear:2018,
+  scholarFallback:{
+    citations:2546,
+    citationsRecent:2324,
+    hIndex:22,
+    hIndexRecent:22,
+    i10Index:35,
+    i10IndexRecent:32,
+    source:'Google Scholar fallback',
+    fetchedAt:'2026-05-25T00:00:00-04:00'
+  },
   cvPath     :'./cv.pdf',
   cvWebPath  :'./cv-web.pdf',
   cvSource   :'local',
@@ -1030,7 +1041,7 @@ let PAPERS=[];
 let curF='all';
 
 const PC={
-  KEY:'hk-papers-v6',TTL:24*60*60*1000,  // 24h: ADS-truth checked every visit via checkOnly
+  KEY:'hk-papers-v7',TTL:24*60*60*1000,  // 24h: ADS-truth checked every visit via checkOnly
   get(){
     try{
       const raw=localStorage.getItem(this.KEY);if(!raw)return null;
@@ -1311,7 +1322,7 @@ function chkScroll(el){
    journals. Default to FALSE for unknowns — never over-count.
 ══════════════════════════════════════════════════════════ */
 const SC={
-  KEY:'hk-scholar-v3',TTL:12*60*60*1000,
+  KEY:'hk-scholar-v4',TTL:12*60*60*1000,
   get(){
     try{
       const raw=localStorage.getItem(this.KEY); if(!raw) return null;
@@ -1332,6 +1343,11 @@ let statsTimer=null;
 let statsMode=0;
 let allStats={papers:0,cites:null,h:null,i10:null};
 let refStats={papers:0,cites:null,h:null,i10:null};
+
+function fallbackScholar(){
+  const fb=CFG.scholarFallback;
+  return fb&&Number.isFinite(fb.hIndex)?fb:null;
+}
 
 // Curated list of refereed-journal substrings (positive match). Conservative.
 const REF_JOURNALS=[
@@ -1370,7 +1386,8 @@ function calcStats(papers){
 
 function updateStats(){
   const yrs=PAPERS.map(p=>parseInt(p.year)).filter(y=>!isNaN(y));
-  if(yrs.length) document.getElementById('sYr').textContent=(new Date().getFullYear()-Math.min(...yrs))+'+';
+  const startYear=CFG.activeStartYear||Math.min(...yrs);
+  if(Number.isFinite(startYear)) document.getElementById('sYr').textContent=(new Date().getFullYear()-startYear)+'+';
 
   const refereed=PAPERS.filter(isRefereed);
   // Paper counts come from ADS. Citations/h/i10 come from Scholar (see applyScholar).
@@ -1379,8 +1396,9 @@ function updateStats(){
 
   console.log(`[Stats] All: ${allStats.papers} papers | Refereed: ${refStats.papers} papers`);
 
-  // Seed from cache immediately so first paint isn't all dashes
-  const cached=SC.get();
+  // Seed from cache or a dated Scholar fallback so citation metrics never
+  // disappear when Google blocks the serverless scrape.
+  const cached=SC.get()||fallbackScholar();
   if(cached) applyScholar(cached, refereed.length/Math.max(PAPERS.length,1));
   // Always refresh in the background
   fetchScholarMetrics(refereed.length/Math.max(PAPERS.length,1));
@@ -1424,7 +1442,12 @@ async function fetchScholarMetrics(refRatio){
     console.log(`[Scholar] citations=${data.citations} h=${data.hIndex} i10=${data.i10Index}`);
   }catch(e){
     console.warn('[Scholar] fetch failed:',e.message);
-    // Keep whatever the cache already painted (or "—" if cache is empty)
+    const fb=fallbackScholar();
+    if(fb){
+      applyScholar(fb, refRatio);
+      showStatsMode(statsMode,false);
+      console.log(`[Scholar] using fallback citations=${fb.citations} h=${fb.hIndex} i10=${fb.i10Index}`);
+    }
   }
 }
 
