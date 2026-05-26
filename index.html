@@ -903,12 +903,17 @@ const CV_DATA={
     {fac:'FLWO 1.2 m',tx:'Tillinghast / KeplerCam — 5 accepted proposals (PI), 2024A – 2025B.'},
     {fac:'HCT 2.0 m',tx:'Himalayan Chandra Telescope, IIA — 9 accepted proposals (PI / Co-I), Cycles 2019 – 2022.'},
   ],
-  topPapers:[
-    {au:'Kumar, H., et al.',ttl:'“SN 2024afav: A Superluminous Supernova with Multiple Light-curve Bumps and Spectroscopic Signatures of Circumstellar Interaction.”',jnl:'ApJL, 998, L3 (2026).',me:true},
-    {au:'Kumar, H., et al.',ttl:'“A Detection of Helium in the Bright Superluminous Supernova SN 2024rmj.”',jnl:'ApJ, 992, 122 (2025).',me:true},
-    {au:'Kumar, H., et al.',ttl:'“A Near-infrared Search for Helium in the Superluminous Supernova SN 2024ahr.”',jnl:'ApJ, 987, 127 (2025).',me:true},
-    {au:'Kumar, H., et al.',ttl:'“India’s First Robotic Eye for Time-domain Astrophysics: The GROWTH-India Telescope.”',jnl:'AJ, 164, 90 (2022).',me:true},
-    {au:'Andreoni, I., et al. (incl. Kumar, H.)',ttl:'“A very luminous jet from the disruption of a star by a massive black hole.”',jnl:'Nature, 612, 430 (2022).',me:false},
+  impactfulPapers:[
+    {yr:'2026',au:'Kumar, H., et al.',                       ttl:'“SN 2024afav: A Superluminous Supernova with Multiple Light-curve Bumps and Spectroscopic Signatures of Circumstellar Interaction.”',jnl:'ApJL, 998, L3 (2026).',me:true},
+    {yr:'2026',au:'Farah, J., et al. (incl. Kumar, H.)',     ttl:'“A Lense–Thirring precessing magnetar engine drives a superluminous supernova.”',jnl:'Nature, 651, 321 (2026).',me:false},
+    {yr:'2025',au:'Kumar, H., et al.',                       ttl:'“A Detection of Helium in the Bright Superluminous Supernova SN 2024rmj.”',jnl:'ApJ, 992, 122 (2025).',me:true},
+    {yr:'2025',au:'Kumar, H., et al.',                       ttl:'“A Near-infrared Search for Helium in the Superluminous Supernova SN 2024ahr.”',jnl:'ApJ, 987, 127 (2025).',me:true},
+    {yr:'2024',au:'Kumar, H., et al.',                       ttl:'“AT 2023vto: An Exceptionally Luminous Helium Tidal Disruption Event from a Massive Star.”',jnl:'ApJL, 974, L36 (2024).',me:true},
+    {yr:'2023',au:'Ho, A. Y. Q., et al. (incl. Kumar, H.)',  ttl:'“Minutes-duration optical flares with supernova luminosities.”',jnl:'Nature (2023).',me:false},
+    {yr:'2022',au:'Kumar, H., et al.',                       ttl:'“India’s First Robotic Eye for Time-domain Astrophysics: The GROWTH-India Telescope.”',jnl:'AJ, 164, 90 (2022).',me:true},
+    {yr:'2022',au:'Andreoni, I., et al. (incl. Kumar, H.)',  ttl:'“A very luminous jet from the disruption of a star by a massive black hole.”',jnl:'Nature, 612, 430 (2022).',me:false},
+    {yr:'2021',au:'Ahumada, T., et al. (incl. Kumar, H.)',   ttl:'“Discovery and confirmation of the shortest gamma-ray burst from a collapsar.”',jnl:'Nature Astronomy, 5, 917 (2021).',me:false},
+    {yr:'2021',au:'Anand, S., et al. (incl. Kumar, H.)',     ttl:'“Optical follow-up of the neutron-star–black-hole mergers S200105ae and S200115j.”',jnl:'Nature Astronomy, 5, 46 (2021).',me:false},
   ],
 };
 
@@ -1781,9 +1786,9 @@ function renderFallbackCV(){
   <div class="po-tx">${esc(o.tx)}</div>
 </div>`).join('')}</div>`;
 
-  const topPapHTML=`<div class="aw-l">${d.topPapers.map((p,i)=>`
+  const topPapHTML=`<div class="aw-l">${d.impactfulPapers.map(p=>`
 <div class="aw-e">
-  <div class="aw-yr">#${i+1}</div>
+  <div class="aw-yr">${esc(p.yr)}</div>
   <div class="aw-b">
     <h5>${esc(p.ttl)}</h5>
     <p>${p.me?`<strong>${esc(p.au)}</strong>`:esc(p.au)} — <em>${esc(p.jnl)}</em></p>
@@ -1796,7 +1801,7 @@ function renderFallbackCV(){
     {id:'cvFb2',t:'Honors, Awards &amp; Fellowships',    i:'fa-trophy',          c:'amber', ct:`${d.awards.length} awards`,            body:awdHTML},
     {id:'cvFb3',t:'Seminars, Talks &amp; Workshops',     i:'fa-microphone',      c:'purple',ct:`${d.talks.length} entries`,            body:talksHTML},
     {id:'cvFb4',t:'Successful Observing Proposals',      i:'fa-satellite-dish',  c:'teal',  ct:`${d.observing.length} facilities`,     body:obsHTML},
-    {id:'cvFb5',t:'Top 5 Publications',                  i:'fa-star',            c:'amber', ct:`${d.topPapers.length} papers`,         body:topPapHTML},
+    {id:'cvFb5',t:'Impactful Publications',              i:'fa-star',            c:'amber', ct:`${d.impactfulPapers.length} papers`,   body:topPapHTML},
   ];
   document.getElementById('cvSecs').innerHTML=secs.map(s=>accordion(s.id,s.t,s.i,s.c,s.ct,s.body,s.pub)).join('');
   secs.forEach((s,i)=>setTimeout(()=>openCVA(s.id),180+i*160));
