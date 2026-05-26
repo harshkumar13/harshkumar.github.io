@@ -78,26 +78,33 @@ vec3 actJetLaunch(vec2 uv, float p){
   vec2 q = uv;
   float r = length(q);
 
-  // Inflated cocoon (volumetric)
-  vec4 cocoon = volNebula(q, vec2(0.0), 0.40, vec3(1.4, 0.8, 0.4), vec3(0.50, 0.20, 0.10), 1.0, t);
-  col = col*cocoon.w + cocoon.rgb;
+  // Collapsar envelope: the jet is still drilling through optically thick
+  // stellar material, so the cocoon is broad and baryon-loaded while the
+  // relativistic spine stays narrow along the rotation axis.
+  vec2 cq = vec2(q.x*1.20, q.y*0.82);
+  float env = exp(-pow(length(cq)/0.48, 2.0));
+  float cavity = smoothstep(0.11, 0.028, abs(q.x)) * smoothstep(0.02, 0.65, abs(q.y));
+  float turb = rfbm(vec2(atan(q.y,q.x)*3.0, r*8.0 - t*0.25));
+  col += env * (0.55 + 0.45*turb) * vec3(0.95, 0.42, 0.18) * 0.55;
+  col *= 1.0 - cavity * smoothstep(0.25, 1.0, p) * 0.45;
 
-  // Jets — narrowing as they accelerate; Lorentz factor rises with p
-  float lor = mix(5.0, 100.0, p);
-  float len = mix(0.20, 1.05, p);
-  vec3 jetN = relJet(q, vec2(0.0,  1.0), len, mix(0.10, 0.04, p), lor, vec3(0.85,1.05,1.40), t);
-  vec3 jetS = relJet(q, vec2(0.0, -1.0), len, mix(0.10, 0.04, p), lor, vec3(0.85,1.05,1.40), t);
-  col += jetN + jetS;
+  float len = mix(0.12, 1.10, smoothstep(0.05, 1.0, p));
+  float width = mix(0.075, 0.030, p);
+  vec3 jet = cleanJet(q, vec2(0.0, 1.0), len, width, vec3(0.62,0.86,1.45), t*1.3);
+  col += jet * mix(0.8, 1.55, p);
 
-  // Central engine glow
-  col += exp(-r*r*150.0) * vec3(1.4, 1.0, 0.7) * 2.4;
-  col = hotGlow(col, q, vec2(0.0), vec3(0.6,0.8,1.2), 0.10);
-  col += lensFlare(q, vec2(0.0), vec3(0.7,0.9,1.3), 0.6);
+  // Hot cocoon wrapped around the head: broad, mildly relativistic shocked
+  // stellar gas rather than a second uncollimated beam.
+  float head = abs(abs(q.y) - len);
+  float bow = exp(-pow(head/0.035, 2.0)) * exp(-pow(q.x/(0.12 + 0.05*p), 2.0));
+  float cocoon = exp(-pow(abs(q.x)/(0.11 + 0.08*p), 2.0)) * smoothstep(0.0, len, abs(q.y)) * (1.0-smoothstep(len*0.75, len*1.08, abs(q.y)));
+  col += cocoon * vec3(1.05,0.58,0.24) * (0.65 + 0.45*turb);
+  col += bow * vec3(1.8, 1.05, 0.45) * 1.7;
 
-  // Bow shock at jet head
-  float headY = len;
-  float bow = exp(-pow((abs(q.y) - headY)/0.04, 2.0)) * smoothstep(0.18, 0.0, abs(q.x));
-  col += bow * vec3(1.4, 0.95, 0.55) * 1.2;
+  // Central engine: black-hole/accretion-torus scale, not a large star.
+  col += exp(-r*r*260.0) * vec3(1.6, 1.05, 0.55) * 2.9;
+  col += accretionDisk(q, 0.78, 0.85, 0.010, t) * 1.4;
+  col = hotGlow(col, q, vec2(0.0), vec3(0.65,0.82,1.25), 0.075);
   return col;
 }
 
@@ -108,32 +115,37 @@ vec3 actPromptEmission(vec2 uv, float p){
   vec2 q = uv;
   float r = length(q);
 
-  // Two wide jets visible (we are slightly off-axis)
-  float jetX = abs(q.x);
-  float jetWidth = mix(0.16, 0.10, p);
-  float withinJet = smoothstep(jetWidth, jetWidth*0.35, jetX) * smoothstep(1.1, 0.4, abs(q.y));
+  // Slightly off-axis view down a narrow relativistic outflow. Prompt
+  // emission appears as causally separated shells and internal shocks, not
+  // as a smooth flashlight beam.
+  vec2 axis = normalize(vec2(0.18, 1.0));
+  float along = dot(q, axis);
+  vec2 perp = q - along*axis;
+  float across = length(perp);
+  float beam = smoothstep(0.18, 0.025, across) * smoothstep(-0.08, 0.20, along) * (1.0-smoothstep(1.05, 1.25, along));
+  float sheath = smoothstep(0.34, 0.08, across) * smoothstep(0.0, 0.30, along) * (1.0-smoothstep(0.85, 1.25, along));
 
-  // Internal shocks — ridged turbulence
-  float chaos = rfbm(vec2(q.x*8.0, q.y*5.0 - t*4.0));
-  chaos += 0.55*rfbm(vec2(q.x*18.0, q.y*14.0 - t*7.0));
-  chaos = pow(chaos, 1.6);
+  float shockTrain = 0.0;
+  for(int i=0;i<6;i++){
+    float fi = float(i);
+    float y = fract(t*(0.42 + fi*0.045) + fi*0.173);
+    float shell = exp(-pow((along - mix(0.12, 1.05, y))/0.026, 2.0));
+    float ripple = 0.65 + 0.35*rfbm(vec2(across*26.0 + fi, along*12.0 - t*3.0));
+    shockTrain += shell * ripple;
+  }
+  float pulse1 = exp(-pow(mod(t*1.7, 2.6) - 1.25, 2.0)*9.0);
+  float pulse2 = exp(-pow(mod(t*2.9 + 0.5, 3.7) - 1.8, 2.0)*13.0);
+  float pulseSum = pulse1 + 0.65*pulse2;
 
-  // Random gamma-ray pulses
-  float pulse1 = exp(-pow(mod(t*1.5, 3.0) - 1.5, 2.0)*8.0);
-  float pulse2 = exp(-pow(mod(t*2.3 + 0.7, 4.0) - 2.0, 2.0)*12.0);
-  float pulseSum = pulse1 + 0.7*pulse2;
+  col += sheath * vec3(0.55,0.78,1.30) * 0.45;
+  col += beam * shockTrain * vec3(1.65,1.42,0.82) * (1.1 + pulseSum);
+  col += beam * pow(shockTrain, 2.0) * vec3(0.72,0.94,1.65) * 1.2;
 
-  vec3 jetCol = mix(vec3(1.0, 0.8, 0.4), vec3(1.4, 1.2, 0.9), chaos);
-  col += withinJet * chaos * jetCol * 1.6;
-  col += withinJet * pulseSum * vec3(1.6, 1.4, 1.0) * 1.4;
+  col += exp(-r*r*180.0) * vec3(1.45, 0.95, 0.55) * 2.0;
+  col += lensFlare(q, vec2(0.0), vec3(1.0,0.88,0.55), pulseSum*0.45 + 0.18);
 
-  // Central engine
-  col += exp(-r*r*120.0) * vec3(1.5, 1.0, 0.7) * 2.4;
-  col += lensFlare(q, vec2(0.0), vec3(1.0,0.85,0.55), pulseSum*0.55 + 0.25);
-
-  // Subtle gamma flicker overlay
-  float flicker = (sin(t*30.0)*sin(t*47.0) + 1.0) * 0.5;
-  col *= 0.9 + 0.2*flicker*pulseSum;
+  float flicker = (sin(t*37.0)*sin(t*61.0) + 1.0) * 0.5;
+  col *= 0.88 + 0.24*flicker*pulseSum;
   return col;
 }
 
@@ -148,16 +160,18 @@ vec3 actAfterglow(vec2 uv, float p){
   float r = length(q);
   float ang = atan(q.y, q.x);
 
-  // Multi-band turbulent shock fronts — each band gets ridged angular bumps
+  // Multi-band turbulent forward-shock fronts. The outer ring is the blast
+  // wave; later bands lag behind as lower-frequency synchrotron emission
+  // peaks after the high-energy light.
   for(int i=0;i<4;i++){
     float fi = float(i);
     float bandT = p - fi*0.10;
     if(bandT < 0.0) continue;
-    float ringR = mix(0.15, 0.95, bandT);
+    float ringR = mix(0.10, 1.02, bandT);
     float ringTh = 0.05 + 0.05*bandT;
-    // Angular bumps make this clearly a turbulent shock, not a planetary orbit
-    float bump = 0.45 + 0.55*rfbm(vec2(ang*4.0 + fi*2.1, t*0.15 + fi));
-    float ring = exp(-pow((r-ringR)/ringTh, 2.0)) * bump;
+    float jetShape = 0.62 + 0.38*pow(abs(sin(ang)), 1.6);
+    float bump = 0.55 + 0.45*rfbm(vec2(ang*5.0 + fi*2.1, t*0.13 + fi));
+    float ring = exp(-pow((r-ringR*jetShape)/ringTh, 2.0)) * bump;
     vec3 bandCol =
       fi < 0.5 ? vec3(0.5, 0.85, 1.40) :    // X-ray hard
       fi < 1.5 ? vec3(1.10, 1.10, 1.10) :   // optical
@@ -167,15 +181,17 @@ vec3 actAfterglow(vec2 uv, float p){
     col += ring * bandCol * fade * 1.4;
   }
 
-  // Filamentary shocked material inside the forward shock (visibly turbulent)
+  // Filamentary shocked material and reverse-shock remnant inside the forward shock.
   float fil = rfbm(vec2(ang*5.0, r*5.0 + t*0.2));
   float filBand = exp(-pow((r-0.55*p)/0.30, 2.0)) * p;
   col += pow(fil, 1.8) * filBand * vec3(1.0, 0.80, 0.50) * 0.4;
+  float reverse = exp(-pow((r-mix(0.08,0.45,p))/0.055, 2.0)) * (1.0-smoothstep(0.35,0.80,p));
+  col += reverse * vec3(0.75,0.90,1.35) * 0.8;
 
-  // Jet break — late narrowing fan along axis
+  // Jet break: late emission remembers the original bipolar collimation.
   float jetBreak = smoothstep(0.55, 0.95, p);
-  float jetSig = (1.0 - smoothstep(0.0, 0.25, abs(q.x))) * exp(-pow(q.y*0.7, 2.0));
-  col += jetBreak * jetSig * vec3(0.55, 0.80, 1.20) * 0.7;
+  float jetSig = smoothstep(0.22, 0.02, abs(q.x)) * smoothstep(0.05, 0.85, abs(q.y));
+  col += jetBreak * jetSig * vec3(0.55, 0.80, 1.20) * 0.55;
 
   // Fading central engine
   col += exp(-r*5.0) * vec3(0.95, 0.85, 0.65) * (0.75 - 0.6*p);
