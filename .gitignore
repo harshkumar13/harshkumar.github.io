@@ -32,3 +32,7 @@ npm-debug.log*
 
 # Netlify local dev cache
 .netlify/
+
+# Local project notes (Netlify publishes the repo root)
+PROGRESS.md
+ONBOARDING.md
